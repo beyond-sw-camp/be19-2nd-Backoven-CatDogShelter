@@ -8,7 +8,7 @@ assignees: LeeSeonggeon, dddd0ng, Easy-going12, haenin, bynmch
 ---
 
 # 이슈 종류
-- [  ] DDL
-- [  ] Dummy Data
-- [  ] Query
+- [ ] DDL
+- [ ] Dummy Data
+- [ ] Query
 # 이슈 내용
