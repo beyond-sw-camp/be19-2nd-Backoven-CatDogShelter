@@ -9,5 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * - JPA를 통해 DB와 상호작용
  * - 게시글 조회, 추천, 신고 등 DB 조작 가능
  */
+
+
 public interface PostRepository extends JpaRepository<Post, Integer> {
 }
