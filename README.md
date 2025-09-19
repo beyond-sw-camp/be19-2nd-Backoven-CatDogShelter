@@ -1,1 +1,7 @@
 # be19-2nd-backoven-pawtalk
+
+| <img src="https://github.com/user-attachments/assets/05ab7192-4cd7-4571-b811-600d61577098" width="80"/> | <img src="https://github.com/user-attachments/assets/af2607ec-b922-45f2-8f1d-545e94901e3b" width="80"/> | <img src="https://github.com/user-attachments/assets/6b540873-1365-4265-86ea-d6be7f7bc619" width="80"/> | <img src="https://github.com/user-attachments/assets/cd4f43c3-a04b-477b-a319-ddc8e1561dd6" width="80"/> | <img width="80" alt="케이크" src="https://github.com/user-attachments/assets/6ed08489-a111-416b-afc4-4961a652ae41" /> |
+|:---:|:---:|:---:|:---:|:---:|
+| **곽동근** | **변민철** | **이지윤** | **이승건** | **최혜원** |
+| <a href="https://github.com/dddd0ng"><img src="https://img.shields.io/badge/GitHub%20%7C%20Link-000?style=for-the-badge&logo=github&logoColor=white"/></a> | <a href="https://github.com/bynmch"><img src="https://img.shields.io/badge/GitHub%20%7C%20Link-000?style=for-the-badge&logo=github&logoColor=white"/></a> | <a href="https://github.com/Easy-going12"><img src="https://img.shields.io/badge/GitHub%20%7C%20Link-000?style=for-the-badge&logo=github&logoColor=white"/></a> | <a href="https://github.com/LeeSeonggeon"><img src="https://img.shields.io/badge/GitHub%20%7C%20Link-000?style=for-the-badge&logo=github&logoColor=white"/></a> | <a href="https://github.com/haenin"><img src="https://img.shields.io/badge/GitHub%20%7C%20Link-000?style=for-the-badge&logo=github&logoColor=white"/></a> |
+
