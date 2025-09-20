@@ -1,5 +1,4 @@
-# ?? ?? + ???
-# ??? ??? ??? ?? yml ??? ??? gitignore ???? github ?? X
+# 공통 설정 + 템플릿
 
 server:
   port: 8080
@@ -16,15 +15,16 @@ spring:
     properties:
       hibernate:
         '[format_sql]': true
-  # ?? ?? ??? ????? ??
+
   # dev: application-dev.yml
   # prod: application-prod.yml
   # test: application-test.yml
-  # active? ??? ??? ???? ?
+  # active: {...} -> application-{...}.yml 파일 우선 적용
   profiles:
     active: dev
-  # ??? ??? ?? -
-  # ?? yml???? url, username, password? ???? ?? ?? ??
+    
+  # DB 설정
+  # url, username, password은 다른 yml에서 작성
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/catdogshelter
@@ -37,5 +37,5 @@ logging:
   level:
     root: INFO
 
-filepath: # ???: C:\\uploadFiles
+filepath: # 윈도우: C:\\uploadFiles
           # max: /User/??/uploadFiles
