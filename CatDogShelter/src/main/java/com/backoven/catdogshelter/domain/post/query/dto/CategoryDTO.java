@@ -1,6 +1,6 @@
 package com.backoven.catdogshelter.domain.post.query.dto;
 
-public enum categoryDTO {
+public enum CategoryDTO {
     SPAM,
     ABUSE,
     PORN,
