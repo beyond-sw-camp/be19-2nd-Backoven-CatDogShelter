@@ -21,34 +21,82 @@
 
         <association property = "writer" resultMap = "writerResultMap"/>
     </resultMap>
+    <select id = "selectSightingSummary" parameterType = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO" resultMap = "sightingSummaryResultMap">
+        SELECT
+        sp.id
+        , sp.title
+        , sp.created_at
+        , sp.updated_at
+        , sp.view
+        , COUNT(spl.id) AS like_count
+        , CASE
+        WHEN sp.user_id IS NOT NULL THEN u.user_name
+        WHEN sp.head_id IS NOT NULL THEN sh.company_name
+        END AS writer_name
+        , sp.user_id
+        , sp.head_id
+        FROM sightingPost AS sp
+        LEFT JOIN sightingPostLiked AS spl ON sp.id = spl.post_id
+        LEFT JOIN user AS u ON sp.user_id = u.user_id
+        LEFT JOIN shelter_head AS sh ON sp.head_id = sh.head_id
+        <where>
+            sp.is_blinded = FALSE
+            AND sp.is_deleted = FALSE
+            <if test = "writer != null and writer != ''">
+                AND (u.user_name LIKE CONCAT('%', #{writer}, '%')
+                OR sh.company_name LIKE CONCAT('%', #{writer}, '%'))
+            </if>
+            <if test = "title != null and title != ''">
+                AND sp.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test = "content != null and content != ''">
+                AND sp.content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <if test = "animalType != null and animalType != ''">
+                AND sp.animal_type = #{animalType}
+            </if>
+            <if test = "breed != null and breed != ''">
+                AND sp.breed LIKE CONCAT('%', #{breed}, '%')
+            </if>
+            <if test = "color != null and color != ''">
+                AND sp.color LIKE CONCAT('%', #{color}, '%')
+            </if>
+            <if test = "sigunguCode != null">
+                AND sp.sigungu_id = #{sigunguCode}
+            </if>
+
+        </where>
+        GROUP BY sp.id, sp.title, sp.created_at, sp.updated_at, sp.view, u.user_name, sh.company_name, sp.user_id, sp.head_id
+        <choose>
+            <when test="order == 0">
+                ORDER BY sp.id DESC
+            </when>
+            <when test="order == 1">
+                ORDER BY sp.id ASC, sp.id DESC
+            </when>
+            <when test="order == 2">
+                ORDER BY sp.view DESC, sp.id DESC
+            </when>
+            <when test="order == 3">
+                ORDER BY sp.view ASC, sp.id DESC
+            </when>
+            <when test="order == 4">
+                ORDER BY like_count DESC, sp.id DESC
+            </when>
+            <when test="order == 5">
+                ORDER BY like_count ASC, sp.id DESC
+            </when>
+            <otherwise>
+                ORDER BY sp.id DESC
+            </otherwise>
+        </choose>
+
+
+    </select>
+
     <resultMap id = "sightingDetailsResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO">
 
     </resultMap>
-
-    <select id = "selectSightingSummary" parameterType = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO" resultMap = "sightingSummaryResultMap">
-        SELECT
-            sp.id
-             , sp.title
-             , sp.created_at
-             , sp.updated_at
-             , sp.view
-             , COUNT(spl.id) AS like_count
-             , CASE
-                   WHEN sp.user_id IS NOT NULL THEN u.user_name
-                   WHEN sp.head_id IS NOT NULL THEN sh.company_name
-            END AS writer_name
-             , sp.user_id
-             , sp.head_id
-        FROM sightingPost AS sp
-                 LEFT JOIN sightingPostLiked AS spl ON sp.id = spl.post_id
-                 LEFT JOIN user AS u ON sp.user_id = u.user_id
-                 LEFT JOIN shelter_head AS sh ON sp.head_id = sh.head_id
-        WHERE sp.is_blinded = FALSE
-          AND sp.is_deleted = FALSE
-        GROUP BY sp.id, sp.title, sp.created_at, sp.updated_at, sp.view, u.user_name, sh.company_name, sp.user_id, sp.head_id
-        ORDER BY sp.id DESC;
-
-    </select>
 
     <select id = "selectSightingDetails" parameterType = "_int" resultMap = "sightingDetailsResultMap">
 
