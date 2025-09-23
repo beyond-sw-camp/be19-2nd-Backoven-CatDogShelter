@@ -3,6 +3,6 @@ package com.backoven.catdogshelter.domain.volunteer.query.controller.controllera
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
-public class VolunteerQueryExceptionHandler {
+public class VolunteerPostQueryExceptionHandler {
 
 }

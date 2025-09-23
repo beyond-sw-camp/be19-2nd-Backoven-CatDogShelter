@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerPostQueryMapper">
+    <resultMap id="volunteerPostsResultMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDTO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="view" column="view"/>
+        <result property="isBlinded" column="is_blinded"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="volunteerId" column="volunteer_id"/>
+    </resultMap>
+    <select id="selectAllVolunteerPosts" resultMap="volunteerPostsResultMap">
+        select
+               id
+             , title
+             , content
+             , created_at
+             , updated_at
+             , view
+             , is_blinded
+             , is_deleted
+             , volunteer_id
+          from volunteerpost
+         order by id desc
+    </select>
+    <select id="selectAllVolunteerPostsByNoneProcessed" resultMap="volunteerPostsResultMap">
+        select
+               id
+             , title
+             , content
+             , created_at
+             , updated_at
+             , view
+             , is_blinded
+             , is_deleted
+             , volunteer_id
+        from volunteerpost
+       where is_blinded = 0 and is_deleted = 0
+        order by id desc
+    </select>
+    <select id="">
+
+    </select>
+</mapper>
