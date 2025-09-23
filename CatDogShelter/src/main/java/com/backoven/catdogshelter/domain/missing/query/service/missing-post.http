@@ -1,5 +1,0 @@
-POST http://localhost:8080/missing-posts/2/view
-Content-Type: application/json
-###
-GET http://localhost:8080/missing-posts/2
-Content-Type: application/json
