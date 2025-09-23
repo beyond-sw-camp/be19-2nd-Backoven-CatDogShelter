@@ -1,5 +1,37 @@
-POST http://localhost:8080/missing-posts/2/view
+###REQ-021게시글 서치 조회
+GET localhost:8080/missing-posts/search?keyword=양
 Content-Type: application/json
-###
-GET http://localhost:8080/missing-posts/2
+
+###조회수 기준 인기글 조회
+GET localhost:8080/missing-posts/popular/view
 Content-Type: application/json
+
+###추천수 기준 인기글 조회
+GET localhost:8080/missing-posts/popular/like
+Content-Type: application/json
+
+###최신 작성 게시글 조회
+GET localhost:8080/missing-posts/latest
+Content-Type: application/json
+
+###조회 수 증가 (Post 테스트용)
+POST localhost:8080/missing-posts/3/view
+Content-Type: application/json
+
+###게시글 조회 하면 조회 수 증가
+GET localhost:8080/missing-posts/3
+Content-Type: application/json
+#{id}
+
+###게시판보드, 게시글 목록 조회 쿼리
+GET localhost:8080/missing-posts/posts
+Content-Type: application/json
+
+###실종신고 게시글 상세내용 조회(게시글 하나 안에서)
+GET localhost:8080/missing-posts/posts/2
+Content-Type: application/json
+
+###댓글 api처리(게시글 하나 안에서)
+GET localhost:8080/missing-posts/posts/4/comments
+Content-Type: application/json
+#{postId}
