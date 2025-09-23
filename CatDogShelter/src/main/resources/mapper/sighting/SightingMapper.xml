@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.sighting.query.mapper.SightingMapper">
+    <resultMap id = "writerResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingUserDTO">
+        <result property = "userId" column = "user_id"/>
+        <result property = "headId" column = "head_id"/>
+        <result property = "name" column = "writer_name"/>
+    </resultMap>
+
+
+    <resultMap id = "sightingSummaryResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSummaryDTO">
+        <id property = "id" column = "id"/>
+        <result property = "title" column ="title"/>
+        <result property = "createdAt" column ="created_at"/>
+        <result property = "updatedAt" column ="updated_at"/>
+        <result property = "view" column ="view"/>
+        <result property = "likeCount" column ="like_count"/>
+
+        <association property = "writer" resultMap = "writerResultMap"/>
+    </resultMap>
+    <resultMap id = "sightingDetailsResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO">
+
+    </resultMap>
+
+    <select id = "selectSightingSummary" parameterType = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO" resultMap = "sightingSummaryResultMap">
+        SELECT
+            sp.id
+             , sp.title
+             , sp.created_at
+             , sp.updated_at
+             , sp.view
+             , COUNT(spl.id) AS like_count
+             , CASE
+                   WHEN sp.user_id IS NOT NULL THEN u.user_name
+                   WHEN sp.head_id IS NOT NULL THEN sh.company_name
+            END AS writer_name
+             , sp.user_id
+             , sp.head_id
+        FROM sightingPost AS sp
+                 LEFT JOIN sightingPostLiked AS spl ON sp.id = spl.post_id
+                 LEFT JOIN user AS u ON sp.user_id = u.user_id
+                 LEFT JOIN shelter_head AS sh ON sp.head_id = sh.head_id
+        WHERE sp.is_blinded = FALSE
+          AND sp.is_deleted = FALSE
+        GROUP BY sp.id, sp.title, sp.created_at, sp.updated_at, sp.view, u.user_name, sh.company_name, sp.user_id, sp.head_id
+        ORDER BY sp.id DESC;
+
+    </select>
+
+    <select id = "selectSightingDetails" parameterType = "_int" resultMap = "sightingDetailsResultMap">
+
+    </select>
+
+    <update id = "incrementSightingView" parameterType = "_int">
+
+    </update>
+</mapper>
