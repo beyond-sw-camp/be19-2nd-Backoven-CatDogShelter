@@ -17,6 +17,7 @@ public class MissingPostQueryDetailDTO {
     private String content;
     private String createdAt;
     private int view;
+    private String userRating;       // 등급
     private String userName;   // 작성자 이름
     private int likeCount;     // 좋아요 수 (인기글에서 사용)
 
@@ -25,7 +26,6 @@ public class MissingPostQueryDetailDTO {
 
     private boolean status;          // 실종 상태 (처리 여부)
     private String detailAddress;    // 실종 상세 위치
-
     private String gender;           // 성별 (MALE, FEMALE)
     private Integer age;             // 나이
     private Integer registrationNum; // 동물등록번호

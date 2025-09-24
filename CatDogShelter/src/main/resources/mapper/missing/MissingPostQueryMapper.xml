@@ -12,12 +12,14 @@
         p.title           AS title,     -- 제목
         p.created_at      AS createdAt, -- 작성일
         p.view            AS view,      -- 조회수
+        r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
         IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
         LEFT JOIN user u ON p.user_id = u.user_id
         LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
         LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
+        LEFT JOIN rating r ON u.rating_id = r.id
         WHERE p.is_deleted = FALSE
         <if test="keyword != null and keyword != ''">
             AND (
@@ -26,7 +28,7 @@
             OR sh.ceo_name LIKE CONCAT('%', #{keyword}, '%')
             )
         </if>
-        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, r.name, p.view
         ORDER BY p.created_at DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -34,18 +36,20 @@
     <!-- REQ-029 조회수 기준 인기 게시글 -->
     <select id="selectAllMissingPostsByView" resultType="com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO">
         SELECT
-            p.id              AS id,        -- 번호
-            p.title           AS title,     -- 제목
-            p.created_at      AS createdAt, -- 작성일
-            p.view            AS view,      -- 조회수
-    COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
-    IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
+            p.id              AS id,         -- 번호
+            p.title           AS title,      -- 제목
+            p.created_at      AS createdAt,  -- 작성일
+            p.view            AS view,       -- 조회수
+            r.name      AS userRating, -- 사용자 등급
+        COALESCE(u.user_name, sh.ceo_name) AS userName,  -- 작성자 이름
+        IFNULL(COUNT(mpl.id), 0) AS likeCount            -- 추천수
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN rating r ON u.rating_id = r.id
             LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, r.name, p.view
         ORDER BY p.view DESC
             LIMIT #{limit};
     </select>
@@ -57,14 +61,16 @@
             p.title           AS title,     -- 제목
             p.created_at      AS createdAt, -- 작성일
             p.view            AS view,      -- 조회수
+            r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
         IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
             LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
+            LEFT JOIN rating r ON u.rating_id = r.id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, r.name, p.view
         ORDER BY likeCount DESC
             LIMIT #{limit}
     </select>
@@ -76,14 +82,16 @@
             p.title           AS title,     -- 제목
             p.created_at      AS createdAt, -- 작성일
             p.view            AS view,      -- 조회수
+            r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
         IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
             LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
+            LEFT JOIN rating r ON u.rating_id = r.id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, r.name, p.view
         ORDER BY p.created_at DESC
             LIMIT #{limit}
     </select>
@@ -97,14 +105,16 @@
         p.title           AS title,     -- 제목
         p.created_at      AS createdAt, -- 작성일
         p.view            AS view,      -- 조회수
+        r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름 (회원/보호소장)
         IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
         LEFT JOIN user u ON p.user_id = u.user_id
         LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
         LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
+            LEFT JOIN rating r ON u.rating_id = r.id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, r.name, p.view
         ORDER BY p.id DESC
     </select>
 
@@ -126,6 +136,7 @@
             p.title            AS post_title,          -- 제목
             p.content          AS post_content,        -- 내용
             p.created_at       AS post_created_at,     -- 작성일
+            r.name             AS post_user_rating, -- 사용자 등급
             u.user_name        AS post_user_name,      -- 작성자 이름
             p.view             AS post_view,           -- 조회수
             IFNULL(l.like_count, 0) AS post_like_count,-- 추천 수
@@ -145,6 +156,7 @@
             p.contact          AS post_contact         -- 연락처
         FROM missingPost p
                  LEFT JOIN user u ON p.user_id = u.user_id
+                 LEFT JOIN rating r ON u.rating_id = r.id
                  LEFT JOIN (
             SELECT post_id, COUNT(*) AS like_count
             FROM missingPostLiked
@@ -162,6 +174,7 @@
         <result property="title" column="post_title"/>
         <result property="content" column="post_content"/>
         <result property="createdAt" column="post_created_at"/>
+        <result property="userRating" column="post_user_rating"/>
         <result property="userName" column="post_user_name"/>
         <result property="view" column="post_view"/>
         <result property="likeCount" column="post_like_count"/>
@@ -196,9 +209,11 @@
                 c.id,
                 c.content,
                 c.created_at AS createdAt,
+                r.name AS userRating, -- 사용자 등급
                 COALESCE(u.user_name, sh.ceo_name) AS userName -- 작성자 이름 (회원/보호소장)
             FROM missingPostComment c
                      LEFT JOIN user u ON c.user_id = u.user_id
+                     LEFT JOIN rating r ON u.rating_id = r.id
                      LEFT JOIN shelter_head sh ON c.head_id = sh.head_id
             WHERE c.post_id = #{postId}
               AND c.is_deleted = FALSE

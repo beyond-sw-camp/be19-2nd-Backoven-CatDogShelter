@@ -20,7 +20,7 @@ public class MissingPostQueryDTO {
     private int view;
     private String userName;   // 작성자 이름
     private int likeCount;     // 좋아요 수 (인기글에서 사용)
-
+    private String userRating; //등급
     private List<MissingPostFileDTO> files;
     private List<MissingPostCommentDTO> comments;
 }
