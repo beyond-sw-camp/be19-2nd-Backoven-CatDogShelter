@@ -1,5 +1,5 @@
 ###REQ-021게시글 서치 조회
-GET localhost:8080/missing-posts/search?keyword=양
+GET localhost:8080/missing-posts/search?keyword=고
 Content-Type: application/json
 
 ###조회수 기준 인기글 조회
