@@ -31,5 +31,6 @@
               FROM post p
               LEFT JOIN user u ON p.user_id = u.user_id
               LEFT JOIN shelter_head h ON p.head_id = h.head_id
+             WHERE p.is_deleted = 0
     </select>
 </mapper>

@@ -19,13 +19,13 @@ public class PostController {
     }
 
     @RequestMapping("/post-posts")
-    public List<PostInventoryDTO> getPostInventory() {
-        return postService.getPostInventory();
+    public List<PostInventoryDTO> selectPostInventory() {
+        return postService.selectPostInventory();
     }
 
     @RequestMapping("/post/{id}")
-    public PostDetailDTO getPostDetail(@PathVariable int id) {
-        return postService.getPostDetail(id);
+    public PostDetailDTO selectPostDetail(@PathVariable int id) {
+        return postService.selectPostDetail(id);
     }
 
 }

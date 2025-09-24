@@ -6,6 +6,7 @@
     <resultMap id="postInventoryMap" type="com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO">
         <id property="id" column="ID"/>
         <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
         <result property="created_at" column="CREATED_AT"/>
         <result property="updated_at" column="UPDATED_AT"/>
         <result property="view" column="VIEW"/>
@@ -13,6 +14,7 @@
         <result property="writeName" column="WRITE_NAME"/>
     </resultMap>
 
+    <!-- extends를 사용하여 상속 관계로 나타냄. -->
     <resultMap id="postDetailMap" type="com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO"
                extends="postInventoryMap">
 
@@ -27,7 +29,8 @@
         <!-- 자유게시글 댓글 매핑 -->
         <collection property="comments" ofType="com.backoven.catdogshelter.domain.post.query.dto.PostCommentDTO">
             <id property="id" column="COMMENT_ID"/>
-            <result property="content" column="CONTENT"/>
+            <result property="content" column="COMMENT_CONTENT"/>
+            <!-- postInventoryMap에 있는 created_at, updated_at 컬럼명이 겹쳐 상세하게 표현 -->
             <result property="created_at" column="COMMENT_CREATED_AT"/>
             <result property="updated_at" column="COMMENT_UPDATED_AT"/>
             <result property="post_id" column="POST_ID"/>
@@ -38,6 +41,7 @@
             SELECT
                        p.id AS ID
                      , p.title
+                     , p.content
                      , p.created_at
                      , p.updated_at
                      , p.view
@@ -54,7 +58,7 @@
                      , f.uploaded_at
                      , f.post_id
                      , c.id AS COMMENT_ID
-                     , c.content
+                     , c.content AS COMMENT_CONTENT
                      , c.created_at AS comment_created_at
                      , c.updated_at AS comment_update_at
                      , c.post_id
@@ -64,5 +68,6 @@
                      LEFT JOIN postfiles f ON p.id = f.post_id
                      LEFT JOIN postcomment c ON p.id = c.post_id
             WHERE p.id = #{id}
+              AND p.is_deleted = 0
     </select>
 </mapper>
