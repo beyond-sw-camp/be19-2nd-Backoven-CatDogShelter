@@ -38,32 +38,31 @@ public class MissingPostQueryService {
     }
 
 
-    //조회수 증가 로직
-    public void increaseView(Long id) {
-        mapper.increaseView(id);
-    }
-
-    //REQ-028 게시글 조회 하면 조회 수 증가
-    public MissingPostQueryDTO getPostById(Long id) {
-        MissingPostQueryDTO dto = mapper.selectPostById(id);
-        if (dto == null) {
-            throw new RuntimeException("해당 게시글을 찾을 수 없습니다.");
-        }
-        return dto;
-    }
-
-
 
     // 게시판보드, 게시글 목록 조회 쿼리
+
     public List<MissingPostQueryDTO> selectAllMissingPosts() {
         return mapper.selectAllMissingPosts();
     }
 
 
+    //조회수 증가 로직
+    public void increaseView(Long id) {
+        mapper.increaseView(id);
+    }
+
 
     // 실종신고 게시글 내용 상세 조회
     public MissingPostQueryDetailDTO selectMissingPostDetail(int postId) {
-        return mapper.selectMissingPostDetail(postId);
+        // 조회수 증가
+        mapper.increaseView((long)postId);
+
+        // 상세 조회
+        MissingPostQueryDetailDTO dto = mapper.selectMissingPostDetail(postId);
+        if (dto == null) {
+            throw new RuntimeException("해당 게시글을 찾을 수 없습니다.");
+        }
+        return dto;
     }
 
     //댓글 api처리

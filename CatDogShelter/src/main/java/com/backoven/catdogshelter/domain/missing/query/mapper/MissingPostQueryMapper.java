@@ -23,17 +23,16 @@ public interface MissingPostQueryMapper {
     // REQ-031 최신 게시글 조회
     List<MissingPostQueryDTO> selectAllMissingPostsLatest(@Param("limit") int limit);
 
-    // REQ-028 조회수 증가
-    void increaseView(@Param("id") Long id);
-
-    // 게시글 조회(view 증가)
-    MissingPostQueryDTO selectPostById(Long id);
-
     //게시판보드, 게시글 목록 조회 쿼리
     List<MissingPostQueryDTO> selectAllMissingPosts();
 
+
+    // REQ-028 조회수 증가
+    void increaseView(@Param("id") Long id);
+
     //실종신고 게시글 상세내용 조회(게시글 하나 안에서)
     MissingPostQueryDetailDTO selectMissingPostDetail(int postId);
+
 
     //댓글 목록 (페이징 처리)
     List<MissingPostCommentDTO> selectMissingPostDetailComments(@Param("postId") int postId,

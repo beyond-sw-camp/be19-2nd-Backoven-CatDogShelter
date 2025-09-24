@@ -51,15 +51,7 @@ public class MissingPostQueryController {
         service.increaseView(id);
     }
 
-    //REQ-028 게시글 조회 하면 조회 수 증가
-    @GetMapping("/{id}")
-    public MissingPostQueryDTO getPostById(@PathVariable Long id) {
-        service.increaseView(id); //조회수 증가 로직
-        return service.getPostById(id);
-    }
 
-
-    //댓글 api처리
     // 게시판보드, 게시글 목록 조회 쿼리
     @GetMapping("/posts")
     public List<MissingPostQueryDTO> selectAllMissingPosts() {
@@ -73,6 +65,8 @@ public class MissingPostQueryController {
         return service.selectMissingPostDetail(postId);
     }
 
+    
+    //댓글 api처리
     @GetMapping("/posts/{postId}/comments")
     public Map<String, Object> selectMissingPostDetailComments(@PathVariable int postId,
                                            @RequestParam(defaultValue = "1") int page,
