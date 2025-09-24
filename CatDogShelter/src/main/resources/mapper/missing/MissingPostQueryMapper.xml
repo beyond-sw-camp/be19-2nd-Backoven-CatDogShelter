@@ -7,45 +7,65 @@
 
     <!-- REQ-021 게시글 서치 -->
     <select id="selectMissingPostSearch" resultType="com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO">
-        SELECT p.id, p.title, p.content, p.created_at, p.view,
-        u.user_name AS userName
+        SELECT
+        p.id              AS id,        -- 번호
+        p.title           AS title,     -- 제목
+        p.created_at      AS createdAt, -- 작성일
+        p.view            AS view,      -- 조회수
+        COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
+        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
         LEFT JOIN user u ON p.user_id = u.user_id
+        LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+        LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
         <if test="keyword != null and keyword != ''">
-            AND (p.title LIKE CONCAT('%', #{keyword}, '%')
-            OR p.content LIKE CONCAT('%', #{keyword}, '%')
-            OR u.user_name LIKE CONCAT('%', #{keyword}, '%'))
+            AND (
+            p.title LIKE CONCAT('%', #{keyword}, '%')
+            OR u.user_name LIKE CONCAT('%', #{keyword}, '%')
+            OR sh.ceo_name LIKE CONCAT('%', #{keyword}, '%')
+            )
         </if>
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
         ORDER BY p.created_at DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <!-- REQ-029 조회수 기준 인기 게시글 -->
     <select id="selectAllMissingPostsByView" resultType="com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO">
-        SELECT p.id,
-               p.title,
-               p.view,
-               COUNT(l.id) AS likeCount
+        SELECT
+            p.id              AS id,        -- 번호
+            p.title           AS title,     -- 제목
+            p.created_at      AS createdAt, -- 작성일
+            p.view            AS view,      -- 조회수
+    COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
+    IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
-                 LEFT JOIN missingPostLiked l ON p.id = l.post_id
+            LEFT JOIN user u ON p.user_id = u.user_id
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
         ORDER BY p.view DESC
-            LIMIT #{limit}
+            LIMIT #{limit};
     </select>
 
     <!-- REQ-030 추천수 기준 인기 게시글 -->
     <select id="selectAllMissingPostsByLiked" resultType="com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO">
-        SELECT p.id,
-               p.title,
-               p.view,
-               COUNT(l.id) AS likeCount
+        SELECT
+            p.id              AS id,        -- 번호
+            p.title           AS title,     -- 제목
+            p.created_at      AS createdAt, -- 작성일
+            p.view            AS view,      -- 조회수
+        COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
+        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
-                 LEFT JOIN missingPostLiked l ON p.id = l.post_id
+            LEFT JOIN user u ON p.user_id = u.user_id
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.view
-        ORDER BY COUNT(l.id) DESC
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
+        ORDER BY likeCount DESC
             LIMIT #{limit}
     </select>
 
@@ -55,16 +75,16 @@
             p.id              AS id,        -- 번호
             p.title           AS title,     -- 제목
             p.created_at      AS createdAt, -- 작성일
-            u.user_name       AS userName,  -- 작성자
             p.view            AS view,      -- 조회수
-        IFNULL(COUNT(mpl.id), 0) AS likeCount -- 추천수
+        COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
+        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
             LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
         ORDER BY p.created_at DESC
-
             LIMIT #{limit}
     </select>
 
@@ -96,14 +116,15 @@
             p.id              AS id,        -- 번호
             p.title           AS title,     -- 제목
             p.created_at      AS createdAt, -- 작성일
-            u.user_name       AS userName,  -- 작성자
             p.view            AS view,      -- 조회수
-        IFNULL(COUNT(mpl.id), 0) AS likeCount -- 추천수
+        COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름 (회원/보호소장)
+        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
             LEFT JOIN missingPostLiked mpl ON p.id = mpl.post_id
         WHERE p.is_deleted = FALSE
-        GROUP BY p.id, p.title, p.created_at, u.user_name, p.view
+        GROUP BY p.id, p.title, p.created_at, u.user_name, sh.ceo_name, p.view
         ORDER BY p.id DESC
     </select>
 
@@ -186,9 +207,10 @@
                 c.id,
                 c.content,
                 c.created_at AS createdAt,
-                u.user_name  AS userName
+                COALESCE(u.user_name, sh.ceo_name) AS userName -- 작성자 이름 (회원/보호소장)
             FROM missingPostComment c
                      LEFT JOIN user u ON c.user_id = u.user_id
+                     LEFT JOIN shelter_head sh ON c.head_id = sh.head_id
             WHERE c.post_id = #{postId}
               AND c.is_deleted = FALSE
             ORDER BY c.created_at ASC

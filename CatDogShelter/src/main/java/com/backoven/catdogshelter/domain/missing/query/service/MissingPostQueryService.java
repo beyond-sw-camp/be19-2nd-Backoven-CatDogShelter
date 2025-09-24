@@ -36,13 +36,14 @@ public class MissingPostQueryService {
     public List<MissingPostQueryDTO> selectAllMissingPostsLatest(int limit) {
         return mapper.selectAllMissingPostsLatest(limit);
     }
-    //조회수 증가 로직
 
+
+    //조회수 증가 로직
     public void increaseView(Long id) {
         mapper.increaseView(id);
     }
-    //REQ-028 게시글 조회 하면 조회 수 증가
 
+    //REQ-028 게시글 조회 하면 조회 수 증가
     public MissingPostQueryDTO getPostById(Long id) {
         MissingPostQueryDTO dto = mapper.selectPostById(id);
         if (dto == null) {
@@ -63,7 +64,6 @@ public class MissingPostQueryService {
     // 실종신고 게시글 내용 상세 조회
     public MissingPostQueryDetailDTO selectMissingPostDetail(int postId) {
         return mapper.selectMissingPostDetail(postId);
-
     }
 
     //댓글 api처리
