@@ -15,7 +15,7 @@ import java.util.List;
 public class DonationPostQueryDTO {
     private Integer id;          // 게시글 번호 (PK)
     private String title;        // 제목
-    private String content;
+    private String content;      // 내용
     private String createdAt;    // 작성일자
     private String updatedAt;    // 수정일자
     private Integer view;        // 조회 수

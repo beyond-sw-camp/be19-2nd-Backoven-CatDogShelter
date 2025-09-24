@@ -24,5 +24,5 @@ GET localhost:8080/donation-posts/posts/2
 Content-Type: application/json
 
 ###댓글 api처리(게시글 하나 안에서)
-GET localhost:8080/donation-posts/posts/4/comments
+GET localhost:8080/donation-posts/posts/3/comments
 Content-Type: application/json

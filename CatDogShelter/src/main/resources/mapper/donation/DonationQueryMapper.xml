@@ -170,9 +170,11 @@
             c.id,
             c.content,
             c.created_at AS createdAt,
+            r.name AS userRating, -- 사용자 등급
             COALESCE(u.user_name, sh.ceo_name) AS userName
         FROM donationPostComment c
                  LEFT JOIN user u ON c.user_id = u.user_id
+                 LEFT JOIN rating r ON u.rating_id = r.id
                  LEFT JOIN shelter_head sh ON c.head_id = sh.head_id
         WHERE c.post_id = #{postId}
           AND c.is_deleted = FALSE
