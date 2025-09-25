@@ -1,22 +1,15 @@
 package com.backoven.catdogshelter.domain.adoption.query.service;
 
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailQueryDTO;
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostAllQueryDTO;
-import com.backoven.catdogshelter.domain.adoption.query.dynamic.SearchCriteria;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostQueryDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AdoptionPostQueryService {
-    // 전체 게시판 목록 조회
-    List<AdoptionPostAllQueryDTO> selectAdoptionAllPosts();
-    // 게시글 조회
-    AdoptionPostDetailQueryDTO selectAdoptionPostById(int adoptionPostId);
-    // 조회수순 조회
-    List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByView();
-    // 추천수순 조회
-    List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByLiked();
-    // 키워드 조회
-    List<AdoptionPostAllQueryDTO> selectAdoptionPostByKeyword(SearchCriteria keyword);
-    // 컨디션 조회
-    List<AdoptionPostAllQueryDTO> selectAdoptionPostByAnimalCondition(SearchCriteria animalCondition);
+
+    List<AdoptionPostQueryDTO> selectAdoptionAllPosts();
+    AdoptionPostDetailDTO selectAdoptionPostById(int adoptionPostId);
+    List<AdoptionPostQueryDTO> selectAdoptionPostByKeyword(String keyword);
+    List<AdoptionPostQueryDTO> selectAdoptionPostByAnimalCondition(Map<String, String> animalCodition);
 }
