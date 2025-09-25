@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerAssociationQueryMapper">
+
+    <!--  전체 게시글 목록 조회 -->
+    <resultMap id="associationListsResultMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationsListDTO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="startDate" column="start_date"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="companyName" column="company_name"/>
+    </resultMap>
+    <select id="selectVolunteerAssociationList" resultMap="associationListsResultMap">
+        SELECT
+               VA.ID
+             , VA.TITLE
+             , VA.CREATED_AT
+             , VA.START_DATE
+             , VA.DETAIL_ADDRESS
+             , SH.COMPANY_NAME
+          FROM VOLUNTEERASSOCIATION VA
+          JOIN SHELTER_HEAD SH ON (SH.HEAD_ID = VA.HEAD_ID)
+         WHERE VA.DEADLINE = FALSE
+         ORDER BY VA.ID DESC
+    </select>
+
+    <!--  봉사모임 글 상세조회 -->
+    <resultMap id="associationMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="time" column="TIME"/>
+        <result property="startDate" column="START_DATE"/>
+        <result property="detailAddress" column="DETAIL_ADDRESS"/>
+        <result property="deadline" column="DEADLINE"/>
+        <result property="end" column="IS_END"/>
+        <result property="numberOfPeople" column="NUMBER_OF_PEOPLE"/>
+        <result property="companyName" column="COMPANY_NAME"/>
+    </resultMap>
+    <select id="selectOneVolunteerAssociation" resultMap="associationMap" parameterType="_int">
+        SELECT
+               VA.ID
+             , VA.TITLE
+             , VA.CONTENT
+             , VA.CREATED_AT
+             , VA.TIME
+             , VA.DETAIL_ADDRESS
+             , VA.DEADLINE
+             , VA.NUMBER_OF_PEOPLE
+             , VA.IS_END
+             , VA.START_DATE
+             , VA.DETAIL_ADDRESS
+             , SH.COMPANY_NAME
+          FROM VOLUNTEERASSOCIATION VA
+          JOIN SHELTER_HEAD SH on SH.HEAD_ID = VA.HEAD_ID
+         WHERE VA.DEADLINE = TRUE
+           AND VA.IS_END = TRUE
+           AND VA.ID = #{id}
+    </select>
+
+    <!--  검색어(키워드) 포함 게시글 목록 조회  -->
+    <resultMap id="searchListMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationsListDTO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="startDate" column="start_date"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="companyName" column="company_name"/>
+    </resultMap>
+    <select id="selectVolunteerAssociationsByKeyword" parameterType="string" resultMap="searchListMap">
+        SELECT
+               va.id
+             , va.title
+             , va.created_at
+             , va.start_date
+             , va.detail_address
+             , sh.company_name
+          FROM volunteerAssociation va
+          JOIN shelter_head sh ON sh.head_id = va.head_id
+        <where>
+            <if test="keyword != null and keyword.trim() != ''">
+                <bind name="keyword" value="'%' + keyword.trim() + '%'" />
+                (
+                va.title           COLLATE utf8mb4_bin LIKE #{keyword}
+                OR va.content      COLLATE utf8mb4_bin LIKE #{keyword}
+                OR sh.company_name COLLATE utf8mb4_bin LIKE #{keyword}
+                )
+            </if>
+        </where>
+         ORDER BY va.id DESC
+    </select>
+
+
+</mapper>
