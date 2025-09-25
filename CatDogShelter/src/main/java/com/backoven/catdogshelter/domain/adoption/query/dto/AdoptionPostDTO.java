@@ -5,6 +5,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class AdoptionPostDTO {
     private int id;
 
