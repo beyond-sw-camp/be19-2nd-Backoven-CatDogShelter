@@ -1,49 +1,132 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerPostQueryMapper">
-    <resultMap id="volunteerPostsResultMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDTO">
-        <id property="id" column="id"/>
-        <result property="title" column="title"/>
-        <result property="content" column="content"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-        <result property="view" column="view"/>
-        <result property="isBlinded" column="is_blinded"/>
-        <result property="isDeleted" column="is_deleted"/>
-        <result property="volunteerId" column="volunteer_id"/>
+    <resultMap id="resultMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        <id property="id"        column="id"/>
+        <result property="title"     column="title"/>
+        <result property="userName"    column="userName"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="view"      column="view"/>
+        <result property="likeCount" column="likeCount"/>
     </resultMap>
-    <select id="selectAllVolunteerPosts" resultMap="volunteerPostsResultMap">
-        select
-               id
-             , title
-             , content
-             , created_at
-             , updated_at
-             , view
-             , is_blinded
-             , is_deleted
-             , volunteer_id
-          from volunteerpost
-         order by id desc
+    <select id="selectVolunteerPostList" resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        SELECT
+               vp.id                          AS id
+             , vp.title                       AS title
+             , u.user_name                    AS userName
+             , vp.created_at                  AS createdAt
+             , vp.view                        AS view
+             , ifnull(lc.likes, 0)            AS likeCount
+          FROM volunteerpost AS vp
+          JOIN volunteerassociationapplicationdetails AS vaad
+            ON vaad.id = vp.volappdetail_id
+          JOIN volunteerassociation AS va
+            ON va.id = vaad.volunteer_id
+          JOIN user AS u
+            ON u.user_id = vaad.user_id
+          LEFT JOIN (SELECT
+                            post_id
+                          , COUNT(*) AS likes
+                       FROM volunteerpostliked
+                      GROUP BY post_id
+                    ) AS lc ON lc.post_id = vp.id
+         WHERE vp.is_blinded = FALSE
+           AND vp.is_deleted = FALSE
+           AND vaad.status = TRUE
+           AND va.deadline = TRUE
+           AND va.is_end = TRUE
+         ORDER BY vp.id DESC;
     </select>
-    <select id="selectAllVolunteerPostsByNoneProcessed" resultMap="volunteerPostsResultMap">
-        select
-               id
-             , title
-             , content
-             , created_at
-             , updated_at
-             , view
-             , is_blinded
-             , is_deleted
-             , volunteer_id
-        from volunteerpost
-       where is_blinded = 0 and is_deleted = 0
-        order by id desc
-    </select>
-    <select id="">
 
-    </select>
+<!--    <resultMap id="vpMap"-->
+<!--               type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDTO">-->
+<!--        <id     property="id"         column="id"/>-->
+<!--        <result property="title"      column="title"/>-->
+<!--        <result property="content"    column="content"/>-->
+<!--        <result property="createdAt"  column="created_at"/>-->
+<!--        <result property="updatedAt"  column="updated_at"/>-->
+<!--        <result property="writerName" column="writer_name"/>-->
+<!--        <result property="view"       column="view"/>-->
+<!--        <result property="likeCount"  column="like_count"/>-->
+<!--        <collection property="comments"-->
+<!--                    ofType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostCommentDTO"-->
+<!--                    select="selctVolunteerPostComment"-->
+<!--                    fetchType="lazy"/>-->
+<!--        <collection property="files"-->
+<!--                    ofType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostFileDTO"-->
+<!--                    select=""-->
+<!--                    fetchType="lazy"/>-->
+<!--    </resultMap>-->
+
+<!--    <select id="selectVolunteerPost" parameterType="_int" resultMap="vpMap">-->
+<!--        SELECT-->
+<!--               vp.id-->
+<!--             , vp.title-->
+<!--             , vp.content-->
+<!--             , vp.created_at-->
+<!--             , vp.updated_at-->
+<!--             , vp.view-->
+<!--             , u.user_name                      AS writer_name-->
+<!--             , IFNULL(lc.like_count, 0)         AS like_count-->
+<!--             , vpc.id-->
+<!--          FROM volunteerPost vp-->
+<!--          JOIN volunteerAssociationApplicationDetails vaad-->
+<!--            ON vaad.id = vp.volappdetail_id-->
+<!--          JOIN volunteerAssociation va-->
+<!--            ON va.id = vaad.volunteer_id-->
+<!--          JOIN user u ON u.user_id = vaad.user_id-->
+<!--          LEFT JOIN (SELECT-->
+<!--                           post_id-->
+<!--                         , COUNT(*) AS like_count-->
+<!--                      FROM volunteerPostLiked-->
+<!--                     GROUP BY post_id-->
+<!--                   ) lc ON lc.post_id = vp.id-->
+<!--          JOIN volunteerpostcomment vpc ON (vp.id = vpc.post_id)-->
+<!--          JOIN volunteerpostfile vpf ON (vp.id = vpf.post_id)-->
+<!--         WHERE vp.id = #{id}-->
+<!--           AND vp.is_deleted = FALSE-->
+<!--           AND vp.is_blinded = FALSE-->
+<!--           AND vaad.status = TRUE-->
+<!--           AND va.deadline = TRUE-->
+<!--           AND va.is_end = TRUE-->
+<!--    </select>-->
+
+<!--    <resultMap id="vpcMap"-->
+<!--               type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostCommentDTO">-->
+<!--        <id     property="id"         column="id"/>-->
+<!--        <result property="content"    column="content"/>-->
+<!--        <result property="createdAt"  column="created_at"/>-->
+<!--        <result property="commentor"  column="commentor"/>-->
+<!--    </resultMap>-->
+<!--    <select id="selectVolunteerPostComments" parameterType="_int" resultMap="vpcMap">-->
+<!--        SELECT-->
+<!--               vpc.id-->
+<!--             , vpc.content-->
+<!--             , vpc.created_at-->
+<!--             , COALESCE(u.user_name, sh.ceo_name) AS commentor-->
+<!--          FROM volunteerPostComment vpc-->
+<!--          LEFT JOIN user         u  ON u.user_id  = vpc.user_id-->
+<!--          LEFT JOIN shelter_head sh ON sh.head_id = vpc.head_id-->
+<!--         WHERE vpc.post_id   = #{id}-->
+<!--           AND vpc.is_deleted = FALSE-->
+<!--           AND vpc.is_blinded = FALSE-->
+<!--           AND (vpc.user_id IS NOT NULL OR vpc.head_id IS NOT NULL)-->
+<!--         ORDER BY vpc.created_at DESC-->
+<!--    </select>-->
+
+<!--    <resultMap id="vpfMap"-->
+<!--               type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostFileDTO">-->
+<!--        <result property="rename" column="rename"/>-->
+<!--        <result property="path"   column="path"/>-->
+<!--    </resultMap>-->
+<!--    <select id="selectVolunteerPostFiles" parameterType="_int" resultMap="vpfMap">-->
+<!--        SELECT-->
+<!--               file_rename AS rename-->
+<!--             , file_path   AS path-->
+<!--          FROM volunteerPostFiles-->
+<!--         WHERE post_id = #{id}-->
+<!--         ORDER BY uploaded_at ASC, id ASC-->
+<!--    </select>-->
 </mapper>

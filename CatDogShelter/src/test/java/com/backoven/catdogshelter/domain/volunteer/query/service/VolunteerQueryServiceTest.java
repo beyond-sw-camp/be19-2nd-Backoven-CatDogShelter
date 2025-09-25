@@ -1,11 +1,16 @@
 package com.backoven.catdogshelter.domain.volunteer.query.service;
 
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -23,24 +28,4 @@ public class VolunteerQueryServiceTest {
         });
     }
 
-    @DisplayName("삭제 나 블라인드가 안된 게시글 모두 조회")
-    @Test
-    void testGetAllVolunteerPostsByNotBlindedAndDeleted(){
-        Assertions.assertDoesNotThrow(
-                () -> {
-                    volunteerPostQueryService.selectAllVolunteerPostsByNoneProcessed()
-                            .forEach(System.out::println);
-                }
-        );
-    }
-
-    @DisplayName("게시글 목록 조회")
-    @Test
-    void testGetAllVolunteerPost(){
-        Assertions.assertDoesNotThrow(
-                () -> {
-
-                }
-        );
-    }
 }

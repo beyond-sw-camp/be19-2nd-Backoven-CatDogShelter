@@ -1,6 +1,9 @@
 package com.backoven.catdogshelter.domain.volunteer.query.service;
 
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostCommentDTO;
 import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDTO;
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostFileDTO;
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO;
 import com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerPostQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +19,22 @@ public class VolunteerPostQueryService {
         this.volunteerPostQueryMapper = volunteerPostQueryMapper;
     }
 
-    public List<VolunteerPostDTO> selectAllVolunteerPosts() {
-        return volunteerPostQueryMapper.selectAllVolunteerPosts();
+
+    public List<VolunteerPostListDTO> getVolunteerPostList() {
+        return volunteerPostQueryMapper.selectVolunteerPostList();
     }
 
+    public VolunteerPostDTO getVolunteerPost(int id) {
 
-    public List<VolunteerPostDTO> selectAllVolunteerPostsByNoneProcessed() {
-        return volunteerPostQueryMapper.selectAllVolunteerPostsByNoneProcessed();
+        List<VolunteerPostCommentDTO> comments = volunteerPostQueryMapper.selectVolunteerPostComments(id);
+
+        List<VolunteerPostFileDTO> files = volunteerPostQueryMapper.selectVolunteerPostFiles(id);
+
+        VolunteerPostDTO post = volunteerPostQueryMapper.selectVolunteerPost(id);
+
+        post.setComments(comments);
+        post.setFiles(files);
+
+        return post;
     }
-
 }
