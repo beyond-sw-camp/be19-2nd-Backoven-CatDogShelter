@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,8 @@ public class VolunteerPostQueryController {
         this.volunteerPostQueryService = volunteerPostQueryService;
     }
 
-    // 봉사후기 게시글 목록 조회(번호, 제목, 작성일, 작성자, 조회수, 추천수)
+    // 봉사후기 게시글 목록 조회
+    // (번호, 제목, 작성일, 작성자, 조회수, 추천수)
     @GetMapping("/volunteerpostslist")
     public ResponseEntity<List<VolunteerPostListDTO>> getVolunteerPostsList() {
 
@@ -41,7 +43,7 @@ public class VolunteerPostQueryController {
     // 봉사활동 후기 게시글 상세 조회
     // (번호, 제목, 내용, 작성자, 등급, 파일, 댓글, 작성일, 수정일, 조회수, 추천수)
     @GetMapping("/{id}")
-    public ResponseEntity<VolunteerPostDTO> getVolunteerPost(int id) {
+    public ResponseEntity<VolunteerPostDTO> getVolunteerPost(@PathVariable int id) {
 
         VolunteerPostDTO post = volunteerPostQueryService.getVolunteerPost(id);
 
@@ -52,4 +54,16 @@ public class VolunteerPostQueryController {
         return ResponseEntity.ok().headers(headers).body(post);
     }
 
+    // 제목, 내용, 작성자에 검색어를 포함한 목록을 조회
+//    @GetMapping("/search")
+//    public ResponseEntity<List<VolunteerPostListDTO>> selectVolunteerPostsListByKeyword(@PathVariable String keyword) {
+//
+//        List<VolunteerPostListDTO> postList = volunteerPostQueryService.selectVolunteerPostsListByKeyword(keyword);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(
+//                new MediaType("application", "json", Charset.forName("UTF-8")));
+//
+//        return ResponseEntity.ok().headers(headers).body(postList);
+//    }
 }
