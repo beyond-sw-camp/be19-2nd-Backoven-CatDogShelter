@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class PostDetailDTO extends PostInventoryDTO {
+    private String ratingName;                    // 일반 회원 등급(보호소장 회원 제외)
     private String content;                       // 자유게시글 내용
     private List<PostFilesDTO> files;             // 자유게시글 올린 이미지 파일
     private List<PostCommentDTO> comments;        // 자유게시글에 등록된 댓글

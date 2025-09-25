@@ -14,5 +14,6 @@ public class PostCommentDTO {
     private String content;         // 자유게시글 댓글 내용
     private String created_at;      // 자유게시글 생성 일자
     private String updated_at;      // 자유게시글 수정 일자
-    private int post_id;            // 자유게시글 번호
+    private String writeType;       // 회원 타입 구분
+    private String writeName;       // 자유게시글 댓글 작성자
 }

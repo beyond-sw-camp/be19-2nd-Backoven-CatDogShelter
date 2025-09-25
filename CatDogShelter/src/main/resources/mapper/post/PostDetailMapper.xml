@@ -10,6 +10,7 @@
         <result property="created_at" column="CREATED_AT"/>
         <result property="updated_at" column="UPDATED_AT"/>
         <result property="view" column="VIEW"/>
+        <result property="ratingName" column="RATING_NAME"/>
         <result property="writeType" column="WRITE_TYPE"/>
         <result property="writeName" column="WRITE_NAME"/>
     </resultMap>
@@ -23,7 +24,6 @@
             <id property="id" column="FILE_ID"/>
             <result property="file_rename" column="FILE_RENAME"/>
             <result property="uploaded_at" column="UPLOADED_AT"/>
-            <result property="post_id" column="POST_ID"/>
         </collection>
 
         <!-- 자유게시글 댓글 매핑 -->
@@ -33,7 +33,8 @@
             <!-- postInventoryMap에 있는 created_at, updated_at 컬럼명이 겹쳐 상세하게 표현 -->
             <result property="created_at" column="COMMENT_CREATED_AT"/>
             <result property="updated_at" column="COMMENT_UPDATED_AT"/>
-            <result property="post_id" column="POST_ID"/>
+            <result property="writeType" column="COMMENT_WRITE_TYPE"/>
+            <result property="writeName" column="COMMENT_WRITE_NAME"/>
         </collection>
     </resultMap>
 
@@ -53,20 +54,33 @@
                            WHEN p.user_id IS NOT NULL THEN u.user_name
                            WHEN p.head_id IS NOT NULL THEN h.ceo_name
                        END AS WRITE_NAME
+                     , CASE
+                           WHEN p.user_id IS NOT NULL THEN r.name
+                           ELSE NULL
+                        END AS RATING_NAME
                      , f.id AS FILE_ID
                      , f.file_rename
                      , f.uploaded_at
-                     , f.post_id
                      , c.id AS COMMENT_ID
                      , c.content AS COMMENT_CONTENT
                      , c.created_at AS comment_created_at
                      , c.updated_at AS comment_update_at
-                     , c.post_id
+                     , CASE
+                           WHEN c.user_id IS NOT NULL THEN '일반 회원'
+                           WHEN c.head_id IS NOT NULL THEN '보호소장 회원'
+                        END AS COMMENT_WRITE_TYPE
+                     , CASE
+                           WHEN c.user_id IS NOT NULL THEN cu.user_name
+                           WHEN c.head_id IS NOT NULL THEN ch.ceo_name
+                        END AS COMMENT_WRITE_NAME
              FROM post p
                      LEFT JOIN user u ON p.user_id = u.user_id
                      LEFT JOIN shelter_head h ON p.head_id = h.head_id
                      LEFT JOIN postfiles f ON p.id = f.post_id
                      LEFT JOIN postcomment c ON p.id = c.post_id
+                     LEFT JOIN rating r ON u.rating_id = r.id
+                     LEFT JOIN user cu ON c.user_id = cu.user_id
+                     LEFT JOIN shelter_head ch ON c.head_id = ch.head_id
             WHERE p.id = #{id}
               AND p.is_deleted = 0
     </select>

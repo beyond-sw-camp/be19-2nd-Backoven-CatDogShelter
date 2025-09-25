@@ -1,5 +1,7 @@
 package com.backoven.catdogshelter.domain.post.command.application.controller;
 
+import com.backoven.catdogshelter.domain.post.command.application.dto.PostCommentModifyDTO;
+import com.backoven.catdogshelter.domain.post.command.application.dto.PostCommentRegistDTO;
 import com.backoven.catdogshelter.domain.post.command.application.dto.PostModifyDTO;
 import com.backoven.catdogshelter.domain.post.command.application.dto.PostRegistDTO;
 import com.backoven.catdogshelter.domain.post.command.application.service.PostService;
@@ -23,7 +25,7 @@ public class PostExController {
     }
 
     @RequestMapping("/regist")
-    public void insertPost(@RequestBody PostRegistDTO postregist){
+    public void registPost(@RequestBody PostRegistDTO postregist){
         postservice.registPost(postregist);
     }
 
@@ -34,12 +36,25 @@ public class PostExController {
 
     /* 프론트에서 삭제할 자유게시글 번호만 받아서 사용하기 때문에 DTO을 따로 사용하지 않고 Map을 사용해서
        String 타입으로 받은 후에 다시 int 타입으로 전환 */
-
     @RequestMapping("/delete")
     public void deletePost(@RequestBody Map<String, String> request){
         int id = Integer.parseInt(request.get("id"));
         postservice.deletePost(id);
     }
 
+    @RequestMapping("/comment/regist")
+    public void registPostComment(@RequestBody PostCommentRegistDTO postCommentRegist){
+        postservice.registPostComment(postCommentRegist);
+    }
 
+    @RequestMapping("/comment/modify")
+    public void modifyPostComment(@RequestBody PostCommentModifyDTO postCommentModify){
+        postservice.modifyPostComment(postCommentModify);
+    }
+
+    @RequestMapping("/comment/delete")
+    public void deletePostComment(@RequestBody Map<String, String> request){
+        int id = Integer.parseInt(request.get("id"));
+        postservice.deletePostComment(id);
+    }
 }

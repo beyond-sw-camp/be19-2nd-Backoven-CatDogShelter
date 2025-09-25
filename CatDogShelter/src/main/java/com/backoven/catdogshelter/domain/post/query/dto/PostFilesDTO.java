@@ -11,5 +11,4 @@ public class PostFilesDTO {
     private int id;                        // 자유게시글 첨부파일 번호
     private String file_rename;            // 자유게시글 첨부파일 개명
     private String uploaded_at;            // 자유게시글 첨부파일 업로드
-    private int post_id;                   // 자유게시글 번호
 }
