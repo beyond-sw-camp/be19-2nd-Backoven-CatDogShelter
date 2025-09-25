@@ -19,4 +19,8 @@ public interface VolunteerPostQueryMapper {
     VolunteerPostDTO selectVolunteerPost(int id);
 
     List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword);
+
+    List<VolunteerPostListDTO> selectVolunteerPostsByView();
+
+    List<VolunteerPostListDTO> selectVolunteerPostsByLiked();
 }

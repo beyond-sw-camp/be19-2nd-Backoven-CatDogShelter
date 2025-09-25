@@ -40,7 +40,7 @@
            AND vaad.status = TRUE
            AND va.deadline = TRUE
            AND va.is_end = TRUE
-         ORDER BY vp.id DESC;
+         ORDER BY vp.id DESC
     </select>
 
     <!-- 봉사후기 상세조회 -->
@@ -177,5 +177,81 @@
         </if>
 
         ORDER BY vp.id DESC
+    </select>
+
+    <!-- 봉사후기 조회수순으로 목록 조회 -->
+    <resultMap id="viewListMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        <id property="id"        column="id"/>
+        <result property="title"     column="title"/>
+        <result property="userName"    column="userName"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="view"      column="view"/>
+        <result property="likeCount" column="likeCount"/>
+    </resultMap>
+    <select id="selectVolunteerPostsByView" resultMap="viewListMap"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        SELECT
+               vp.id                          AS id
+             , vp.title                       AS title
+             , u.user_name                    AS userName
+             , vp.created_at                  AS createdAt
+             , vp.view                        AS view
+             , ifnull(lc.likes, 0)            AS likeCount
+          FROM volunteerpost AS vp
+          JOIN volunteerassociationapplicationdetails AS vaad
+            ON vaad.id = vp.volappdetail_id
+          JOIN volunteerassociation AS va
+            ON va.id = vaad.volunteer_id
+          JOIN user AS u
+            ON u.user_id = vaad.user_id
+          LEFT JOIN (SELECT
+                            post_id
+                          , COUNT(*) AS likes
+                       FROM volunteerpostliked
+                      GROUP BY post_id) AS lc ON lc.post_id = vp.id
+         WHERE vp.is_blinded = FALSE
+           AND vp.is_deleted = FALSE
+           AND vaad.status = TRUE
+           AND va.deadline = TRUE
+           AND va.is_end = TRUE
+         ORDER BY vp.view DESC
+    </select>
+
+    <!-- 봉사후기 추천수순으로 목록 조회 -->
+    <resultMap id="likeListMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        <id property="id"        column="id"/>
+        <result property="title"     column="title"/>
+        <result property="userName"    column="userName"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="view"      column="view"/>
+        <result property="likeCount" column="likeCount"/>
+    </resultMap>
+    <select id="selectVolunteerPostsByLiked" resultMap="likeListMap"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
+        SELECT
+               vp.id                          AS id
+             , vp.title                       AS title
+             , u.user_name                    AS userName
+             , vp.created_at                  AS createdAt
+             , vp.view                        AS view
+             , ifnull(lc.likes, 0)            AS likeCount
+          FROM volunteerpost AS vp
+          JOIN volunteerassociationapplicationdetails AS vaad
+            ON vaad.id = vp.volappdetail_id
+          JOIN volunteerassociation AS va
+            ON va.id = vaad.volunteer_id
+          JOIN user AS u
+            ON u.user_id = vaad.user_id
+          LEFT JOIN (SELECT
+                            post_id
+                          , COUNT(*) AS likes
+                       FROM volunteerpostliked
+                      GROUP BY post_id) AS lc ON lc.post_id = vp.id
+         WHERE vp.is_blinded = FALSE
+           AND vp.is_deleted = FALSE
+           AND vaad.status = TRUE
+           AND va.deadline = TRUE
+           AND va.is_end = TRUE
+         ORDER BY likeCount DESC
     </select>
 </mapper>
