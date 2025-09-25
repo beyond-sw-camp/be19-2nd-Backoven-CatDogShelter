@@ -1,6 +1,7 @@
-create database CatDogShelter;
+
 use CatDogShelter;
 -- 기존 테이블 삭제
+
 SET FOREIGN_KEY_CHECKS = 0;
 -- 1. 파일 테이블들
 DROP TABLE IF EXISTS noticeFiles;
@@ -111,16 +112,16 @@ CREATE TABLE questionCategory (
 CREATE TABLE user (
     user_id INT NOT NULL AUTO_INCREMENT,
     user_name VARCHAR(20) NOT NULL,          -- 회원명
-    user_account VARCHAR(20) NOT NULL,       -- 아이디
+    user_account VARCHAR(20) NOT NULL UNIQUE,-- 아이디
     user_password VARCHAR(255) NOT NULL,     -- 비밀번호
-    e_mail VARCHAR(50) NULL,                 -- 이메일 (추가됨)
+    e_mail VARCHAR(50) NOT NULL UNIQUE,      -- 이메일
     detail_address VARCHAR(255) NULL,        -- 상세주소
-    answer VARCHAR(255) NOT NULL,            -- 지정답변 (추가됨)
-    user_phone VARCHAR(20) NOT NULL,         -- 전화번호
+    answer VARCHAR(255) NOT NULL,            -- 지정답변
+    user_phone VARCHAR(20) NOT NULL UNIQUE,  -- 전화번호
     cumulative_volunteer_time INT NOT NULL,  -- 누적봉사시간
     month_volunteer_time INT NULL,           -- 월봉사시간
     volunteer_count INT NOT NULL,            -- 봉사횟수
-    deactivation_times INT NOT NULL,         -- 불일인터 횟수
+    deactivation_times INT NOT NULL,         -- 블라인드 횟수
     user_status ENUM('GENERAL','BLACK','CANCEL') NOT NULL, -- 회원상태
     activation_date VARCHAR(20) NOT NULL,    -- 정지 해제일
     rating_id INT NOT NULL,                  -- 회원등급 FK
@@ -148,11 +149,12 @@ CREATE TABLE volunteerKing (
 CREATE TABLE shelter_head (
     head_id INT NOT NULL AUTO_INCREMENT,
     ceo_name VARCHAR(20) NOT NULL,           -- 대표자 성명
-    ceo_name2 VARCHAR(20) NULL,              -- 대표자 성명2 (nullable)
-    head_account VARCHAR(20) NOT NULL,       -- 아이디
+    ceo_name2 VARCHAR(20) NULL,              -- 대표자 성명2
+    head_account VARCHAR(20) NOT NULL UNIQUE,-- 아이디
     head_password VARCHAR(255) NOT NULL,     -- 비밀번호
-    e_mail VARCHAR(50) NULL,                 -- 이메일 (추가됨)
-    answer VARCHAR(255) NOT NULL,            -- 지정답변 (추가됨)
+    e_mail VARCHAR(50) NOT NULL UNIQUE,      -- 이메일
+    answer VARCHAR(255) NOT NULL,            -- 지정답변
+    head_phone VARCHAR(20) NOT NULL UNIQUE,  -- 전화번호
     company_name VARCHAR(255) NOT NULL,      -- 상호명
     biz_number VARCHAR(20) NOT NULL,         -- 사업자등록번호
     cor_number VARCHAR(20) NOT NULL,         -- 법인등록번호
@@ -160,10 +162,10 @@ CREATE TABLE shelter_head (
     open_date VARCHAR(20) NOT NULL,          -- 개업일자
     close_date VARCHAR(20) NULL,             -- 폐업일자 (nullable)
     sigungu_id INT NOT NULL,                 -- 소속 시군구 FK
-    id2 INT NOT NULL,                        -- 지정질문카테고리번호 FK
+    questionCategory_id INT NOT NULL,        -- 지정질문카테고리번호 FK
     PRIMARY KEY (head_id),
     CONSTRAINT fk_head_sigungu FOREIGN KEY (sigungu_id) REFERENCES sigungu(sigungu_id),
-    CONSTRAINT fk_head_question FOREIGN KEY (id2) REFERENCES questionCategory(id)
+    CONSTRAINT fk_head_question FOREIGN KEY (questionCategory_id) REFERENCES questionCategory(id)
 );
 -- =========================
 -- 로그인 / 메세지
@@ -199,9 +201,9 @@ CREATE TABLE message (
 );
 
 -- =========================
--- 봉사모임
+-- 봉사모임(봉사활동 공고)
 -- =========================
--- 봉사모임 --
+-- 봉사모임(봉사활동 공고) --
 CREATE TABLE volunteerAssociation (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
@@ -212,10 +214,11 @@ CREATE TABLE volunteerAssociation (
     detail_address VARCHAR(255),
     deadline BOOLEAN NOT NULL DEFAULT FALSE,
     number_of_people INT,
-    user_id INT NOT NULL,
+    is_end BOOLEAN NOT NULL DEFAULT FALSE,
+    head_id INT NOT NULL,
     sigungu_id INT NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_va_user FOREIGN KEY (user_id) REFERENCES user(user_id),
+    CONSTRAINT fk_va_user FOREIGN KEY (head_id) REFERENCES shelter_head(head_id),
     CONSTRAINT fk_va_sigungu FOREIGN KEY (sigungu_id) REFERENCES sigungu(sigungu_id)
 );
 
@@ -227,7 +230,7 @@ CREATE TABLE volunteerAssociationApplicationDetails (
     volunteer_id INT NOT NULL,
     user_id INT NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_vaad_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteerAssociation(id),
+    CONSTRAINT fk_vaad_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteerassociation(id),
     CONSTRAINT fk_vaad_user FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
@@ -238,12 +241,12 @@ CREATE TABLE volunteerPost (
     content TEXT NOT NULL,
     created_at VARCHAR(20) NOT NULL,
     updated_at VARCHAR(20),
-    field INT NOT NULL DEFAULT 0,
+    view INT NOT NULL DEFAULT 0,
     is_blinded BOOLEAN NOT NULL DEFAULT FALSE,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    volunteer_id INT NOT NULL,
+    volappdetail_id INT NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_vpost_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteerAssociation(id)
+    CONSTRAINT fk_vpost_volappdetail FOREIGN KEY (volappdetail_id) REFERENCES volunteerAssociationApplicationDetails(id)
 );
 
 -- 봉사후기 게시판 좋아요 --
@@ -282,8 +285,8 @@ CREATE TABLE volunteerPostComment (
     updated_at VARCHAR(20),
     is_blinded BOOLEAN NOT NULL DEFAULT FALSE,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    head_id INT NOT NULL,
-    user_id INT NOT NULL,
+    head_id INT,
+    user_id INT,
     post_id INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_vcomment_post FOREIGN KEY (post_id) REFERENCES volunteerPost(id),
@@ -724,7 +727,7 @@ CREATE TABLE postFiles (
 -- 물품기부 게시판
 -- =========================
 -- 물품기부 게시판 --
-CREATE TABLE donationPost (
+CREATE TABLE donationPost (--
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
@@ -754,6 +757,8 @@ CREATE TABLE donationPostComment (
     content TEXT NOT NULL,
     created_at VARCHAR(20) NOT NULL,
     updated_at VARCHAR(20),
+    is_blinded BOOLEAN NOT NULL DEFAULT FALSE,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     post_id INT NOT NULL,
     user_id INT,
     head_id INT,
