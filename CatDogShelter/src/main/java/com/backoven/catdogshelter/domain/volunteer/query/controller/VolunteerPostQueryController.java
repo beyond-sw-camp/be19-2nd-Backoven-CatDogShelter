@@ -63,7 +63,6 @@ public class VolunteerPostQueryController {
 
         return ResponseEntity.ok().headers(headers).body(postList);
     }
-<<<<<<< HEAD
 
     // 봉사후기 게시글 조회수순 목록 조회
     // (번호, 제목, 작성일, 작성자, 조회수, 추천수)
@@ -93,6 +92,4 @@ public class VolunteerPostQueryController {
         return ResponseEntity.ok().headers(headers).body(postList);
     }
 
-=======
->>>>>>> 33f796932cfb84fa1aacf92a4c46f369f22dd1ce
 }

@@ -41,7 +41,6 @@ public class VolunteerPostQueryService {
     public List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword) {
         return volunteerPostQueryMapper.selectVolunteerPostsListByKeyword(keyword);
     }
-<<<<<<< HEAD
 
     public List<VolunteerPostListDTO> selectVolunteerPostsByView() {
         return volunteerPostQueryMapper.selectVolunteerPostsByView();
@@ -50,6 +49,4 @@ public class VolunteerPostQueryService {
     public List<VolunteerPostListDTO> selectVolunteerPostsByLiked() {
         return volunteerPostQueryMapper.selectVolunteerPostsByLiked();
     }
-=======
->>>>>>> 33f796932cfb84fa1aacf92a4c46f369f22dd1ce
 }

@@ -40,11 +40,7 @@
            AND vaad.status = TRUE
            AND va.deadline = TRUE
            AND va.is_end = TRUE
-<<<<<<< HEAD
          ORDER BY vp.id DESC
-=======
-         ORDER BY vp.id DESC;
->>>>>>> 33f796932cfb84fa1aacf92a4c46f369f22dd1ce
     </select>
 
     <!-- 봉사후기 상세조회 -->
@@ -182,7 +178,6 @@
 
         ORDER BY vp.id DESC
     </select>
-<<<<<<< HEAD
 
     <!-- 봉사후기 조회수순으로 목록 조회 -->
     <resultMap id="viewListMap" type="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListDTO">
@@ -259,6 +254,4 @@
            AND va.is_end = TRUE
          ORDER BY likeCount DESC
     </select>
-=======
->>>>>>> 33f796932cfb84fa1aacf92a4c46f369f22dd1ce
 </mapper>
