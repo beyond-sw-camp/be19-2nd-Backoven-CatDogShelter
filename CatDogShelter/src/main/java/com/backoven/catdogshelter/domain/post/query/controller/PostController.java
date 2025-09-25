@@ -28,4 +28,14 @@ public class PostController {
         return postService.selectPostDetail(id);
     }
 
+    @RequestMapping("/post/viewDesc")
+    public List<PostInventoryDTO> viewDescPostInventory(){
+        return postService.viewDescPostInventory();
+    }
+
+    @RequestMapping("/post/createdAtDesc")
+    public List<PostInventoryDTO> createdAtPostInventory(){
+        return postService.createdAtPostInventory();
+    }
+
 }

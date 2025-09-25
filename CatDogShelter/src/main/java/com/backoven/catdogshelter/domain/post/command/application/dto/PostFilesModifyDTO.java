@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostCommentModifyDTO {
+public class PostFilesModifyDTO {
     private int id;
-    private String content;
-    private String updatedAt;
-//    private Integer userId;
-//    private Integer headId;
+    private String fileRename;
+    private String uploadedAt;
+    private String filePath;
 }

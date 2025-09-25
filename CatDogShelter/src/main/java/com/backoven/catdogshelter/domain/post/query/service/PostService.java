@@ -2,8 +2,10 @@ package com.backoven.catdogshelter.domain.post.query.service;
 
 import com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO;
 import com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO;
+import com.backoven.catdogshelter.domain.post.query.mapper.PostCreatedAtDescMapper;
 import com.backoven.catdogshelter.domain.post.query.mapper.PostDetailMapper;
 import com.backoven.catdogshelter.domain.post.query.mapper.PostInventoryMapper;
+import com.backoven.catdogshelter.domain.post.query.mapper.PostViewDescMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +17,15 @@ public class PostService {
 
     private final PostInventoryMapper postInventoryMapper;
     private final PostDetailMapper postDetailMapper;
+    private final PostViewDescMapper postViewDescMapper;
+    private final PostCreatedAtDescMapper postCreatedAtDescMapper;
 
     @Autowired
-    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper) {
+    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper, PostViewDescMapper postViewDescMapper, PostCreatedAtDescMapper postCreatedAtDescMapper) {
         this.postInventoryMapper = postInventoryMapper;
         this.postDetailMapper = postDetailMapper;
+        this.postViewDescMapper = postViewDescMapper;
+        this.postCreatedAtDescMapper = postCreatedAtDescMapper;
     }
 
     public List<PostInventoryDTO> selectPostInventory() {
@@ -31,5 +37,17 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostDetailDTO selectPostDetail(int id){
         return postDetailMapper.selectPostDetail(id);
+    }
+
+    /* 자유게시글 목록 조회에서 추천(view)에 따라 내림차순으로 정렬.
+       이때 목록에서 정렬하므로 DTO는 목록 조회할 때 썼던거 그대로 사용 */
+    public List<PostInventoryDTO> viewDescPostInventory() {
+        return postViewDescMapper.selectPostViewDesc();
+    }
+
+    /* 자유게시글 목록 조회에서 생성일(created_at)에 따라 내림차순으로 정렬.
+       이때 목록에서 정렬하므로 DTO는 목록 조회할 때 썼던거 그대로 사용 */
+    public List<PostInventoryDTO> createdAtPostInventory() {
+        return postCreatedAtDescMapper.selectPostCreatedAtDesc();
     }
 }

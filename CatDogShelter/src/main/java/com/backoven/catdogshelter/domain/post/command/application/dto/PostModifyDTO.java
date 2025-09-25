@@ -12,6 +12,6 @@ public class PostModifyDTO {
     private String title;
     private String content;
     private String updatedAt;
-    private Integer userId;
-    private Integer headId;
+//    private Integer userId;
+//    private Integer headId;
 }
