@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface MissingPostQueryMapper {
-    // REQ-021 게시글 목록 조회 (검색 + 페이징)
+   // REQ-021 게시글 목록 조회 (검색 + 페이징)
     List<MissingPostQueryDTO> selectMissingPostSearch(@Param("keyword") String keyword,
                                           @Param("offset") int offset,
                                           @Param("limit") int limit);

@@ -1,8 +1,10 @@
 package com.backoven.catdogshelter.domain.missing.query.service;
 
+
 import com.backoven.catdogshelter.domain.missing.query.dto.MissingPostCommentDTO;
 import com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO;
 import com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDetailDTO;
+import com.backoven.catdogshelter.domain.missing.query.dto.MissingPostQueryDTO;
 import com.backoven.catdogshelter.domain.missing.query.mapper.MissingPostQueryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MissingPostQueryService {
 
-    private final MissingPostQueryMapper mapper;
+  private final MissingPostQueryMapper mapper;
     //REQ-021게시글 서치 조회
 
     public List<MissingPostQueryDTO> selectMissingPostSearch(String keyword, int page, int size) {
@@ -74,5 +76,4 @@ public class MissingPostQueryService {
     public int getTotalCount(int postId) {
         return mapper.countComments(postId);
     }
-
 }
