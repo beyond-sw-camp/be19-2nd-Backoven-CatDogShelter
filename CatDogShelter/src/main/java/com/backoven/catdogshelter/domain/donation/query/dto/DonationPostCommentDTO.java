@@ -11,5 +11,6 @@ public class DonationPostCommentDTO {
     private int id;
     private String content;
     private String createdAt;
+    private String userRating; //등급
     private String userName;
 }
