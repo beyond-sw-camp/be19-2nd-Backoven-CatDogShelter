@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -55,15 +52,15 @@ public class VolunteerPostQueryController {
     }
 
     // 제목, 내용, 작성자에 검색어를 포함한 목록을 조회
-//    @GetMapping("/search")
-//    public ResponseEntity<List<VolunteerPostListDTO>> selectVolunteerPostsListByKeyword(@PathVariable String keyword) {
-//
-//        List<VolunteerPostListDTO> postList = volunteerPostQueryService.selectVolunteerPostsListByKeyword(keyword);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(
-//                new MediaType("application", "json", Charset.forName("UTF-8")));
-//
-//        return ResponseEntity.ok().headers(headers).body(postList);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<VolunteerPostListDTO>> selectVolunteerPostsListByKeyword(@RequestParam(required = false) String keyword) {
+
+        List<VolunteerPostListDTO> postList = volunteerPostQueryService.selectVolunteerPostsListByKeyword(keyword);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(
+                new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        return ResponseEntity.ok().headers(headers).body(postList);
+    }
 }

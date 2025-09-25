@@ -38,7 +38,7 @@ public class VolunteerPostQueryService {
         return post;
     }
 
-//    public List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword) {
-//        return volunteerPostQueryMapper.selectVolunteerPostsListByKeyword(keyword);
-//    }
+    public List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword) {
+        return volunteerPostQueryMapper.selectVolunteerPostsListByKeyword(keyword);
+    }
 }

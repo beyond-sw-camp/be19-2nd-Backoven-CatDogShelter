@@ -18,5 +18,5 @@ public interface VolunteerPostQueryMapper {
     List<VolunteerPostFileDTO> selectVolunteerPostFiles(int id);
     VolunteerPostDTO selectVolunteerPost(int id);
 
-//    List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword);
+    List<VolunteerPostListDTO> selectVolunteerPostsListByKeyword(String keyword);
 }
