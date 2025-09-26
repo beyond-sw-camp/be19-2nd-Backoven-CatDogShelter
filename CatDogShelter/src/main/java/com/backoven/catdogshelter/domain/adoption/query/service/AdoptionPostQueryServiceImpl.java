@@ -1,15 +1,15 @@
 package com.backoven.catdogshelter.domain.adoption.query.service;
 
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailQueryDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dynamic.SearchCriteria;
 import com.backoven.catdogshelter.domain.adoption.query.mapper.AdoptionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostQueryDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostAllQueryDTO;
 import static com.backoven.catdogshelter.domain.adoption.query.template.Template.getSqlSession;
 
 
@@ -18,34 +18,52 @@ import static com.backoven.catdogshelter.domain.adoption.query.template.Template
 public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
     private AdoptionMapper adoptionMapper;
 
-    public List<AdoptionPostQueryDTO> selectAdoptionAllPosts() {
+    public List<AdoptionPostAllQueryDTO> selectAdoptionAllPosts() {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper = sqlSession.getMapper(AdoptionMapper.class);
-        List<AdoptionPostQueryDTO> adotpionPostList = adoptionMapper.selectAllAdoptionPosts();
+        List<AdoptionPostAllQueryDTO> adotpionPostList = adoptionMapper.selectAllAdoptionPosts();
         sqlSession.close();
         return adotpionPostList;
     }
 
-    public AdoptionPostDetailDTO selectAdoptionPostById(int adoptionPostId) {
+    public AdoptionPostDetailQueryDTO selectAdoptionPostById(int adoptionPostId) {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
-        AdoptionPostDetailDTO adoptionPostDetailDTO = adoptionMapper.selectAdoptionPostById(adoptionPostId);
+        AdoptionPostDetailQueryDTO adoptionPostDetailDTO = adoptionMapper.selectAdoptionPostById(adoptionPostId);
         sqlSession.close();
         return adoptionPostDetailDTO;
     }
 
-    public List<AdoptionPostQueryDTO> selectAdoptionPostByKeyword(String keyword) {
+    @Override
+    public List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByView() {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
-        List<AdoptionPostQueryDTO> adotpionPostList = adoptionMapper.selectAdoptionPostByKeyword(keyword);
+        List<AdoptionPostAllQueryDTO> adotpionPostList = adoptionMapper.selectAllAdoptionPostsByView();
         sqlSession.close();
         return adotpionPostList;
     }
 
-    public List<AdoptionPostQueryDTO> selectAdoptionPostByAnimalCondition(Map<String, String> animalCodition){
+    @Override
+    public List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByLiked() {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
-        List<AdoptionPostQueryDTO> adotpionPostList = adoptionMapper.selectAdoptionPostByAnimalCondition(animalCodition);
+        List<AdoptionPostAllQueryDTO> adotpionPostList = adoptionMapper.selectAllAdoptionPostByLiked();
+        sqlSession.close();
+        return adotpionPostList;
+    }
+
+    public List<AdoptionPostAllQueryDTO> selectAdoptionPostByKeyword(SearchCriteria keyword) {
+        SqlSession sqlSession = getSqlSession();
+        adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
+        List<AdoptionPostAllQueryDTO> adotpionPostList = adoptionMapper.selectAdoptionPostByKeyword(keyword);
+        sqlSession.close();
+        return adotpionPostList;
+    }
+
+    public List<AdoptionPostAllQueryDTO> selectAdoptionPostByAnimalCondition(SearchCriteria animalCondition){
+        SqlSession sqlSession = getSqlSession();
+        adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
+        List<AdoptionPostAllQueryDTO> adotpionPostList = adoptionMapper.selectAdoptionPostByAnimalCondition(animalCondition);
         sqlSession.close();
         return adotpionPostList;
     }
