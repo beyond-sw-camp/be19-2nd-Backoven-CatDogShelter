@@ -7,9 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class SightingUserDTO {
-    private Integer userId;
-    private Integer headId;
-    private String name;
-    private String ratingName;
+public class SightingAddressNameDTO {
+    private String sidoName;
+    private String sigunguName;
 }

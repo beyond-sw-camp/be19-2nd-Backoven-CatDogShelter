@@ -1,0 +1,45 @@
+package com.backoven.catdogshelter.domain.sighting.command.application.service;
+
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
+import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPost;
+import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostRepository;
+import com.backoven.catdogshelter.domain.sighting.command.domain.service.DSightingService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ASightingServiceImpl implements ASightingService {
+
+    private final DSightingService dSightingService;
+    private final SightingPostRepository sightingPostRepository;
+    private final ModelMapper modelMapper;
+    @Autowired
+    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, ModelMapper modelMapper) {
+        this.dSightingService = DSightingService;
+        this.sightingPostRepository = sightingPostRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    // 게시글 작성
+    @Override
+    public int registSightingPost(RequestSightingPostDTO newPostDTO) {
+
+        // 추가하려는 게시글이 규칙을 지키지 않았다면
+        dSightingService.validatePost(newPostDTO);
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);  // 정확하게 변수명이 일치하는 것만 매핑
+                                                                                        // id 라는 말이 들어가는게 많으므로 설정
+        SightingPost newPost = modelMapper.map(newPostDTO, SightingPost.class);
+
+        // createdAt을 서버의 현재시간으로 설정: yyyy-MM-dd HH:mm:ss
+        newPost.setCreatedAtNow();
+
+        // 게시글 insert
+        sightingPostRepository.save(newPost);
+
+        // 게시글 번호 반환
+        return newPost.getId();
+    }
+}

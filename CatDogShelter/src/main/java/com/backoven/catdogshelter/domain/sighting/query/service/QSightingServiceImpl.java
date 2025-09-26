@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class SightingServiceImpl implements SightingService {
+public class QSightingServiceImpl implements QSightingService {
 
     private final SightingMapper sightingMapper;
 
     @Autowired
-    public SightingServiceImpl(SightingMapper sightingMapper) {
+    public QSightingServiceImpl(SightingMapper sightingMapper) {
         this.sightingMapper = sightingMapper;
     }
 
@@ -28,15 +28,15 @@ public class SightingServiceImpl implements SightingService {
         return sightingMapper.selectSightingSummary(search);
     }
 
-//    @Override
-//    @Transactional  // 상세 조회를 들어가면 조회수 +1
-//    public SightingDetailDTO findSightingDetails(int postId) {
-//
-//        SightingDetailDTO sightingDetailDTO = sightingMapper.selectSightingDetails(postId);
-//
-//        sightingMapper.incrementSightingView(postId);  // 조회수 업데이트
-//
-//        return sightingDetailDTO;
-//    }
+    @Override
+    @Transactional  // 상세 조회를 들어가면 조회수 +1
+    public SightingDetailDTO findSightingDetails(int postId) {
+
+        SightingDetailDTO sightingDetailDTO = sightingMapper.selectSightingDetails(postId);
+
+        sightingMapper.incrementSightingView(postId);  // 조회수 업데이트
+
+        return sightingDetailDTO;
+    }
 
 }

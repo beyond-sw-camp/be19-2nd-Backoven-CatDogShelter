@@ -3,10 +3,9 @@ package com.backoven.catdogshelter.domain.sighting.query.controller;
 import com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO;
 import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO;
 import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSummaryDTO;
-import com.backoven.catdogshelter.domain.sighting.query.service.SightingService;
+import com.backoven.catdogshelter.domain.sighting.query.service.QSightingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +13,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/sighting-posts")
 @Slf4j
-public class QuerySightingController {
+public class QSightingController {
 
-    private final SightingService sightingService;
+    private final QSightingService qSightingService;
 
     @Autowired
-    public QuerySightingController(SightingService sightingService) {
-        this.sightingService = sightingService;
+    public QSightingController(QSightingService QSightingService) {
+        this.qSightingService = QSightingService;
     }
 
     @GetMapping("/summary")
@@ -29,16 +28,14 @@ public class QuerySightingController {
 //        List<SightingSummaryDTO> sightingSummaryDTO = sightingService.findSightingSummary();
 //        return sightingSummaryDTO;
         log.info("controller 계층: {}", search.toString());
-        return sightingService.findSightingSummary(search);
+        return qSightingService.findSightingSummary(search);
     }
 
+    @GetMapping("/{postId}")
+    public SightingDetailDTO findSightingDetails(@PathVariable int postId) {
 
-    //    @GetMapping("/detail/{postId}")
-//    public SightingDetailDTO findSightingDetails(@PathVariable int postId) {
-//
-//        SightingDetailDTO sightingDetailDTO = sightingService.findSightingDetails(postId);
-//
-//        return null;
-//    }
+        SightingDetailDTO sightingDetailDTO = qSightingService.findSightingDetails(postId);
 
+        return sightingDetailDTO;
+    }
 }
