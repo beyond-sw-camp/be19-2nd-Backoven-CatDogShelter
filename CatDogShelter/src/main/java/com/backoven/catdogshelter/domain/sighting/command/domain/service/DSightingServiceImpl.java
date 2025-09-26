@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.command.domain.service;
 
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
 import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.enumeration.AnimalType;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,17 @@ public class DSightingServiceImpl implements DSightingService {
         if(PostDTO.getUserId() == null && PostDTO.getHeadId() == null) {
             throw new IllegalArgumentException("누가 작성했나요?");
         }
+    }
+
+    @Override
+    public void validatePost(RequestSightingPostCommentDTO newPostCommentDTO) {
+        if(newPostCommentDTO.getContent() == null || newPostCommentDTO.getContent().isEmpty()) {
+            throw new IllegalArgumentException("내용을 채워주세요");
+        }
+        if(newPostCommentDTO.getUserId() == null && newPostCommentDTO.getHeadId() == null) {
+            throw new IllegalArgumentException("작성자를 채워주세요");
+        }
+        // 현재 작성하려는 댓글의 postId가 유효한지 확인 (postId 행이 있는가 + is_deleted와 is_blinded가 false인가)
     }
 
 }

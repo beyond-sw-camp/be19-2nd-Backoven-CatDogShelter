@@ -54,10 +54,10 @@ public class SightingPost {
 //    private int view;
 
     @Column(name = "is_blinded", nullable = false)
-    private boolean isBlinded;
+    private boolean blinded = false;
 
     @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    private boolean deleted = false;
 
     @Column(name = "user_id")
     private Integer userId;
@@ -67,16 +67,4 @@ public class SightingPost {
 
     @Column(name = "sigungu_id", nullable = false)
     private int sigunguId;
-
-
-    public void setCreatedAtNow() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public void setUpdatedAtNow() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-
-
 }

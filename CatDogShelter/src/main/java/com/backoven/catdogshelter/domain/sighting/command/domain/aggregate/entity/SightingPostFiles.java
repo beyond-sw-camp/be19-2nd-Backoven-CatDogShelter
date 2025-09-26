@@ -7,9 +7,5 @@ public class SightingPostFiles {
 
 
 
-//
-//    public void setCreatedAtNow() {
-//        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//    }
 
 }

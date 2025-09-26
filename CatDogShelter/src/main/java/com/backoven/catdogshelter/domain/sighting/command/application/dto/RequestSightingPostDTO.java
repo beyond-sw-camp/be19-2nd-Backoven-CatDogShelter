@@ -20,6 +20,4 @@ public class RequestSightingPostDTO {
     private Integer userId;         // 회원 작성자 번호    - headId와 배타적 관계
     private Integer headId;         // 보호소 작성자 번호  - userId와 배타적 관계
     private Integer sigunguId;      // 시군구 코드
-
-
 }
