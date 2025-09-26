@@ -1,6 +1,8 @@
 package com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity;
 
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
+
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,6 +43,7 @@ public class PostCommentEntity {
     @Column(name="head_id")
     private Integer headId;
 
+
     // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
     @PrePersist
     public void prePersist() {
@@ -51,5 +54,13 @@ public class PostCommentEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = DateTimeUtil.now();
+
+    public void setCreatedAtNow() {
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setUpdatedAtNow() {
+        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
     }
 }

@@ -12,6 +12,9 @@ public class PostLikedDescDTO {
     private String title;           // 자유게시글 제목
     private String created_at;      // 자유게시글 작성일
     private String updated_at;      // 자유게시글 수정일
+
+    private int view;               // 자유게시글 추천수
+
     private String writeType;       // 회원 타입 구분
     private String writeName;       // 자유게시글 작성자
     private int likeCount;          // postLiked 테이블과 조인해서 좋아요 수 보여주기

@@ -69,6 +69,7 @@ public class PostExController {
         postservice.deletePostFiles(postFilesDelete);
     }
 
+
     @RequestMapping("/liked")
     public void likedPost(@RequestBody PostLikedDTO postLiked){
         postservice.likedPost(postLiked);
@@ -78,4 +79,5 @@ public class PostExController {
     public void reportPost(@RequestBody PostReportDTO postReport){
         postservice.reportPost(postReport);
     }
-}
+
+  }

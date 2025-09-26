@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /* service 명 중복 방지를 위해 alias 사용 */
+
 @Service("postQueryService")
 public class PostService {
 

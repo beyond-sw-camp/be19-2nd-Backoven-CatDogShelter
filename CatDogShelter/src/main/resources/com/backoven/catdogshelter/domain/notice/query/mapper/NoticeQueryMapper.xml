@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.notice.query.mapper.NoticeQueryMapper">
+    <resultMap id="noticesMap" type="com.backoven.catdogshelter.domain.notice.query.dto.NoticeQueryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="writer" column="NAME"/>
+    </resultMap>
+    <select id="selectNotices" resultMap="noticesMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CREATED_AT
+             , B.NAME
+          FROM NOTICE A
+          JOIN RATING B ON A.RATING_ID = B.ID
+         ORDER BY A.CREATED_AT DESC
+    </select>
+
+    <select id="selectNoticesByKeyword" parameterType="string" resultMap="noticesMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CREATED_AT
+             , B.NAME
+          FROM NOTICE A
+          JOIN RATING B ON A.RATING_ID = B.ID
+        <where>
+            <if test="keyword != null">
+                A.TITLE LIKE CONCAT ('%', #{keyword}, '%')
+                OR A.CONTENT LIKE CONCAT ('%', #{keyword}, '%')
+            </if>
+        </where>
+         ORDER BY A.CREATED_AT DESC
+    </select>
+
+    <resultMap id="detailMap" type="com.backoven.catdogshelter.domain.notice.query.dto.NoticePostQueryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="created" column="CREATED_AT"/>
+        <result property="updated" column="UPDATED_AT"/>
+        <result property="writer" column="NAME"/>
+    </resultMap>
+    <select id="selectNotice" parameterType="_int" resultMap="detailMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , B.NAME
+         FROM NOTICE A
+         JOIN RATING B ON A.RATING_ID = B.ID
+        WHERE A.ID = #{id}
+    </select>
+</mapper>

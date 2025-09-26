@@ -13,4 +13,8 @@ public class PostModifyDTO {
     private String content;
     private String updatedAt;
 
+
+
+
+
 }
