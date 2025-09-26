@@ -1,14 +1,17 @@
 package com.backoven.catdogshelter.domain.adoption.query.mapper;
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailDTO;
-import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostQueryDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailQueryDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostAllQueryDTO;
+import com.backoven.catdogshelter.domain.adoption.query.dynamic.SearchCriteria;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface AdoptionMapper {
-    List<AdoptionPostQueryDTO> selectAllAdoptionPosts();
-    AdoptionPostDetailDTO selectAdoptionPostById(int adoptionPostId);
-    List<AdoptionPostQueryDTO> selectAdoptionPostByKeyword(String condition);
-    List<AdoptionPostQueryDTO> selectAdoptionPostByAnimalCondition(Map<String, String> animalCodition);
+    List<AdoptionPostAllQueryDTO> selectAllAdoptionPosts();
+    AdoptionPostDetailQueryDTO selectAdoptionPostById(int adoptionPostId);
+    List<AdoptionPostAllQueryDTO> selectAllAdoptionPostsByView();
+    List<AdoptionPostAllQueryDTO> selectAdoptionPostByKeyword(SearchCriteria condition);
+    List<AdoptionPostAllQueryDTO> selectAdoptionPostByAnimalCondition(SearchCriteria animalCodition);
+
+    List<AdoptionPostAllQueryDTO> selectAllAdoptionPostByLiked();
 }

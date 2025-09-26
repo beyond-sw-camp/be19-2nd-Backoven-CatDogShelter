@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class AdoptionPostQueryDTO {
+public class AdoptionPostAllQueryDTO {
     private int id;
 
     private String title;
@@ -18,6 +18,8 @@ public class AdoptionPostQueryDTO {
 
     private String writerName;   // user_name 또는 company_name
 
+    private String userRating;   // 회원 등급
+
     private int view;
 
     private int recommendCount;  // 추천 수
@@ -25,4 +27,5 @@ public class AdoptionPostQueryDTO {
     private String sidoName;     // 시/도 이름
 
     private String sigunguName;  // 시/군/구 이름
+
 }

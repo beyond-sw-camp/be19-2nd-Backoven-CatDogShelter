@@ -9,11 +9,13 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class AdoptionPostDetailDTO {
+public class AdoptionPostDetailQueryDTO {
     private int id;
     private String title;
     private String content;
     private String userPhone;
+    private String writerName;
+    private String userRating;   // 회원 등급
     private int view;
     private int recommendCount;
 
