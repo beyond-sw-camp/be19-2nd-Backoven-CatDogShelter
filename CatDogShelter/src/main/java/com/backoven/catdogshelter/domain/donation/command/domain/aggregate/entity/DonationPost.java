@@ -1,0 +1,61 @@
+package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity;
+
+import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.Where;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="donationPost")
+//@Where(clause = "is_deleted = false") // 조회 시 자동 필터링 (Hibernate 전용)
+public class DonationPost {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    private String content;
+
+    @Column(name="created_at")
+    private String createdAt;
+
+    @Column(name="updated_at")
+    private String updatedAt;
+
+    private int view;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean deleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "head_id", nullable = false)
+    private ShelterUserEntity head; //보호소장FK
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DonationPostFiles> files = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DonationPostComment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DonationPostLiked> likes = new ArrayList<>();
+
+
+    // 소프트 삭제 메서드
+    public void softDelete() {
+        this.deleted = true;
+        comments.forEach(DonationPostComment::softDelete);
+        files.forEach(DonationPostFiles::softDelete);
+    }
+
+
+}

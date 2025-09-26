@@ -25,9 +25,6 @@ public interface DonationPostQueryMapper {
     // REQ-028 조회수 증가
     void increaseView(@Param("id") Long id);
 
-    // 게시글 조회(view 증가)
-    DonationPostQueryDTO selectPostById(Long id);
-
     List<DonationPostQueryDTO> selectAllDonationPosts();
 
     DonationPostQueryDTO selectDonationPostDetail(int postId);

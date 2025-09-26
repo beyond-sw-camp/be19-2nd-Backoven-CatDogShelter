@@ -19,10 +19,10 @@ Content-Type: application/json
 POST localhost:8080/donation-posts/2/view
 Content-Type: application/json
 
-###실종신고 게시글 상세 내용 조회(게시글 하나 안에서)
+###실종신고 게시글 상세 내용 조회
 GET localhost:8080/donation-posts/posts/2
 Content-Type: application/json
 
-###댓글 api처리(게시글 하나 안에서)
+###댓글 api처리(게시글에 대한 댓글)
 GET localhost:8080/donation-posts/posts/3/comments
 Content-Type: application/json
