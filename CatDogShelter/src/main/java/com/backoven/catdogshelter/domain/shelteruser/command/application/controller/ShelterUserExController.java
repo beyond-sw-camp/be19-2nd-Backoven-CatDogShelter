@@ -3,5 +3,5 @@ package com.backoven.catdogshelter.domain.shelteruser.command.application.contro
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class UserExController {
+public class ShelterUserExController {
 }

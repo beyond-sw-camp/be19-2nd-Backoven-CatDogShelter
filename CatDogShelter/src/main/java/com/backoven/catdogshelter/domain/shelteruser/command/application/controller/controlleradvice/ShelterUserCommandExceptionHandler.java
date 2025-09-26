@@ -3,6 +3,6 @@ package com.backoven.catdogshelter.domain.shelteruser.command.application.contro
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
-public class UserCommandExceptionHandler {
+public class ShelterUserCommandExceptionHandler {
 
 }
