@@ -1,36 +1,33 @@
 package com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity;
 
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
+import com.backoven.catdogshelter.common.util.ReportCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Entity
-@Table(name="postcomment")
+@Table(name="postreport")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostCommentEntity {
+public class PostReportEntity {
     @Id
-    //auto_increment 적용
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
-    private String content;
+    // DB ENUM 타입과 자바 enum 타입 매핑
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    private ReportCategory category;
 
-    @Column(name="created_at")
+    @Column(name="etc_detail")
+    private String etcDetail;
+
+    @Column(name = "created_at", nullable = false)
     private String createdAt;
-
-    @Column(name="updated_at")
-    private String updatedAt;
-
-    @Column(name="is_deleted")
-    private Integer isDeleted = 0;
 
     @Column(name="post_id")
     private int postId;
@@ -41,15 +38,10 @@ public class PostCommentEntity {
     @Column(name="head_id")
     private Integer headId;
 
-    // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
+    // 입력할때 현재 서버 시간을 계산하기 위해서 util 클래스 아래 DatTimeUtil 클래스 안에 공통된 기능 개발
     @PrePersist
     public void prePersist() {
         this.createdAt = DateTimeUtil.now();
     }
 
-    // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = DateTimeUtil.now();
-    }
 }
