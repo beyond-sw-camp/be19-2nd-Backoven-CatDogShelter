@@ -30,14 +30,19 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/catdogshelter
-    username: backoven
-    password: backoven
+
+    username: root
+    password: mariadb
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
 
 
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
-    root: INFO
+    root: debug
 
-filepath: # 윈도우: C:\\uploadFiles
-# max: /User/??/uploadFiles
+
+filepath: /Users/haeone/Desktop/be19-2nd-backoven-petShelter
+
