@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.notice.query.service;
 
+import com.backoven.catdogshelter.domain.notice.query.dto.NoticePostFileQueryDTO;
 import com.backoven.catdogshelter.domain.notice.query.dto.NoticePostQueryDTO;
 import com.backoven.catdogshelter.domain.notice.query.dto.NoticeQueryDTO;
 import com.backoven.catdogshelter.domain.notice.query.mapper.NoticeQueryMapper;
@@ -29,8 +30,14 @@ public class NoticeQueryService {
         return noticeQueryMapper.selectNoticesByKeyword(keyword);
     }
 
-
+    // 공지사항 상세 조회
     public NoticePostQueryDTO selectNotice(int id) {
-        return noticeQueryMapper.selectNotice(id);
+
+        List<NoticePostFileQueryDTO> files = noticeQueryMapper.selectNoticePostFiles(id);
+        NoticePostQueryDTO notice = noticeQueryMapper.selectNotice(id);
+
+        notice.setFiles(files);
+
+        return notice;
     }
 }
