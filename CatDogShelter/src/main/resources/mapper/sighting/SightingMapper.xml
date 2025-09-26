@@ -29,7 +29,7 @@
               , sp.created_at
               , sp.updated_at
               , sp.view
-              , COUNT(spl.id) AS like_count
+              , (SELECT COUNT(*) FROM sightingPostLiked WHERE post_id = sp.id) AS like_count
               , CASE
                   WHEN sp.user_id IS NOT NULL THEN u.user_name
                   WHEN sp.head_id IS NOT NULL THEN sh.company_name
@@ -66,7 +66,6 @@
                 AND sp.sigungu_id = #{sigunguCode}
             </if>
         </where>
-        GROUP BY sp.id, sp.title, sp.created_at, sp.updated_at, sp.view, u.user_name, sh.company_name, sp.user_id, sp.head_id
         <choose>
             <when test="order == 0">
                 ORDER BY sp.id DESC
