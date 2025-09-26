@@ -14,4 +14,6 @@ public class RequestSightingPostReportDTO {
     private int postId;
     private Integer userId;
     private Integer headId;
+
+
 }

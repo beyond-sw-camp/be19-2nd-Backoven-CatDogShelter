@@ -21,6 +21,7 @@ public class SightingPostCommentReport {
     private int id;
 
     @Column(name = "category", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ReportCategory reportCategory;
 
     @Column(name = "etc_detail")

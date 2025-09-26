@@ -2,10 +2,16 @@ package com.backoven.catdogshelter.domain.sighting.command.application.service;
 
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
 import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPost;
 import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostComment;
+import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostCommentReport;
+import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostReport;
+import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostCommentReportRepository;
 import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostCommentRepository;
+import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostReportRepository;
 import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostRepository;
 import com.backoven.catdogshelter.domain.sighting.command.domain.service.DSightingService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +28,16 @@ public class ASightingServiceImpl implements ASightingService {
     private final DSightingService dSightingService;
     private final SightingPostRepository sightingPostRepository;
     private final SightingPostCommentRepository sightingPostCommentRepository;
+    private final SightingPostReportRepository sightingPostReportRepository;
+    private final SightingPostCommentReportRepository sightingPostCommentReportRepository;
     private final ModelMapper modelMapper;
     @Autowired
-    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, ModelMapper modelMapper) {
+    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, SightingPostReportRepository sightingPostReportRepository, SightingPostCommentReportRepository sightingPostCommentReportRepository, ModelMapper modelMapper) {
         this.dSightingService = DSightingService;
         this.sightingPostRepository = sightingPostRepository;
         this.sightingPostCommentRepository = sightingPostCommentRepository;
+        this.sightingPostReportRepository = sightingPostReportRepository;
+        this.sightingPostCommentReportRepository = sightingPostCommentReportRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -36,7 +46,7 @@ public class ASightingServiceImpl implements ASightingService {
     @Transactional
     public int registSightingPost(RequestSightingPostDTO newPostDTO) {
         // 추가하려는 게시글이 규칙을 지키지 않았다면
-        dSightingService.validatePost(newPostDTO);
+        dSightingService.validate(newPostDTO);
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);  // 정확하게 변수명이 일치하는 것만 매핑
                                                                                         // id 라는 말이 들어가는게 많으므로 설정
@@ -57,7 +67,7 @@ public class ASightingServiceImpl implements ASightingService {
     @Transactional
     public void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO) {
         // 변경하려는 게시글이 규칙을 지키지 않았다면
-        dSightingService.validatePost(modifyPostDTO);
+        dSightingService.validate(modifyPostDTO);
 
         // 엔티티로 변경
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -125,7 +135,7 @@ public class ASightingServiceImpl implements ASightingService {
     @Override
     @Transactional
     public void registSightingPostComment(RequestSightingPostCommentDTO newCommentDTO) {
-        dSightingService.validatePost(newCommentDTO);
+        dSightingService.validate(newCommentDTO);
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         SightingPostComment newComment = modelMapper.map(newCommentDTO, SightingPostComment.class);
@@ -141,7 +151,7 @@ public class ASightingServiceImpl implements ASightingService {
     @Override
     @Transactional
     public void modifySightingPostComment(int commentId, RequestSightingPostCommentDTO modifyCommentDTO) {
-        dSightingService.validatePost(modifyCommentDTO);
+        dSightingService.validate(modifyCommentDTO);
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         SightingPostComment newComment = modelMapper.map(modifyCommentDTO, SightingPostComment.class);
@@ -190,5 +200,29 @@ public class ASightingServiceImpl implements ASightingService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void registSightingPostReport(RequestSightingPostReportDTO newReportDTO) {
+        dSightingService.validate(newReportDTO);
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        SightingPostReport newReport = modelMapper.map(newReportDTO, SightingPostReport.class);
+
+        newReport.setCreatedAt(DateTimeUtil.now());
+
+        sightingPostReportRepository.save(newReport);
+    }
+
+    @Override
+    public void registSightingPostCommentReport(RequestSightingPostCommentReportDTO newReportDTO) {
+        dSightingService.validate(newReportDTO);
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        SightingPostCommentReport newReport = modelMapper.map(newReportDTO, SightingPostCommentReport.class);
+
+        newReport.setCreatedAt(DateTimeUtil.now());
+
+        sightingPostCommentReportRepository.save(newReport);
     }
 }

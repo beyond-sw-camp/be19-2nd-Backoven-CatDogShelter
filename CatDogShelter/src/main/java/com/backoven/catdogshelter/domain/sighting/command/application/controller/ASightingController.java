@@ -1,7 +1,9 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.controller;
 
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
 import com.backoven.catdogshelter.domain.sighting.command.application.service.ASightingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -132,17 +134,17 @@ public class ASightingController {
 
     // 게시글 신고
     @PostMapping("/post-report")
-    public ResponseEntity<?> registSightingPostReport(@RequestBody ) {
-        aSightingService.registSightingPostComment(newCommentDTO);
+    public ResponseEntity<?> registSightingPostReport(@RequestBody RequestSightingPostReportDTO newReportDTO) {
+        aSightingService.registSightingPostReport(newReportDTO);
 
-        return ResponseEntity
-                .created(URI.create("/sighting-post/" + newCommentDTO.getPostId()))
-                .build();
+        return ResponseEntity.noContent().build();
     }
     // 댓글 신고
     @PostMapping("/comment-report")
-    public ResponseEntity<?> registSightingPostCommentReport() {
+    public ResponseEntity<?> registSightingPostCommentReport(@RequestBody RequestSightingPostCommentReportDTO newReportDTO) {
+        aSightingService.registSightingPostCommentReport(newReportDTO);
 
+        return ResponseEntity.noContent().build();
     }
 //    // 게시글 추천
 //    @PostMapping("/post-like")

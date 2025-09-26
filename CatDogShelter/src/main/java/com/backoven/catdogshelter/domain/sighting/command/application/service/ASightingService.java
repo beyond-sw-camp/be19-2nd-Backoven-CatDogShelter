@@ -1,7 +1,9 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.service;
 
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
 
 public interface ASightingService {
     int registSightingPost(RequestSightingPostDTO newPostDTO);
@@ -23,4 +25,8 @@ public interface ASightingService {
     boolean restoreSightingPostComment(int commentId);
 
     boolean blindSightingPostComment(int commentId);
+
+    void registSightingPostReport(RequestSightingPostReportDTO newReportDTO);
+
+    void registSightingPostCommentReport(RequestSightingPostCommentReportDTO newReportDTO);
 }
