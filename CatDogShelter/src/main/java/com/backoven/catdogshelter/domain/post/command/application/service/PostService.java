@@ -31,7 +31,9 @@ public class PostService {
     /* 자유게시글 삽입(insert) 부분 */
     @Transactional
     public void registPost(PostRegistDTO postregist) {
-        postRepository.save(modelMapper.map(postregist, PostEntity.class));
+        PostEntity entity = modelMapper.map(postregist, PostEntity.class);
+        entity.setCreatedAtNow();
+        postRepository.save(entity);
     }
 
     /* 자유게시글 수정(update) 부분 */
@@ -43,7 +45,7 @@ public class PostService {
         // 수정할 값 덮어쓰기
         foundPost.setTitle(postModify.getTitle());
         foundPost.setContent(postModify.getContent());
-        foundPost.setUpdatedAt(postModify.getUpdatedAt());
+        foundPost.setUpdatedAtNow();
 
         /* 둘 중 하나의 값이 먼저 들어오면 다른 값은 null로 처리되도록 함 */
         /* if 문을 안 썼을 경우, 둘의 값을 같이 넣어야 하고 하나만 넣었을 경우 둘 다 null 값으로 처리됨. */
@@ -67,7 +69,9 @@ public class PostService {
     /* 자유게시글 댓글 삽입(insert) 부분 */
     @Transactional
     public void registPostComment(PostCommentRegistDTO postCommentRegist){
-        postCommentRepository.save(modelMapper.map(postCommentRegist, PostCommentEntity.class));
+        PostCommentEntity entity = modelMapper.map(postCommentRegist, PostCommentEntity.class);
+        entity.setCreatedAtNow();
+        postCommentRepository.save(entity);
     }
 
     /* 자유게시글 댓글 수정(update) 부분 */
@@ -77,7 +81,7 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         foundComment.setContent(postCommentModify.getContent());
-        foundComment.setUpdatedAt(postCommentModify.getUpdatedAt());
+        foundComment.setUpdatedAtNow();
 
 //        if (postCommentModify.getUserId() != null) {
 //            foundComment.setUserId(postCommentModify.getUserId());
@@ -99,7 +103,9 @@ public class PostService {
     /* 자유게시글 파일 삽입(insert) 부분 */
     @Transactional
     public void registPostFiles(PostFilesRegistDTO postFilesRegist){
-        postFilesRepository.save(modelMapper.map(postFilesRegist, PostFilesEntity.class));
+        PostFilesEntity entity = modelMapper.map(postFilesRegist, PostFilesEntity.class);
+        entity.setUploadedAtNow();
+        postFilesRepository.save(entity);
     }
 
     /* 자유게시글 파일 수정(modify) 부분 */
@@ -109,7 +115,7 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         foundFiles.setFileRename(postFilesModify.getFileRename());
-        foundFiles.setUploadedAt(postFilesModify.getUploadedAt());
+        foundFiles.setUploadedAtNow();
     }
 
     /* 자유게시글 파일 삭제(delete) 부분 */

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name="postfiles")
 @AllArgsConstructor
@@ -27,4 +30,8 @@ public class PostFilesEntity {
 
     @Column(name="post_id")
     private int postId;
+
+    public void setUploadedAtNow() {
+        this.uploadedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 }

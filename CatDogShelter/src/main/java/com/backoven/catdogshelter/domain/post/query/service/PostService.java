@@ -2,10 +2,8 @@ package com.backoven.catdogshelter.domain.post.query.service;
 
 import com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO;
 import com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO;
-import com.backoven.catdogshelter.domain.post.query.mapper.PostCreatedAtDescMapper;
-import com.backoven.catdogshelter.domain.post.query.mapper.PostDetailMapper;
-import com.backoven.catdogshelter.domain.post.query.mapper.PostInventoryMapper;
-import com.backoven.catdogshelter.domain.post.query.mapper.PostViewDescMapper;
+import com.backoven.catdogshelter.domain.post.query.dto.PostLikedDescDTO;
+import com.backoven.catdogshelter.domain.post.query.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +17,15 @@ public class PostService {
     private final PostDetailMapper postDetailMapper;
     private final PostViewDescMapper postViewDescMapper;
     private final PostCreatedAtDescMapper postCreatedAtDescMapper;
+    private final PostLikedDescMapper postLikedDescMapper;
 
     @Autowired
-    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper, PostViewDescMapper postViewDescMapper, PostCreatedAtDescMapper postCreatedAtDescMapper) {
+    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper, PostViewDescMapper postViewDescMapper, PostCreatedAtDescMapper postCreatedAtDescMapper, PostLikedDescMapper postLikedDescMapper) {
         this.postInventoryMapper = postInventoryMapper;
         this.postDetailMapper = postDetailMapper;
         this.postViewDescMapper = postViewDescMapper;
         this.postCreatedAtDescMapper = postCreatedAtDescMapper;
+        this.postLikedDescMapper = postLikedDescMapper;
     }
 
     public List<PostInventoryDTO> selectPostInventory() {
@@ -49,5 +49,9 @@ public class PostService {
        이때 목록에서 정렬하므로 DTO는 목록 조회할 때 썼던거 그대로 사용 */
     public List<PostInventoryDTO> createdAtPostInventory() {
         return postCreatedAtDescMapper.selectPostCreatedAtDesc();
+    }
+
+    public List<PostLikedDescDTO> likedPostInventory() {
+        return postLikedDescMapper.selectPostLikedDesc();
     }
 }

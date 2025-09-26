@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @Entity
 @Table(name="post")
@@ -40,5 +43,14 @@ public class PostEntity {
     private Integer userId;
     @Column(name="head_id")
     private Integer headId;
+
+    public void setCreatedAtNow() {
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setUpdatedAtNow() {
+        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
 
 }
