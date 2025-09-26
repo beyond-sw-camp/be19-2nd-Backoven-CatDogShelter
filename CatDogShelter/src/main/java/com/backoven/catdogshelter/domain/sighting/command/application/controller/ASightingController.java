@@ -38,11 +38,43 @@ public class ASightingController {
                 .created(URI.create("/sighting-post/" + postId))   // Response Header 중 "Location"에 담겨 돌아옴
                 .build();
     }
-//    // 게시글 삭제
-//    @DeleteMapping("/post/{postId}")
-//    public ResponseEntity<?> removeSightingPost() {
-//
-//    }
+
+    // 게시글 삭제
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<?> removeSightingPost(@PathVariable int postId) {
+        if (aSightingService.removeSightingPost(postId)) {
+            // 게시글이 존재해서 변경
+        } else {
+            // 게시글 존재 X
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    // 삭제된 게시글 복원
+    @PatchMapping("/post/{postId}/restore")
+    public ResponseEntity<?> restoreSightingPost(@PathVariable int postId) {
+        if (aSightingService.restoreSightingPost(postId)) {
+            // 게시글이 존재해서 되살림
+        } else {
+            // 게시글이 존재 X
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+
+    // 게시글 블라인드
+    @PatchMapping("/post/{postId}/blind")
+    public ResponseEntity<?> blindSightingPost(@PathVariable int postId) {
+        if (aSightingService.blindSightingPost(postId)) {
+            // 게시글이 존재해서 변경
+        } else {
+            // 게시글 존재 X
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 //    // 댓글 작성
 //    @PostMapping("/comment")
 //    public ResponseEntity<?> registSightingPostComment() {

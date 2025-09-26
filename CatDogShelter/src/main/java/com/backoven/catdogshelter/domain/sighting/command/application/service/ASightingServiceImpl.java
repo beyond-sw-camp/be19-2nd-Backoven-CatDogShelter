@@ -4,12 +4,14 @@ import com.backoven.catdogshelter.domain.sighting.command.application.dto.Reques
 import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPost;
 import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostRepository;
 import com.backoven.catdogshelter.domain.sighting.command.domain.service.DSightingService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class ASightingServiceImpl implements ASightingService {
 
     private final DSightingService dSightingService;
@@ -56,17 +58,53 @@ public class ASightingServiceImpl implements ASightingService {
         // DB에서 정보 불러오기
         SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
 
-        // 정보 변경 + 업데이트 날짜 추가
-        foundPost.setTitle(modifyPost.getTitle());
-        foundPost.setContent(modifyPost.getContent());
-        foundPost.setSightedAt(modifyPost.getSightedAt());
-        foundPost.setSightedPlace(modifyPost.getSightedPlace());
-        foundPost.setColor(modifyPost.getColor());
-        foundPost.setAnimalType(modifyPost.getAnimalType());
-        foundPost.setBreed(modifyPost.getBreed());
-        foundPost.setSigunguId(modifyPost.getSigunguId());
-        foundPost.setUpdatedAtNow();
+        if (foundPost != null) {
+            // 정보 변경 + 업데이트 날짜 추가
+            foundPost.setTitle(modifyPost.getTitle());
+            foundPost.setContent(modifyPost.getContent());
+            foundPost.setSightedAt(modifyPost.getSightedAt());
+            foundPost.setSightedPlace(modifyPost.getSightedPlace());
+            foundPost.setColor(modifyPost.getColor());
+            foundPost.setAnimalType(modifyPost.getAnimalType());
+            foundPost.setBreed(modifyPost.getBreed());
+            foundPost.setSigunguId(modifyPost.getSigunguId());
+            foundPost.setUpdatedAtNow();
+        }
+    }
 
-        sightingPostRepository.save(foundPost);
+    @Override
+    public boolean removeSightingPost(int postId) {
+        SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
+
+        if(foundPost != null) {
+            foundPost.setDeleted(true);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean blindSightingPost(int postId) {
+        SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
+
+        if(foundPost != null) {
+            foundPost.setBlinded(true);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean restoreSightingPost(int postId) {
+        SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
+
+        if(foundPost != null) {
+            foundPost.setBlinded(false);
+            return true;
+        }
+
+        return false;
     }
 }
