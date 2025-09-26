@@ -24,12 +24,12 @@ spring:
   # active: {...} -> application-{...}.yml 파일 우선 적용
   profiles:
     active: dev
-    
+
   # DB 설정
   # url, username, password은 다른 yml에서 작성
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/CatDogShelter
+    url: jdbc:mariadb://localhost:3306/catdogshelter
     username: root
     password: mariadb
 
@@ -39,7 +39,6 @@ mybatis:
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
-    root: INFO
+    root: debug
 
-filepath: # 윈도우: C:\\uploadFiles
-          # max: /User/??/uploadFiles
+filepath: /Users/haeone/Desktop/be19-2nd-backoven-petShelter
