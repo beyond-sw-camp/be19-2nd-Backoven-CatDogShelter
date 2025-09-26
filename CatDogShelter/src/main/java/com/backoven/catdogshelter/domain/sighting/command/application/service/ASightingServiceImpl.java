@@ -42,4 +42,31 @@ public class ASightingServiceImpl implements ASightingService {
         // 게시글 번호 반환
         return newPost.getId();
     }
+
+    @Override
+    public void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO) {
+
+        // 변경하려는 게시글이 규칙을 지키지 않았다면
+        dSightingService.validatePost(modifyPostDTO);
+
+        // 엔티티로 변경
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        SightingPost modifyPost = modelMapper.map(modifyPostDTO, SightingPost.class);
+
+        // DB에서 정보 불러오기
+        SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
+
+        // 정보 변경 + 업데이트 날짜 추가
+        foundPost.setTitle(modifyPost.getTitle());
+        foundPost.setContent(modifyPost.getContent());
+        foundPost.setSightedAt(modifyPost.getSightedAt());
+        foundPost.setSightedPlace(modifyPost.getSightedPlace());
+        foundPost.setColor(modifyPost.getColor());
+        foundPost.setAnimalType(modifyPost.getAnimalType());
+        foundPost.setBreed(modifyPost.getBreed());
+        foundPost.setSigunguId(modifyPost.getSigunguId());
+        foundPost.setUpdatedAtNow();
+
+        sightingPostRepository.save(foundPost);
+    }
 }

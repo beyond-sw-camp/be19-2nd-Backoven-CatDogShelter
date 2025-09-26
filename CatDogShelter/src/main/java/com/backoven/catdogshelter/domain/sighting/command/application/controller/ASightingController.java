@@ -23,16 +23,21 @@ public class ASightingController {
     @PostMapping("/post")
     public ResponseEntity<?> registSightingPost(@RequestBody RequestSightingPostDTO newPost) {
         int postId = aSightingService.registSightingPost(newPost);
+        // 목격 정보 게시판의 필드 중에 nullable하게 만들 것들 확인 필요
+        
+        return ResponseEntity
+                .created(URI.create("/sighting-post/" + postId))   // Response Header 중 "Location"에 담겨 돌아옴
+                .build();
+    }
+    // 게시글 수정
+    @PutMapping("/post/{postId}")
+    public ResponseEntity<?> modifySightingPost(@PathVariable int postId,@RequestBody RequestSightingPostDTO modifyPost) {
+        aSightingService.modifySightingPost(postId, modifyPost);
 
         return ResponseEntity
                 .created(URI.create("/sighting-post/" + postId))   // Response Header 중 "Location"에 담겨 돌아옴
                 .build();
     }
-//    // 게시글 수정
-//    @PutMapping("/post")
-//    public ResponseEntity<?> modifySightingPost() {
-//
-//    }
 //    // 게시글 삭제
 //    @DeleteMapping("/post/{postId}")
 //    public ResponseEntity<?> removeSightingPost() {

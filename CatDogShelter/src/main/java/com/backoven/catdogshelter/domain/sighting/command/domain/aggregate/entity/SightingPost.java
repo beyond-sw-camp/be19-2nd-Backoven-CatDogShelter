@@ -42,6 +42,7 @@ public class SightingPost {
     private String color;
 
     @Column(name = "animal_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AnimalType animalType;
 
     @Column(name = "breed", nullable = false)

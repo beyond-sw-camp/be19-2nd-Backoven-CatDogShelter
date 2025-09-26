@@ -4,4 +4,6 @@ import com.backoven.catdogshelter.domain.sighting.command.application.dto.Reques
 
 public interface ASightingService {
     int registSightingPost(RequestSightingPostDTO newPost);
+
+    void modifySightingPost(int postId, RequestSightingPostDTO modifyPost);
 }
