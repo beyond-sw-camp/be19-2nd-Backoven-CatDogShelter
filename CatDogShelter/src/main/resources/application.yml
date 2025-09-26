@@ -24,7 +24,7 @@ spring:
   # active: {...} -> application-{...}.yml 파일 우선 적용
   profiles:
     active: dev
-    
+
   # DB 설정
   # url, username, password은 다른 yml에서 작성
   datasource:
