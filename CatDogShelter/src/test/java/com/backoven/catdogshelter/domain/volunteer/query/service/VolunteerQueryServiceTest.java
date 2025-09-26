@@ -23,7 +23,7 @@ public class VolunteerQueryServiceTest {
     @Test
     void testGetAllVolunteerPosts(){
         Assertions.assertDoesNotThrow(()->{
-            volunteerPostQueryService.selectAllVolunteerPosts()
+            volunteerPostQueryService.getVolunteerPostList()
                     .forEach(System.out::println);
         });
     }
