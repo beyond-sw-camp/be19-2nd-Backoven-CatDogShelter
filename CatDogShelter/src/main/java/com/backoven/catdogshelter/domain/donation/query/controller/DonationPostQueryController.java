@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/donation-posts")
+@RequestMapping("/donation-posts/query")
 @RequiredArgsConstructor
 public class DonationPostQueryController {
 

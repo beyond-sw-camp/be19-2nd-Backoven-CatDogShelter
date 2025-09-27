@@ -42,7 +42,7 @@ mybatis:
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
-    root: debug
+    root: info
 
 
 filepath: /Users/haeone/Desktop/be19-2nd-backoven-petShelter

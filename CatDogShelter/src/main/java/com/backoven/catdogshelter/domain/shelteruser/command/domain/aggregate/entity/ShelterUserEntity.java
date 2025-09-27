@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "shelter_head")
 public class ShelterUserEntity {
     @Id
-    @Column(name="head_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "head_id")
     private Long id;
 
     @Column(name = "ceo_name", nullable = false, length = 20)
-    private String userName;
+    private String ceoName;
 }

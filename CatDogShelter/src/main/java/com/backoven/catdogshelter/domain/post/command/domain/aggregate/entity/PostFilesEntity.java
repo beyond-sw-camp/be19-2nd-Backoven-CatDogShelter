@@ -31,7 +31,4 @@ public class PostFilesEntity {
     @Column(name="post_id")
     private int postId;
 
-    public void setUploadedAtNow() {
-        this.uploadedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
 }

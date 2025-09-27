@@ -40,11 +40,4 @@ public class PostCommentEntity {
     @Column(name="head_id")
     private Integer headId;
 
-    public void setCreatedAtNow() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public void setUpdatedAtNow() {
-        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
 }
