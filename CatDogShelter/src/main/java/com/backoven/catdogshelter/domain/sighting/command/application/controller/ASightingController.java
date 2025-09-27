@@ -1,9 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.controller;
 
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
 import com.backoven.catdogshelter.domain.sighting.command.application.service.ASightingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -146,10 +143,12 @@ public class ASightingController {
 
         return ResponseEntity.noContent().build();
     }
-//    // 게시글 추천
-//    @PostMapping("/post-like")
-//    public ResponseEntity<?> registSightingPostLiked() {
-//
-//    }
+    // 게시글 추천
+    @PostMapping("/post-like")
+    public ResponseEntity<?> registSightingPostLiked(@RequestBody RequestSightingPostLikedDTO newLikedDTO) {
+        aSightingService.registSightingPostLiked(newLikedDTO);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

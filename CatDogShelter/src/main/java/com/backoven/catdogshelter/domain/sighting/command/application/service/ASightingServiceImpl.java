@@ -1,18 +1,9 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.service;
 
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPost;
-import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostComment;
-import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostCommentReport;
-import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.SightingPostReport;
-import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostCommentReportRepository;
-import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostCommentRepository;
-import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostReportRepository;
-import com.backoven.catdogshelter.domain.sighting.command.domain.repository.SightingPostRepository;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
+import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.entity.*;
+import com.backoven.catdogshelter.domain.sighting.command.domain.repository.*;
 import com.backoven.catdogshelter.domain.sighting.command.domain.service.DSightingService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -30,14 +21,17 @@ public class ASightingServiceImpl implements ASightingService {
     private final SightingPostCommentRepository sightingPostCommentRepository;
     private final SightingPostReportRepository sightingPostReportRepository;
     private final SightingPostCommentReportRepository sightingPostCommentReportRepository;
+    private final SightingPostLikedRepository sightingPostLikedRepository;
+
     private final ModelMapper modelMapper;
     @Autowired
-    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, SightingPostReportRepository sightingPostReportRepository, SightingPostCommentReportRepository sightingPostCommentReportRepository, ModelMapper modelMapper) {
+    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, SightingPostReportRepository sightingPostReportRepository, SightingPostCommentReportRepository sightingPostCommentReportRepository, SightingPostLikedRepository sightingPostLikedRepository, ModelMapper modelMapper) {
         this.dSightingService = DSightingService;
         this.sightingPostRepository = sightingPostRepository;
         this.sightingPostCommentRepository = sightingPostCommentRepository;
         this.sightingPostReportRepository = sightingPostReportRepository;
         this.sightingPostCommentReportRepository = sightingPostCommentReportRepository;
+        this.sightingPostLikedRepository = sightingPostLikedRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -224,5 +218,15 @@ public class ASightingServiceImpl implements ASightingService {
         newReport.setCreatedAt(DateTimeUtil.now());
 
         sightingPostCommentReportRepository.save(newReport);
+    }
+
+    @Override
+    public void registSightingPostLiked(RequestSightingPostLikedDTO newLikedDTO) {
+        dSightingService.validate(newLikedDTO);
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        SightingPostLiked newLiked = modelMapper.map(newLikedDTO, SightingPostLiked.class);
+
+        sightingPostLikedRepository.save(newLiked);
     }
 }

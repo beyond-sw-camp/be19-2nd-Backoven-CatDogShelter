@@ -1,9 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.command.domain.service;
 
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
 import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.enumeration.AnimalType;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +86,14 @@ public class DSightingServiceImpl implements DSightingService {
             throw new IllegalArgumentException("작성자를 채워주세요");
         }
         // commentId가 유효한지 확인 필요
+    }
+
+    @Override
+    public void validate(RequestSightingPostLikedDTO newLikedDTO) {
+        if (newLikedDTO.getUserId() == null && newLikedDTO.getHeadId() == null) {
+            throw new IllegalArgumentException("작성자를 채워주세요");
+        }
+        // postId가 유효한지 확인 필요
     }
 
 }
