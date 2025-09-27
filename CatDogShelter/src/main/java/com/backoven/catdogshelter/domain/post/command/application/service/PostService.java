@@ -29,14 +29,23 @@ public class PostService {
 
     private final PostLikedRepository postLikedRepository;
     private final PostReportRepository postReportRepository;
+    private final PostCommentReportRepository postCommentReportRepository;
 
     @Autowired
+<<<<<<< HEAD
     public PostService(PostRepository postRepository, ModelMapper modelMapper, PostCommentRepository postCommentRepository, PostFilesRepository postFilesRepository, PostLikedRepository postLikedRepository, PostReportRepository postReportRepository) {
 
 
     @Autowired
     public PostService(PostRepository postRepository, ModelMapper modelMapper, PostCommentRepository postCommentRepository, PostFilesRepository postFilesRepository) {
 
+=======
+    public PostService(PostRepository postRepository, ModelMapper modelMapper,
+                       PostCommentRepository postCommentRepository, PostFilesRepository postFilesRepository,
+                       PostLikedRepository postLikedRepository,
+                       PostReportRepository postReportRepository,
+                       PostCommentReportRepository postCommentReportRepository) {
+>>>>>>> 999573b (자유게시글 댓글 신고 조회 및 삽입 기능 작성)
         this.postRepository = postRepository;
         this.modelMapper = modelMapper;
         this.postCommentRepository = postCommentRepository;
@@ -44,6 +53,7 @@ public class PostService {
         this.postLikedRepository = postLikedRepository;
 
         this.postReportRepository = postReportRepository;
+        this.postCommentReportRepository = postCommentReportRepository;
     }
 
     /* 자유게시글 삽입(insert) 부분 */
@@ -227,22 +237,47 @@ public class PostService {
         postLikedRepository.save(modelMapper.map(postLiked, PostLikedEntity.class));
     }
 
+    /* 자유게시글 신고 삽입 */
     @Transactional
     public void reportPost(PostReportDTO postReport){
         postReport.setCreatedAt(DateTimeUtil.now());
 
         if (postReport.getUserId() != null) {
             if (postReportRepository.existsByPostIdAndUserId(postReport.getPostId(), postReport.getUserId())) {
-                throw new RuntimeException("이미 신고한 게시글입니다.");
+                throw new RuntimeException("이미 신고했던 게시글입니다.");
             }
         }
         if (postReport.getHeadId() != null) {
             if (postReportRepository.existsByPostIdAndHeadId(postReport.getPostId(), postReport.getHeadId())) {
-                throw new RuntimeException("이미 신고한 게시글입니다.");
+                throw new RuntimeException("이미 신고했던 게시글입니다.");
             }
         }
 
         postReportRepository.save(modelMapper.map(postReport, PostReportEntity.class));
     }
 
+<<<<<<< HEAD
+=======
+    /* 자유게시글 댓글 신고 삽입 */
+    @Transactional
+    public void reportPostComment(PostCommentReportDTO postCommentReport){
+        postCommentReport.setCreatedAt(DateTimeUtil.now());
+
+        if (postCommentReport.getUserId() != null) {
+            if (postCommentReportRepository.existsByCommentIdAndUserId(postCommentReport.getCommentId(),
+                                                             postCommentReport.getUserId())) {
+                throw new RuntimeException("이미 신고했던 게시글 댓글입니다.");
+            }
+        }
+        if (postCommentReport.getHeadId() != null) {
+            if (postCommentReportRepository.existsByCommentIdAndHeadId(postCommentReport.getCommentId(),
+                                                             postCommentReport.getHeadId())) {
+                throw new RuntimeException("이미 신고했던 게시글 댓글입니다.");
+            }
+        }
+
+        postCommentReportRepository.save(modelMapper.map(postCommentReport,  PostCommentReportEntity.class));
+    }
+
+>>>>>>> 999573b (자유게시글 댓글 신고 조회 및 삽입 기능 작성)
 }

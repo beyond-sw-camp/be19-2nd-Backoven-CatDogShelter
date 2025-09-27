@@ -80,4 +80,12 @@ public class PostExController {
         postservice.reportPost(postReport);
     }
 
+<<<<<<< HEAD
   }
+=======
+    @RequestMapping("/comment/report")
+    public void reportPostComment(@RequestBody PostCommentReportDTO postCommentReport){
+        postservice.reportPostComment(postCommentReport);
+    }
+}
+>>>>>>> 999573b (자유게시글 댓글 신고 조회 및 삽입 기능 작성)

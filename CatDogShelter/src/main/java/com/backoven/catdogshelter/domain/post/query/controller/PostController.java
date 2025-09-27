@@ -1,8 +1,6 @@
 package com.backoven.catdogshelter.domain.post.query.controller;
 
-import com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO;
-import com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO;
-import com.backoven.catdogshelter.domain.post.query.dto.PostLikedDescDTO;
+import com.backoven.catdogshelter.domain.post.query.dto.*;
 import com.backoven.catdogshelter.domain.post.query.service.PostService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +41,15 @@ public class PostController {
     @RequestMapping("/likedDesc")
     public List<PostLikedDescDTO> likedPostInventory(){
         return postService.likedPostInventory();
+    }
+
+    @RequestMapping("/report/{postId}")
+    public  List<PostReportDetailDTO>  reportPost(@PathVariable int postId) {
+        return postService.selectPostReport(postId);
+    }
+
+    @RequestMapping("/commentReport/{postCommentId}")
+    public List<PostCommentReportDetailDTO>  commentPostReport(@PathVariable int postCommentId) {
+        return postService.selectPostCommentReport(postCommentId);
     }
 }
