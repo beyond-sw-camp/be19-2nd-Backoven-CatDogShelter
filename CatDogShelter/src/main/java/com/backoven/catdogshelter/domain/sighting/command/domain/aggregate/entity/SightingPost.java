@@ -4,9 +4,6 @@ import com.backoven.catdogshelter.domain.sighting.command.domain.aggregate.enume
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
