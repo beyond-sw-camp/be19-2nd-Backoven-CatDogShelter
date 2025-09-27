@@ -13,7 +13,6 @@ public class ResponseRegistShelter_headDTO {
     private String ceoName;                    // 본명
     private String ceoName2;
     private String email;                       // 이메일
-    private String headPassword;               // 아직 암호화 적용 안 됨.
     private String headPhone;
     private String companyName;                 // 보호소 이름
     private String bizNumber;                  // 사업자 번호
