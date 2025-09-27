@@ -1,8 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.query.service;
 
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO;
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO;
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSummaryDTO;
+import com.backoven.catdogshelter.domain.sighting.query.dto.*;
 import com.backoven.catdogshelter.domain.sighting.query.mapper.SightingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,16 @@ public class QSightingServiceImpl implements QSightingService {
         sightingMapper.incrementSightingView(postId);  // 조회수 업데이트
 
         return sightingDetailDTO;
+    }
+
+    @Override
+    public List<SightingPostReportDTO> findSightingPostReport(int postId) {
+        return sightingMapper.selectSightingPostReport(postId);
+    }
+
+    @Override
+    public List<SightingPostCommentReportDTO> findSightingPostCommentReport(int commentId) {
+        return sightingMapper.selectSightingPostCommentReport(commentId);
     }
 
 }

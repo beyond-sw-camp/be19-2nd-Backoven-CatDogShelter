@@ -212,4 +212,66 @@
            SET view = view + 1
          WHERE id = #{postId}
     </update>
+
+    <resultMap id = "postReportResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingPostReportDTO">
+        <id property = "id" column="id"/>
+        <result property = "reportCategory" column = "category"/>
+        <result property = "etcDetail" column = "etc_detail"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <result property = "postId" column = "post_id"/>
+        <association property="writer" resultMap = "writerResultMap"/>
+    </resultMap>
+
+    <select id = "selectSightingPostReport" parameterType = "_int" resultMap = "postReportResultMap">
+        SELECT
+               spr.id
+             , spr.category
+             , spr.etc_detail
+             , spr.created_at
+             , spr.status
+             , spr.post_id
+             , spr.user_id
+             , spr.head_id
+             , CASE
+                 WHEN spr.user_id IS NOT NULL THEN u.user_name
+                 WHEN spr.head_id IS NOT NULL THEN sh.company_name
+           END AS writer_name
+          FROM sightingPostReport AS spr
+          LEFT JOIN user AS u ON (spr.user_id = u.user_id)
+          LEFT JOIN shelter_head AS sh ON (spr.head_id = sh.head_id)
+         WHERE spr.post_id = #{postId}
+    </select>
+
+    <resultMap id = "postCommentReportResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingPostCommentReportDTO">
+        <id property = "id" column="id"/>
+        <result property = "reportCategory" column = "category"/>
+        <result property = "etcDetail" column = "etc_detail"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <result property = "commentId" column = "comment_id"/>
+        <association property="writer" resultMap = "writerResultMap"/>
+    </resultMap>
+
+    <select id = "selectSightingPostCommentReport" parameterType = "_int" resultMap = "postCommentReportResultMap">
+        SELECT
+               sprc.id
+             , sprc.category
+             , sprc.etc_detail
+             , sprc.created_at
+             , sprc.status
+             , sprc.comment_id
+             , sprc.user_id
+             , sprc.head_id
+             , CASE
+                   WHEN sprc.user_id IS NOT NULL THEN u.user_name
+                   WHEN sprc.head_id IS NOT NULL THEN sh.company_name
+            END AS writer_name
+        FROM sightingPostCommentReport AS sprc
+                 LEFT JOIN user AS u ON (sprc.user_id = u.user_id)
+                 LEFT JOIN shelter_head AS sh ON (sprc.head_id = sh.head_id)
+        WHERE sprc.comment_id = #{commentId}
+    </select>
+
+
 </mapper>

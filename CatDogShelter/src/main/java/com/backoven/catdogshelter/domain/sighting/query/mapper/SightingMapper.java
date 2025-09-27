@@ -1,8 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.query.mapper;
 
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO;
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO;
-import com.backoven.catdogshelter.domain.sighting.query.dto.SightingSummaryDTO;
+import com.backoven.catdogshelter.domain.sighting.query.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,4 +13,8 @@ public interface SightingMapper {
     SightingDetailDTO selectSightingDetails(int postId);    // 상세 보기
 
     void incrementSightingView(int postId);
+
+    List<SightingPostReportDTO> selectSightingPostReport(int postId);
+
+    List<SightingPostCommentReportDTO> selectSightingPostCommentReport(int commentId);
 }
