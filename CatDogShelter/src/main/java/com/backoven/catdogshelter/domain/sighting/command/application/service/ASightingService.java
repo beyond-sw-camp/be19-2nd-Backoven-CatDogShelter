@@ -33,4 +33,8 @@ public interface ASightingService {
     void registSightingPostLiked(RequestSightingPostLikedDTO newLikedDTO);
 
     void deleteFile(int postId);
+
+    void modifySightingPostReport(int postId, boolean approve);
+
+    void modifySightingPostCommentReport(int commentId, boolean approve);
 }

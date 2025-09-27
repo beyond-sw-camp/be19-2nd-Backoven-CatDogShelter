@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -261,6 +260,7 @@ public class ASightingServiceImpl implements ASightingService {
     }
 
     @Override
+    @Transactional
     public void registSightingPostReport(RequestSightingPostReportDTO newReportDTO) {
         dSightingService.validate(newReportDTO);
 
@@ -273,6 +273,7 @@ public class ASightingServiceImpl implements ASightingService {
     }
 
     @Override
+    @Transactional
     public void registSightingPostCommentReport(RequestSightingPostCommentReportDTO newReportDTO) {
         dSightingService.validate(newReportDTO);
 
@@ -285,6 +286,7 @@ public class ASightingServiceImpl implements ASightingService {
     }
 
     @Override
+    @Transactional
     public void registSightingPostLiked(RequestSightingPostLikedDTO newLikedDTO) {
         dSightingService.validate(newLikedDTO);
 
@@ -295,6 +297,7 @@ public class ASightingServiceImpl implements ASightingService {
     }
 
     @Override
+    @Transactional
     public void deleteFile(int postId) {
         List<SightingPostFiles> files = sightingPostFilesRepository.findByPostId(postId);
 
@@ -310,5 +313,40 @@ public class ASightingServiceImpl implements ASightingService {
             }
         }
         sightingPostFilesRepository.deleteAll(files);
+    }
+
+    @Override
+    @Transactional
+    public void modifySightingPostReport(int postId, boolean approve) {
+        List<SightingPostReport> postReports = sightingPostReportRepository.findByPostId(postId);
+
+        for(SightingPostReport spr : postReports) {
+            spr.setStatus(true);
+        }
+        sightingPostReportRepository.saveAll(postReports);
+
+        // 신고를 승인하면
+        if(approve == true) {
+            SightingPost post =  sightingPostRepository.findById(postId).orElse(null);
+            post.setBlinded(true);
+            sightingPostRepository.save(post);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void modifySightingPostCommentReport(int commentId, boolean approve) {
+        List<SightingPostCommentReport> commentReports = sightingPostCommentReportRepository.findByCommentId(commentId);
+
+        for(SightingPostCommentReport sprc : commentReports) {
+            sprc.setStatus(true);
+        }
+        sightingPostCommentReportRepository.saveAll(commentReports);
+
+        if(approve == true) {
+            SightingPostComment comment =  sightingPostCommentRepository.findById(commentId).orElse(null);
+            comment.setBlinded(true);
+            sightingPostCommentRepository.save(comment);
+        }
     }
 }

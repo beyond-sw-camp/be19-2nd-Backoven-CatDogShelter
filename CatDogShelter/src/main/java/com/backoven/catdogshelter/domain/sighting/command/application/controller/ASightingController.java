@@ -162,11 +162,30 @@ public class ASightingController {
         return ResponseEntity.noContent().build();
     }
 
-
+    // 이미지 삭제
     @DeleteMapping("/{postId}/files")
     public ResponseEntity<?> deleteFile(@PathVariable int postId) {
         aSightingService.deleteFile(postId);
 
         return ResponseEntity.noContent().build();
     }
+
+    // 신고 처리
+    @PatchMapping("/post-report/{postId}/{approve}")
+    public ResponseEntity<?> modifySightingPostReport(@PathVariable int postId,
+                                                      @PathVariable boolean approve) {
+        aSightingService.modifySightingPostReport(postId, approve);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // 신고 처리
+    @PatchMapping("/comment-report/{commentId}/{approve}")
+    public ResponseEntity<?> modifySightingPostCommentReport(@PathVariable int commentId,
+                                                             @PathVariable boolean approve) {
+        aSightingService.modifySightingPostCommentReport(commentId, approve);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
