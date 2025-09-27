@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostCommentReportDTO {
+public class  PostCommentReportDTO {
     private int id;
     private String etcDetail;
     private ReportCategory category;

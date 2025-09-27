@@ -13,21 +13,21 @@ import java.util.Map;
 @RequestMapping("/post")
 public class PostExController {
 
-    private final PostService postservice;
+    private final PostService postService;
 
-    @Autowired
-    public PostExController(PostService postservice) {
-        this.postservice = postservice;
+    public PostExController(PostService postService) {
+        this.postService = postService;
     }
+
 
     @RequestMapping("/regist")
     public void registPost(@RequestBody PostRegistDTO postregist){
-        postservice.registPost(postregist);
+        postService.registPost(postregist);
     }
 
     @RequestMapping("/modify")
     public void modifyPost(@RequestBody PostModifyDTO postmodify){
-        postservice.modifyPost(postmodify);
+        postService.modifyPost(postmodify);
     }
 
     /* 프론트에서 삭제할 자유게시글 번호만 받아서 사용하기 때문에 DTO을 따로 사용하지 않고 Map을 사용해서
@@ -35,57 +35,55 @@ public class PostExController {
     @RequestMapping("/delete")
     public void deletePost(@RequestBody Map<String, String> postDelete){
         int id = Integer.parseInt(postDelete.get("id"));
-        postservice.deletePost(id);
+        postService.deletePost(id);
     }
 
     @RequestMapping("/comment/regist")
     public void registPostComment(@RequestBody PostCommentRegistDTO postCommentRegist){
-        postservice.registPostComment(postCommentRegist);
+        postService.registPostComment(postCommentRegist);
     }
 
     @RequestMapping("/comment/modify")
     public void modifyPostComment(@RequestBody PostCommentModifyDTO postCommentModify){
-        postservice.modifyPostComment(postCommentModify);
+        postService.modifyPostComment(postCommentModify);
     }
 
     @RequestMapping("/comment/delete")
     public void deletePostComment(@RequestBody Map<String, String> postCommentDelete){
         int id = Integer.parseInt(postCommentDelete.get("id"));
-        postservice.deletePostComment(id);
+        postService.deletePostComment(id);
     }
 
     @RequestMapping("/files/regist")
     public void registPostFiles(@RequestBody PostFilesRegistDTO postFilesRegist){
-        postservice.registPostFiles(postFilesRegist);
+        postService.registPostFiles(postFilesRegist);
     }
 
     @RequestMapping("/files/modify")
     public void modifyPostFiles(@RequestBody PostFilesModifyDTO postFilestModify){
-        postservice.modifyPostFiles(postFilestModify);
+        postService.modifyPostFiles(postFilestModify);
     }
 
     @RequestMapping("/files/delete")
     public void deletePostFiles(@RequestBody PostFilesDeleteDTO postFilesDelete){
-        postservice.deletePostFiles(postFilesDelete);
+        postService.deletePostFiles(postFilesDelete);
     }
 
 
     @RequestMapping("/liked")
     public void likedPost(@RequestBody PostLikedDTO postLiked){
-        postservice.likedPost(postLiked);
+        postService.likedPost(postLiked);
     }
 
     @RequestMapping("/report")
     public void reportPost(@RequestBody PostReportDTO postReport){
-        postservice.reportPost(postReport);
+        postService.reportPost(postReport);
     }
-
-<<<<<<< HEAD
-  }
-=======
     @RequestMapping("/comment/report")
     public void reportPostComment(@RequestBody PostCommentReportDTO postCommentReport){
-        postservice.reportPostComment(postCommentReport);
+        postService.reportPostComment(postCommentReport);
     }
 }
->>>>>>> 999573b (자유게시글 댓글 신고 조회 및 삽입 기능 작성)
+
+
+

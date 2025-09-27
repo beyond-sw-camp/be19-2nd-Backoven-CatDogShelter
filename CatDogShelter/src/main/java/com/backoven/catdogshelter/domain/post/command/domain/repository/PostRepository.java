@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 
-
-
 public interface PostRepository extends JpaRepository<PostEntity, Integer> {
+
 }

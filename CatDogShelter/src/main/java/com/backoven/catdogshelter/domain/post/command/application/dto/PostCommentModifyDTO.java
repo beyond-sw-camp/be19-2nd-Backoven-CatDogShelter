@@ -11,6 +11,5 @@ public class PostCommentModifyDTO {
     private int id;
     private String content;
     private String updatedAt;
-//    private Integer userId;
-//    private Integer headId;
+
 }

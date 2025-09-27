@@ -9,9 +9,6 @@
         <result property="title" column="TITLE"/>
         <result property="created_at" column="CREATED_AT"/>
         <result property="updated_at" column="UPDATED_AT"/>
-
-        <result property="view" column="VIEW"/>
-
         <result property="writeType" column="WRITE_TYPE"/>
         <result property="writeName" column="WRITE_NAME"/>
         <result property="likeCount" column="LIKE_COUNT"/>
@@ -22,9 +19,6 @@
              , p.title
              , p.created_at
              , p.updated_at
-
-             , p.view
-
              , CASE
                    WHEN p.user_id IS NOT NULL THEN '일반 회원'
                    WHEN p.head_id IS NOT NULL THEN '보호소장 회원'

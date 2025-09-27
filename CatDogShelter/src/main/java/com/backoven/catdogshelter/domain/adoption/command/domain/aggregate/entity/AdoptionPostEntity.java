@@ -5,6 +5,7 @@ import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enume
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.AdoptionPostStatus;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.YnOption;
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
 
 @AllArgsConstructor

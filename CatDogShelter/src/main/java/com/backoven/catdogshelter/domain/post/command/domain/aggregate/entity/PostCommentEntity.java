@@ -54,13 +54,6 @@ public class PostCommentEntity {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = DateTimeUtil.now();
-
-    public void setCreatedAtNow() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void setUpdatedAtNow() {
-        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-    }
 }
