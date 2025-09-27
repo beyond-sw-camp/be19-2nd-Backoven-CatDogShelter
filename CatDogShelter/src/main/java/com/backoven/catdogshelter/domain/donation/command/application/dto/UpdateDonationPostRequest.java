@@ -11,4 +11,6 @@ public class UpdateDonationPostRequest {
     private Long postId;
     private String title;
     private String content;
+    private Long headId;
+    private String headName; // ceoName
 }
