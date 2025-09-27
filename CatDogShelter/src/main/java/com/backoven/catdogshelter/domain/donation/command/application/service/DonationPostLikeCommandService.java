@@ -16,12 +16,17 @@ public class DonationPostLikeCommandService {
     private final DonationPostRepository donationPostRepository;
     private final DonationPostLikedRepository donationPostLikedRepository;
 
-    public void likePost(Long postId, UserEntity user) {
+    // 좋아요 누르기
+    public void likePost(Long postId, Long userId) {
         DonationPost post = donationPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        // 임시 UserEntity (DB조회 생략)
+        UserEntity user = new UserEntity();
+        user.setId(userId);
 
         if (donationPostLikedRepository.existsByPostAndUser(post, user)) {
-            throw new IllegalArgumentException("Already liked");
+            throw new IllegalStateException("이미 좋아요를 눌렀습니다.");
         }
 
         DonationPostLiked like = new DonationPostLiked();
@@ -29,5 +34,20 @@ public class DonationPostLikeCommandService {
         like.setUser(user);
 
         donationPostLikedRepository.save(like);
+    }
+
+    // 좋아요 취소
+    public void unlikePost(Long postId, Long userId) {
+        DonationPost post = donationPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+
+        if (!donationPostLikedRepository.existsByPostAndUser(post, user)) {
+            throw new IllegalStateException("좋아요 기록이 없습니다.");
+        }
+
+        donationPostLikedRepository.deleteByPostAndUser(post, user);
     }
 }
