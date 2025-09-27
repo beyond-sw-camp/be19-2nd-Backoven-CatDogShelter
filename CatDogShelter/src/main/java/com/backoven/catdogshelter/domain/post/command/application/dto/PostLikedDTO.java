@@ -7,14 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostModifyDTO {
+public class PostLikedDTO {
     private int id;
-    private String title;
-    private String content;
-    private String updatedAt;
-
-
-
-
-
+    private int postId;
+    private Integer userId;
+    private Integer headId;
 }
