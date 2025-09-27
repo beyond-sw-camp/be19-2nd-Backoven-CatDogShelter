@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity;
 
 import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -33,11 +34,10 @@ public class DonationPost {
 
     private int view;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "head_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ShelterUserEntity head; //보호소장FK
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,12 +50,6 @@ public class DonationPost {
     private List<DonationPostLiked> likes = new ArrayList<>();
 
 
-    // 소프트 삭제 메서드
-    public void softDelete() {
-        this.deleted = true;
-        comments.forEach(DonationPostComment::softDelete);
-        files.forEach(DonationPostFiles::softDelete);
-    }
 
 
 }

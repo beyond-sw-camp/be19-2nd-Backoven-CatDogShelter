@@ -15,13 +15,11 @@ public class DonationPostFiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "file_rename")
     private String fileRename;
 
+    @Column(name = "file_path")
     private String filePath;
-
-    @Column(name = "is_deleted", nullable = false)
-    private boolean deleted = false;
 
     @Column(name="uploaded_at")
     private String uploadedAt;
@@ -29,9 +27,5 @@ public class DonationPostFiles {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private DonationPost post;
-
-    public void softDelete() {
-        this.deleted = true;
-    }
 
 }
