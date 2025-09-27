@@ -53,14 +53,24 @@ public class QSightingController {
 
     // 게시글 신고 조회
     @GetMapping("/post-report/{postId}")
-    public List<SightingPostReportDTO> findSightingPostReport(@PathVariable int postId) {
-        return qSightingService.findSightingPostReport(postId);
+    public SightingPostReportCountDTO findSightingPostReport(@PathVariable int postId) {
+        List<SightingPostReportDTO> reports = qSightingService.findSightingPostReport(postId);
+        SightingPostReportCountDTO response = new SightingPostReportCountDTO();
+        response.setCount(reports.size());
+        response.setSightingPostReportDTOList(reports);
+
+        return response;
     }
 
     // 댓글 신고 조회
     @GetMapping("/comment-report/{commentId}")
-    public List<SightingPostCommentReportDTO> findSightingPostCommentReport(@PathVariable int commentId) {
-        return qSightingService.findSightingPostCommentReport(commentId);
+    public SightingPostCommentReportCountDTO findSightingPostCommentReport(@PathVariable int commentId) {
+        List<SightingPostCommentReportDTO> reports = qSightingService.findSightingPostCommentReport(commentId);
+        SightingPostCommentReportCountDTO response = new SightingPostCommentReportCountDTO();
+        response.setCount(reports.size());
+        response.setSightingPostCommentReportDTOList(reports);
+
+        return response;
     }
 
     @GetMapping("/file/{filePath}/{fileName}")
