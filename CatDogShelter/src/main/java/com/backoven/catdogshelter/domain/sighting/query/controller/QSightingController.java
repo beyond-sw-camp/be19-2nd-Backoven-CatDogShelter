@@ -46,7 +46,7 @@ public class QSightingController {
     public SightingDetailDTO findSightingDetails(@PathVariable int postId) {
 
         SightingDetailDTO sightingDetailDTO = qSightingService.findSightingDetails(postId);
-
+        log.info("{}",  sightingDetailDTO);
         return sightingDetailDTO;
     }
 

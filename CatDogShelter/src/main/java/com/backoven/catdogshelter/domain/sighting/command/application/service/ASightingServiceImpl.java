@@ -9,8 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -21,16 +32,21 @@ public class ASightingServiceImpl implements ASightingService {
     private final SightingPostCommentRepository sightingPostCommentRepository;
     private final SightingPostReportRepository sightingPostReportRepository;
     private final SightingPostCommentReportRepository sightingPostCommentReportRepository;
+    private final SightingPostFilesRepository sightingPostFilesRepository;
     private final SightingPostLikedRepository sightingPostLikedRepository;
-
     private final ModelMapper modelMapper;
+
+    @Value("${filepath}")
+    private String imgCommonPath;
+
     @Autowired
-    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, SightingPostReportRepository sightingPostReportRepository, SightingPostCommentReportRepository sightingPostCommentReportRepository, SightingPostLikedRepository sightingPostLikedRepository, ModelMapper modelMapper) {
+    public ASightingServiceImpl(DSightingService DSightingService, SightingPostRepository sightingPostRepository, SightingPostCommentRepository sightingPostCommentRepository, SightingPostReportRepository sightingPostReportRepository, SightingPostCommentReportRepository sightingPostCommentReportRepository, SightingPostFilesRepository sightingPostFilesRepository, SightingPostLikedRepository sightingPostLikedRepository, ModelMapper modelMapper) {
         this.dSightingService = DSightingService;
         this.sightingPostRepository = sightingPostRepository;
         this.sightingPostCommentRepository = sightingPostCommentRepository;
         this.sightingPostReportRepository = sightingPostReportRepository;
         this.sightingPostCommentReportRepository = sightingPostCommentReportRepository;
+        this.sightingPostFilesRepository = sightingPostFilesRepository;
         this.sightingPostLikedRepository = sightingPostLikedRepository;
         this.modelMapper = modelMapper;
     }
@@ -38,7 +54,7 @@ public class ASightingServiceImpl implements ASightingService {
     // 게시글 작성
     @Override
     @Transactional
-    public int registSightingPost(RequestSightingPostDTO newPostDTO) {
+    public int registSightingPost(RequestSightingPostDTO newPostDTO, List<MultipartFile> multiFiles) {
         // 추가하려는 게시글이 규칙을 지키지 않았다면
         dSightingService.validate(newPostDTO);
 
@@ -47,10 +63,40 @@ public class ASightingServiceImpl implements ASightingService {
         SightingPost newPost = modelMapper.map(newPostDTO, SightingPost.class);
 
         // createdAt을 서버의 현재시간으로 설정: yyyy-MM-dd HH:mm:ss
-        newPost.setCreatedAt(DateTimeUtil.now());
+        String now = DateTimeUtil.now();
+        newPost.setCreatedAt(now);
 
         // 게시글 insert
         sightingPostRepository.save(newPost);
+
+        if (multiFiles != null) {
+            try {
+                for(MultipartFile multiFile : multiFiles) {
+                    String originFileName = multiFile.getOriginalFilename();
+                    String ext = originFileName.substring(originFileName.lastIndexOf("."));
+                    String saveName = UUID.randomUUID().toString().replace("-", "") + ext;
+
+                    File dir = new File(imgCommonPath, "Sighting");
+                    if(!dir.exists()) {
+                        if(!dir.mkdirs()) {
+                            // 폴더 만들기 실패 에러
+                        }
+                    }
+                    File dest = new File(dir, saveName);
+                    multiFile.transferTo(dest);
+
+                    SightingPostFiles spfile = new SightingPostFiles();
+                    spfile.setPostId(newPost.getId());
+                    spfile.setFileRename(saveName);
+                    spfile.setUploadedAt(now);
+
+                    sightingPostFilesRepository.save(spfile);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         // 게시글 번호 반환
         return newPost.getId();
@@ -92,6 +138,25 @@ public class ASightingServiceImpl implements ASightingService {
 
         if(foundPost != null) {
             foundPost.setDeleted(true);
+
+            // 관련 파일들 삭제
+            List<SightingPostFiles> files = sightingPostFilesRepository.findByPostId(postId);
+
+
+            for (SightingPostFiles spfile : files) {
+
+                Path path = Paths.get(imgCommonPath,spfile.getFilePath(), spfile.getFileRename());
+                if(Files.exists(path)) {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+
+            sightingPostFilesRepository.deleteAll(files);
             return true;
         }
         return false;
@@ -103,9 +168,10 @@ public class ASightingServiceImpl implements ASightingService {
     public boolean restoreSightingPost(int postId) {
         SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
 
-        log.info("여기까지 옴: {}", foundPost);
+//        log.info("여기까지 옴: {}", foundPost);
         if(foundPost != null) {
             foundPost.setDeleted(false);
+
             return true;
         }
         return false;

@@ -1,9 +1,12 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.service;
 
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ASightingService {
-    int registSightingPost(RequestSightingPostDTO newPostDTO);
+    int registSightingPost(RequestSightingPostDTO newPostDTO, List<MultipartFile> multiFiles);
 
     void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO);
 

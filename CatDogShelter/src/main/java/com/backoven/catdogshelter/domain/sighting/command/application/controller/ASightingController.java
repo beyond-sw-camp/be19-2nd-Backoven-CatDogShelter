@@ -2,11 +2,17 @@ package com.backoven.catdogshelter.domain.sighting.command.application.controlle
 
 import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
 import com.backoven.catdogshelter.domain.sighting.command.application.service.ASightingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/sighting-post")
@@ -21,8 +27,13 @@ public class ASightingController {
 
     // 게시글 작성
     @PostMapping("/post")
-    public ResponseEntity<?> registSightingPost(@RequestBody RequestSightingPostDTO newPostDTO) {
-        int postId = aSightingService.registSightingPost(newPostDTO);
+    public ResponseEntity<?> registSightingPost(@RequestParam("newPostDTO") String newPostDTOJson,    // RequestParam과 RequestBody 동시 사용 불가
+                                                @RequestParam List<MultipartFile> multiFiles) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        RequestSightingPostDTO newPostDTO = objectMapper.readValue(newPostDTOJson, RequestSightingPostDTO.class);
+
+        int postId = aSightingService.registSightingPost(newPostDTO, multiFiles);
         // 목격 정보 게시판의 필드 중에 nullable하게 만들 것들 확인 필요
         
         return ResponseEntity
@@ -150,5 +161,4 @@ public class ASightingController {
 
         return ResponseEntity.noContent().build();
     }
-
 }
