@@ -29,9 +29,10 @@ spring:
   # url, username, password은 다른 yml에서 작성
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/catdogshelter
-    username: backoven
-    password: backoven
+    url: jdbc:mariadb://localhost:3306/CatDogShelter
+    username:
+    password:
+
 
 
 # fatal -> error -> warn -> info -> debug -> trace
