@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DonationPostLikedRepository extends JpaRepository<DonationPostLiked, Long> {
     boolean existsByPostAndUser(DonationPost post, UserEntity user);
+    void deleteByPostAndUser(DonationPost post, UserEntity user);
 }
