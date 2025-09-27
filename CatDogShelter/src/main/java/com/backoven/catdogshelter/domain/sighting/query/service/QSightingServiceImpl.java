@@ -46,5 +46,4 @@ public class QSightingServiceImpl implements QSightingService {
     public List<SightingPostCommentReportDTO> findSightingPostCommentReport(int commentId) {
         return sightingMapper.selectSightingPostCommentReport(commentId);
     }
-
 }

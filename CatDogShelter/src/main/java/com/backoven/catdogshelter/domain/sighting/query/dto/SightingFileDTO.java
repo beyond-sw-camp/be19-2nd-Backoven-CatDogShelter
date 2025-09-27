@@ -1,6 +1,9 @@
 package com.backoven.catdogshelter.domain.sighting.query.dto;
 
 import lombok.*;
+import org.springframework.core.io.Resource;
+
+import java.nio.file.Path;
 
 @NoArgsConstructor
 @AllArgsConstructor
