@@ -24,7 +24,7 @@ spring:
   # active: {...} -> application-{...}.yml 파일 우선 적용
   profiles:
     active: dev
-
+    
   # DB 설정
   # url, username, password은 다른 yml에서 작성
   datasource:
@@ -33,13 +33,13 @@ spring:
     username:
     password:
 
-
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
 
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
-    root: info
+    root: INFO
 
 filepath: # 윈도우: C:\\uploadFiles
-# max: /User/??/uploadFiles
-
+          # max: /User/??/uploadFiles
