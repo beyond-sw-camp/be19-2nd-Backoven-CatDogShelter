@@ -161,4 +161,12 @@ public class ASightingController {
 
         return ResponseEntity.noContent().build();
     }
+
+
+    @DeleteMapping("/{postId}/files")
+    public ResponseEntity<?> deleteFile(@PathVariable int postId) {
+        aSightingService.deleteFile(postId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

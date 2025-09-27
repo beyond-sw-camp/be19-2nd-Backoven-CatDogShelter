@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.sighting.query.controller;
 
+import com.backoven.catdogshelter.domain.sighting.command.application.service.ASightingService;
 import com.backoven.catdogshelter.domain.sighting.query.dto.*;
 import com.backoven.catdogshelter.domain.sighting.query.service.QSightingService;
 import lombok.extern.slf4j.Slf4j;

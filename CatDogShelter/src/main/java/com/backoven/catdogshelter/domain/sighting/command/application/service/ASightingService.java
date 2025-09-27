@@ -31,4 +31,6 @@ public interface ASightingService {
     void registSightingPostCommentReport(RequestSightingPostCommentReportDTO newReportDTO);
 
     void registSightingPostLiked(RequestSightingPostLikedDTO newLikedDTO);
+
+    void deleteFile(int postId);
 }

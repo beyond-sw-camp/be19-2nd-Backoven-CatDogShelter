@@ -154,8 +154,6 @@ public class ASightingServiceImpl implements ASightingService {
                     }
                 }
             }
-
-
             sightingPostFilesRepository.deleteAll(files);
             return true;
         }
@@ -294,5 +292,23 @@ public class ASightingServiceImpl implements ASightingService {
         SightingPostLiked newLiked = modelMapper.map(newLikedDTO, SightingPostLiked.class);
 
         sightingPostLikedRepository.save(newLiked);
+    }
+
+    @Override
+    public void deleteFile(int postId) {
+        List<SightingPostFiles> files = sightingPostFilesRepository.findByPostId(postId);
+
+        for (SightingPostFiles spfile : files) {
+
+            Path path = Paths.get(imgCommonPath,spfile.getFilePath(), spfile.getFileRename());
+            if(Files.exists(path)) {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        sightingPostFilesRepository.deleteAll(files);
     }
 }
