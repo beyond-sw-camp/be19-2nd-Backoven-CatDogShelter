@@ -83,7 +83,16 @@ public class PostExController {
     public void reportPostComment(@RequestBody PostCommentReportDTO postCommentReport){
         postService.reportPostComment(postCommentReport);
     }
-}
 
+    @RequestMapping("/liked")
+    public void likedPost(@RequestBody PostLikedDTO postLiked){
+        postservice.likedPost(postLiked);
+    }
 
+    @RequestMapping("/report")
+    public void reportPost(@RequestBody PostReportDTO postReport){
+        postservice.reportPost(postReport);
+    }
+
+  }
 

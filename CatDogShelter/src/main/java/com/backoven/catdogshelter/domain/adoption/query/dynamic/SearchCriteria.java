@@ -1,7 +1,6 @@
 package com.backoven.catdogshelter.domain.adoption.query.dynamic;
 
 import lombok.*;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

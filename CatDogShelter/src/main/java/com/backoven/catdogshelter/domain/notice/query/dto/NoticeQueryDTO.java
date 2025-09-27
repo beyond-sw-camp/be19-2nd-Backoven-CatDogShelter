@@ -8,4 +8,5 @@ public class NoticeQueryDTO {
     private String title;
     private String createdAt;
     private String writer;
+    private int likes;
 }
