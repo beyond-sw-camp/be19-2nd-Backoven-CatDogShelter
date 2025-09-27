@@ -189,13 +189,12 @@
               , spc.user_id AS comment_user_id
               , spc.head_id AS comment_head_id
           FROM sightingPost AS sp
-          LEFT JOIN sightingPostLiked AS spl ON (sp.id = spl.post_id)
           LEFT JOIN user AS u ON (sp.user_id = u.user_id)
           LEFT JOIN shelter_head AS sh ON (sp.head_id = sh.head_id)
           LEFT JOIN sigungu ON (sp.sigungu_id = sigungu.sigungu_id)
           LEFT JOIN sido ON (sigungu.sido_id = sido.sido_id)
           LEFT JOIN sightingPostFiles AS spf ON (sp.id = spf.post_id)
-          LEFT JOIN sightingPostComment AS spc ON (sp.id = spc.post_id)
+          LEFT JOIN sightingPostComment AS spc ON (sp.id = spc.post_id AND spc.is_blinded = FALSE AND spc.is_deleted = FALSE)
           LEFT JOIN user AS cu ON (spc.user_id = cu.user_id)
           LEFT JOIN shelter_head AS csh ON (spc.head_id = csh.head_id)
           LEFT JOIN rating AS spr ON (u.rating_id = spr.id)
@@ -203,8 +202,6 @@
          WHERE sp.is_blinded = FALSE
            AND sp.is_deleted = FALSE
            AND sp.id = #{postId}
-           AND spc.is_blinded = FALSE
-           AND spc.is_deleted = FALSE
     </select>
 
     <update id = "incrementSightingView" parameterType = "_int">
