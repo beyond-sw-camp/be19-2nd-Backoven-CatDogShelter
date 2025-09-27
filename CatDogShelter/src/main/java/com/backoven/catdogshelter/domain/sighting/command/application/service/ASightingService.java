@@ -1,12 +1,12 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.service;
 
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ASightingService {
-    int registSightingPost(RequestSightingPostDTO newPostDTO);
+    int registSightingPost(RequestSightingPostDTO newPostDTO, List<MultipartFile> multiFiles);
 
     void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO);
 
@@ -29,4 +29,12 @@ public interface ASightingService {
     void registSightingPostReport(RequestSightingPostReportDTO newReportDTO);
 
     void registSightingPostCommentReport(RequestSightingPostCommentReportDTO newReportDTO);
+
+    void registSightingPostLiked(RequestSightingPostLikedDTO newLikedDTO);
+
+    void deleteFile(int postId);
+
+    void modifySightingPostReport(int postId, boolean approve);
+
+    void modifySightingPostCommentReport(int commentId, boolean approve);
 }

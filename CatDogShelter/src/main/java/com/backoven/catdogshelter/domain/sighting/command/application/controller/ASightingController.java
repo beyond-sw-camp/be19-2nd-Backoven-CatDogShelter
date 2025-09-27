@@ -1,15 +1,16 @@
 package com.backoven.catdogshelter.domain.sighting.command.application.controller;
 
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostCommentReportDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostDTO;
-import com.backoven.catdogshelter.domain.sighting.command.application.dto.RequestSightingPostReportDTO;
+import com.backoven.catdogshelter.domain.sighting.command.application.dto.*;
 import com.backoven.catdogshelter.domain.sighting.command.application.service.ASightingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/sighting-post")
@@ -24,8 +25,13 @@ public class ASightingController {
 
     // 게시글 작성
     @PostMapping("/post")
-    public ResponseEntity<?> registSightingPost(@RequestBody RequestSightingPostDTO newPostDTO) {
-        int postId = aSightingService.registSightingPost(newPostDTO);
+    public ResponseEntity<?> registSightingPost(@RequestParam("newPostDTO") String newPostDTOJson,    // RequestParam과 RequestBody 동시 사용 불가
+                                                @RequestParam List<MultipartFile> multiFiles) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        RequestSightingPostDTO newPostDTO = objectMapper.readValue(newPostDTOJson, RequestSightingPostDTO.class);
+
+        int postId = aSightingService.registSightingPost(newPostDTO, multiFiles);
         // 목격 정보 게시판의 필드 중에 nullable하게 만들 것들 확인 필요
         
         return ResponseEntity
@@ -146,10 +152,38 @@ public class ASightingController {
 
         return ResponseEntity.noContent().build();
     }
-//    // 게시글 추천
-//    @PostMapping("/post-like")
-//    public ResponseEntity<?> registSightingPostLiked() {
-//
-//    }
+    // 게시글 추천
+    @PostMapping("/post-like")
+    public ResponseEntity<?> registSightingPostLiked(@RequestBody RequestSightingPostLikedDTO newLikedDTO) {
+        aSightingService.registSightingPostLiked(newLikedDTO);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // 이미지 삭제
+    @DeleteMapping("/{postId}/files")
+    public ResponseEntity<?> deleteFile(@PathVariable int postId) {
+        aSightingService.deleteFile(postId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // 신고 처리
+    @PatchMapping("/post-report/{postId}/{approve}")
+    public ResponseEntity<?> modifySightingPostReport(@PathVariable int postId,
+                                                      @PathVariable boolean approve) {
+        aSightingService.modifySightingPostReport(postId, approve);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // 신고 처리
+    @PatchMapping("/comment-report/{commentId}/{approve}")
+    public ResponseEntity<?> modifySightingPostCommentReport(@PathVariable int commentId,
+                                                             @PathVariable boolean approve) {
+        aSightingService.modifySightingPostCommentReport(commentId, approve);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }
