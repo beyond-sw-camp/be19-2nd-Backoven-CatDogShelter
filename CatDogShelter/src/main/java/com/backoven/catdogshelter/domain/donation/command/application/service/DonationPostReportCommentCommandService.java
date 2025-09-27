@@ -19,7 +19,7 @@ public class DonationPostReportCommentCommandService {
     private final DonationPostCommentRepository donationPostCommentRepository;
     private final DonationPostCommentReportRepository donationPostCommentReportRepository;
 
-    public void reportComment(Long commentId, ReportCategory category, String detail, UserEntity reporter) {
+    public void createReportDonationPostComment(Long commentId, ReportCategory category, String detail, UserEntity reporter) {
         DonationPostComment comment = donationPostCommentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
 

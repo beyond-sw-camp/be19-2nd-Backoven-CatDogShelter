@@ -29,12 +29,7 @@ public class DonationExController {
     private final DonationPostReportCommentCommandService donationPostCommentReportService;
     private final DonationPostFileService donationPostFileService;
 
-    // 게시글 생성
-    @PostMapping
-    public ResponseEntity<Long> createPost(@RequestBody CreateDonationPostRequest request) {
-        return ResponseEntity.ok(donationPostService.createPost(request));
-    }
-
+      /*===============JPA - READ=============== */
 
     // 게시글 단건 조회(조회>mybatis에서 다 구현했음)
     @GetMapping("/{id}")
@@ -55,7 +50,7 @@ public class DonationExController {
         );
     }
 
-    // 게시글 작성자 (보호소장)ceo_name으로 조회(조회>mybatis에서 다 구현했음)
+    // 게시글 작성자 (보호소장)ceo_name으로 조회
     @GetMapping("/by-ceo")
     public ResponseEntity<List<DonationPostResponse>> getPostsByCeoName(@RequestParam String ceoName) {
         return ResponseEntity.ok(
@@ -66,89 +61,130 @@ public class DonationExController {
         );
     }
 
+    /* =============== JPA - CRD =============== */
 
-    // 게시글 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id,
-                                           @RequestBody UpdateDonationPostRequest request) {
-        request.setPostId(id);
-        donationPostService.updatePost(request);
+    // 게시글 생성 (보호소장만 가능) 제목+내용+파일업로드
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Long> createDonationPost(
+            @RequestPart("post") CreateDonationPostRequest request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+
+        Long postId = donationPostService.createDonationPost(request, files);
+        return ResponseEntity.ok(postId);
+    }
+
+    //게시글 수정 (본인만 가능) 파일 삭제,첨부 가능
+    @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateDonationPost(
+            @PathVariable Long postId,
+            @RequestPart("post") UpdateDonationPostRequest dto,   // JSON
+            @RequestPart(value = "files", required = false) List<MultipartFile> files, // 새 파일
+            @RequestParam Long headId) { // 작성자 검증용
+
+        donationPostService.updateDonationPost(dto, headId, files);
         return ResponseEntity.ok().build();
     }
 
+
     // 게시글 삭제 (작성자 본인만 가능)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id,
+    public ResponseEntity<Void> deleteDonationPost(@PathVariable Long id,
                                            @RequestParam Long headId) { // 작성자(보호소장) ID
-        donationPostService.deletePost(id, headId);
+        donationPostService.deleteDonationPost(id, headId);
         return ResponseEntity.noContent().build(); // 204
     }
 
-    //특정 게시글에 댓글 작성
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<Long> addComment(@PathVariable Long id,
-                                           @RequestBody CreateDonationCommentRequest request) {
-        request.setPostId(id); // PathVariable로 받은 게시글 ID를 DTO에 주입
-        return ResponseEntity.ok(donationCommentService.createComment(request));
-        // 댓글 저장 후 생성된 댓글 ID 반환
+
+    // 이미지 다운로드(조회용)
+    @GetMapping("/image/{fileName}")
+    public ResponseEntity<byte[]> downloadImage(@PathVariable String fileName) {
+        byte[] imageData = donationPostFileService.downloadImage(fileName); // 로컬에서 파일 읽기
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG) // 확장자에 따라 변경 가능
+                .body(imageData);
     }
 
-    // 특정 댓글 삭제 (작성자 본인만 가능)
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id,
-                                              @RequestParam Long userId) {
-        donationCommentService.deleteComment(id, userId);
-        return ResponseEntity.noContent().build(); // 204 반환 권장
-    }
+
 
     // 좋아요 누르기
     @PostMapping("/{id}/like")
-    public ResponseEntity<Void> likePost(@PathVariable Long id, @RequestParam Long userId) {
-        donationLikeService.likePost(id, userId);
+    public ResponseEntity<Void> updateLikeDonationPost(@PathVariable Long id, @RequestParam Long userId) {
+        donationLikeService.updateLikeDonationPost(id, userId);
         return ResponseEntity.ok().build();
     }
 
 
     // 좋아요 취소
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> unlikePost(@PathVariable Long id, @RequestParam Long userId) {
-        donationLikeService.unlikePost(id, userId);
+    public ResponseEntity<Void> updateUnLikeDonationPost(@PathVariable Long id, @RequestParam Long userId) {
+        donationLikeService.updateUnLikeDonationPost(id, userId);
         return ResponseEntity.noContent().build(); // 204
     }
 
-    //특정 게시글에 첨부파일(이미지 등) 업로드
-    @PostMapping(value = "/{id}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadFiles(@PathVariable Long id,
-                                            @RequestParam("files") List<MultipartFile> files) {
-        donationPostFileService.uploadFiles(id, files);
+
+
+    //특정 게시글에 댓글 작성
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<Long> createDonationPostComment(@PathVariable Long id,
+                                           @RequestBody CreateDonationCommentRequest request) {
+        request.setPostId(id); // PathVariable로 받은 게시글 ID를 DTO에 주입
+        return ResponseEntity.ok(donationCommentService.createDonationPostComment(request));
+        // 댓글 저장 후 생성된 댓글 ID 반환
+    }
+
+
+    // 댓글 수정 (작성자 본인만 가능)
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<Void> updateDonationPostComment(@PathVariable Long id,
+                                              @RequestParam Long userId, // 댓글 작성자 ID
+                                              @RequestBody String content) {
+        donationCommentService.updateDonationPostComment(id, userId, content);
         return ResponseEntity.ok().build();
     }
 
 
+
+    // 댓글 삭제 (작성자 본인만 가능)
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<Void> deleteDonationPostComment(@PathVariable Long id,
+                                              @RequestParam Long userId) {
+        donationCommentService.deleteDonationPostComment(id, userId);
+        return ResponseEntity.noContent().build(); // 204 반환 권장
+    }
+
+
+
+
+
     // 게시글 신고
     @PostMapping("/{id}/report")
-    public ResponseEntity<Void> reportPost(@PathVariable Long id,
+    public ResponseEntity<Void> createReportDonationPost(@PathVariable Long id,
                                            @RequestParam ReportCategory category,
                                            @RequestParam(required = false) String detail,
                                            @RequestParam Long userId) {
         UserEntity user = new UserEntity();
         user.setId(userId); // 더미 (추후 UserService 연동)
 
-        donationReportService.reportPost(id, category, detail, user);
+        donationReportService.createReportDonationPost(id, category, detail, user);
         return ResponseEntity.ok().build();
     }
 
+
     // 댓글 신고
     @PostMapping("/comments/{id}/report")
-    public ResponseEntity<Void> reportComment(@PathVariable Long id,
+    public ResponseEntity<Void> createReportDonationPostComment(@PathVariable Long id,
                                               @RequestParam ReportCategory category,
                                               @RequestParam(required = false) String detail,
                                               @RequestParam Long userId) {
         UserEntity user = new UserEntity();
         user.setId(userId);
-        donationPostCommentReportService.reportComment(id, category, detail, user);
+        donationPostCommentReportService.createReportDonationPostComment(id, category, detail, user);
         return ResponseEntity.ok().build();
     }
+
+
+
+
 }
 
 

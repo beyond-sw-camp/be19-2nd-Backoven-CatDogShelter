@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -24,31 +25,13 @@ public class DonationPostFileService {
 
     private final String uploadDir = "/Users/dong/uploads/"; // 로컬 저장 경로
 
-    @Transactional
-    public void uploadFiles(Long postId, List<MultipartFile> files) {
-        DonationPost post = donationPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        for (MultipartFile file : files) {
-            try {
-                // 파일명 변환
-                String rename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-                Path path = Paths.get(uploadDir + rename);
-
-                // 서버에 저장
-                file.transferTo(path);
-
-                // DB에 경로 저장
-                DonationPostFiles postFile = new DonationPostFiles();
-                postFile.setFileRename(rename);
-                postFile.setFilePath("/uploads/" + rename); // URL로 접근할 경로
-                postFile.setUploadedAt(DateTimeUtil.now());
-                postFile.setPost(post);
-
-                donationPostFilesRepository.save(postFile);
-            } catch (IOException e) {
-                throw new RuntimeException("파일 저장 실패", e);
-            }
+    public byte[] downloadImage(String fileName) {
+        try {
+            Path path = Paths.get(uploadDir + fileName);
+            return Files.readAllBytes(path);
+        } catch (IOException e) {
+            throw new RuntimeException("이미지 다운로드 실패: " + fileName, e);
         }
     }
 }

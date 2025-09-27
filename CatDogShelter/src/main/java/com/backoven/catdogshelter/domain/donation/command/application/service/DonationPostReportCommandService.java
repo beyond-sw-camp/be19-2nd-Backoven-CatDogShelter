@@ -20,7 +20,7 @@ public class DonationPostReportCommandService {
     private final DonationPostReportRepository donationPostReportRepository;
 
 
-    public void reportPost(Long postId, ReportCategory category, String detail, UserEntity reporter) {
+    public void createReportDonationPost(Long postId, ReportCategory category, String detail, UserEntity reporter) {
         DonationPost post = donationPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 

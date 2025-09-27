@@ -17,7 +17,7 @@ public class DonationPostLikeCommandService {
     private final DonationPostLikedRepository donationPostLikedRepository;
 
     // 좋아요 누르기
-    public void likePost(Long postId, Long userId) {
+    public void updateLikeDonationPost(Long postId, Long userId) {
         DonationPost post = donationPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
@@ -37,7 +37,7 @@ public class DonationPostLikeCommandService {
     }
 
     // 좋아요 취소
-    public void unlikePost(Long postId, Long userId) {
+    public void updateUnLikeDonationPost(Long postId, Long userId) {
         DonationPost post = donationPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
