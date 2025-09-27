@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.*;
 
 @AllArgsConstructor

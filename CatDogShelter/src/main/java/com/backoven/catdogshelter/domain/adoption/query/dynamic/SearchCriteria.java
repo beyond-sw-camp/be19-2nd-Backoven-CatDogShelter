@@ -9,7 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class SerachCriteria {
+public class SearchCriteria {
     // 키워드 검색용
     private String title;      // 제목 검색 키워드
     private String content;    // 내용 검색 키워드
