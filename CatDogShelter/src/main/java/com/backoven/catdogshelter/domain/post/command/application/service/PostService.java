@@ -6,7 +6,6 @@ import com.backoven.catdogshelter.domain.post.command.application.dto.*;
 import com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity.*;
 import com.backoven.catdogshelter.domain.post.command.domain.repository.*;
 
-import com.backoven.catdogshelter.domain.post.command.application.dto.*;
 import com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity.PostCommentEntity;
 import com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity.PostEntity;
 import com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity.PostFilesEntity;
@@ -26,24 +25,25 @@ public class PostService {
     private final ModelMapper modelMapper;
     private final PostCommentRepository postCommentRepository;
     private final PostFilesRepository postFilesRepository;
-
     private final PostLikedRepository postLikedRepository;
     private final PostReportRepository postReportRepository;
+    private final PostCommentReportRepository postCommentReportRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, ModelMapper modelMapper, PostCommentRepository postCommentRepository, PostFilesRepository postFilesRepository, PostLikedRepository postLikedRepository, PostReportRepository postReportRepository) {
-
-
-    @Autowired
-    public PostService(PostRepository postRepository, ModelMapper modelMapper, PostCommentRepository postCommentRepository, PostFilesRepository postFilesRepository) {
+    public PostService(PostRepository postRepository,
+                       ModelMapper modelMapper,
+                       PostCommentRepository postCommentRepository,
+                       PostFilesRepository postFilesRepository,
+                       PostLikedRepository postLikedRepository, PostLikedRepository postLikedRepository1,
+                       PostReportRepository postReportRepository, PostCommentReportRepository postCommentReportRepository) {
 
         this.postRepository = postRepository;
         this.modelMapper = modelMapper;
         this.postCommentRepository = postCommentRepository;
         this.postFilesRepository = postFilesRepository;
-        this.postLikedRepository = postLikedRepository;
-
+        this.postLikedRepository = postLikedRepository1;
         this.postReportRepository = postReportRepository;
+        this.postCommentReportRepository = postCommentReportRepository;
     }
 
     /* 자유게시글 삽입(insert) 부분 */
@@ -52,9 +52,6 @@ public class PostService {
         PostEntity insertPost = modelMapper.map(postregist, PostEntity.class);
         postregist.setCreatedAt(DateTimeUtil.now());
         postRepository.save(insertPost);
-        PostEntity entity = modelMapper.map(postregist, PostEntity.class);
-        entity.setCreatedAtNow();
-        postRepository.save(entity);
 
     }
 
@@ -67,19 +64,6 @@ public class PostService {
         // 수정할 값 덮어쓰기
         updatePost.setTitle(postModify.getTitle());
         updatePost.setContent(postModify.getContent());
-
-
-        PostEntity foundPost = postRepository.findById(postModify.getId())
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
-
-        // 수정할 값 덮어쓰기
-        foundPost.setTitle(postModify.getTitle());
-        foundPost.setContent(postModify.getContent());
-        foundPost.setUpdatedAtNow();
-
-        /* 둘 중 하나의 값이 먼저 들어오면 다른 값은 null로 처리되도록 함 */
-        /* if 문을 안 썼을 경우, 둘의 값을 같이 넣어야 하고 하나만 넣었을 경우 둘 다 null 값으로 처리됨. */
-
     }
 
     /* 자유게시글 내용 논리적 삭제(delete) 부분 */
@@ -90,10 +74,6 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         deletePost.setIsDeleted(1);
-
-        PostEntity foundPost = postRepository.findById(postDelete)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
-        foundPost.setIsDeleted(1);
 
     }
 
@@ -111,10 +91,6 @@ public class PostService {
         postCommentRegist.setCreatedAt(DateTimeUtil.now());
         postCommentRepository.save(insertPostComment);
 
-        PostCommentEntity entity = modelMapper.map(postCommentRegist, PostCommentEntity.class);
-        entity.setCreatedAtNow();
-        postCommentRepository.save(entity);
-
     }
 
     /* 자유게시글 댓글 수정(update) 부분 */
@@ -131,21 +107,6 @@ public class PostService {
 
         postCommentModify.setUpdatedAt(DateTimeUtil.now());
         updatePostComment.setContent(postCommentModify.getContent());
-
-        PostCommentEntity foundComment = postCommentRepository.findById(postCommentModify.getId())
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
-
-        foundComment.setContent(postCommentModify.getContent());
-        foundComment.setUpdatedAtNow();
-
-//        if (postCommentModify.getUserId() != null) {
-//            foundComment.setUserId(postCommentModify.getUserId());
-//            foundComment.setHeadId(null);
-//        } else if (postCommentModify.getHeadId() != null) {
-//            foundComment.setHeadId(postCommentModify.getHeadId());
-//            foundComment.setUserId(null);
-//        }
-
     }
 
     /* 자유게시글 댓글 삭제(delete) 부분 */
@@ -162,10 +123,6 @@ public class PostService {
 
         deletePostComment.setIsDeleted(1);
 
-        PostCommentEntity foundComment = postCommentRepository.findById(postCommentDelete)
-                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
-        foundComment.setIsDeleted(1);
-
     }
 
     /* 자유게시글 파일 삽입(insert) 부분 */
@@ -175,13 +132,6 @@ public class PostService {
         PostFilesEntity registPostFiles = modelMapper.map(postFilesRegist, PostFilesEntity.class);
         postFilesRegist.setUploadedAt(DateTimeUtil.now());
         postFilesRepository.save(registPostFiles);
-    }
-
-    /* 자유게시글 파일 수정(update) 부분 */
-
-        PostFilesEntity entity = modelMapper.map(postFilesRegist, PostFilesEntity.class);
-        entity.setUploadedAtNow();
-        postFilesRepository.save(entity);
     }
 
     /* 자유게시글 파일 수정(modify) 부분 */
@@ -194,10 +144,6 @@ public class PostService {
 
         postFilesModify.setUploadedAt(DateTimeUtil.now());
         foundFiles.setFileRename(postFilesModify.getFileRename());
-
-        foundFiles.setFileRename(postFilesModify.getFileRename());
-        foundFiles.setUploadedAtNow();
-
     }
 
     /* 자유게시글 파일 삭제(delete) 부분 */
@@ -227,22 +173,46 @@ public class PostService {
         postLikedRepository.save(modelMapper.map(postLiked, PostLikedEntity.class));
     }
 
+    /* 자유게시글 신고 삽입 */
     @Transactional
     public void reportPost(PostReportDTO postReport){
         postReport.setCreatedAt(DateTimeUtil.now());
 
         if (postReport.getUserId() != null) {
             if (postReportRepository.existsByPostIdAndUserId(postReport.getPostId(), postReport.getUserId())) {
-                throw new RuntimeException("이미 신고한 게시글입니다.");
+                throw new RuntimeException("이미 신고했던 게시글입니다.");
             }
         }
         if (postReport.getHeadId() != null) {
             if (postReportRepository.existsByPostIdAndHeadId(postReport.getPostId(), postReport.getHeadId())) {
-                throw new RuntimeException("이미 신고한 게시글입니다.");
+                throw new RuntimeException("이미 신고했던 게시글입니다.");
             }
         }
 
         postReportRepository.save(modelMapper.map(postReport, PostReportEntity.class));
+    }
+
+
+
+    /* 자유게시글 댓글 신고 삽입 */
+    @Transactional
+    public void reportPostComment(PostCommentReportDTO postCommentReport){
+        postCommentReport.setCreatedAt(DateTimeUtil.now());
+
+        if (postCommentReport.getUserId() != null) {
+            if (postCommentReportRepository.existsByCommentIdAndUserId(postCommentReport.getCommentId(),
+                                                             postCommentReport.getUserId())) {
+                throw new RuntimeException("이미 신고했던 게시글 댓글입니다.");
+            }
+        }
+        if (postCommentReport.getHeadId() != null) {
+            if (postCommentReportRepository.existsByCommentIdAndHeadId(postCommentReport.getCommentId(),
+                                                             postCommentReport.getHeadId())) {
+                throw new RuntimeException("이미 신고했던 게시글 댓글입니다.");
+            }
+        }
+
+        postCommentReportRepository.save(modelMapper.map(postCommentReport,  PostCommentReportEntity.class));
     }
 
 }

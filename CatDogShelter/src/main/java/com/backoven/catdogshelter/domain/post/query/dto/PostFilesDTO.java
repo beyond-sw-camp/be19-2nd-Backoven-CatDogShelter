@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PostFilesDTO {
-    private int id;                        // 자유게시글 첨부파일 번호
-    private String file_rename;            // 자유게시글 첨부파일 개명
-    private String uploaded_at;            // 자유게시글 첨부파일 업로드
+    private int id;
+    private String file_rename;
+    private String uploaded_at;
 }

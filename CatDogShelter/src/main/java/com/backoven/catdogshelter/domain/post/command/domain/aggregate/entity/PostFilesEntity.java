@@ -2,8 +2,6 @@ package com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity;
 
 
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,9 +38,6 @@ public class PostFilesEntity {
     @PrePersist
     public void prePersist() {
         this.uploadedAt = DateTimeUtil.now();
-
-    public void setUploadedAtNow() {
-        this.uploadedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
     }
+
 }

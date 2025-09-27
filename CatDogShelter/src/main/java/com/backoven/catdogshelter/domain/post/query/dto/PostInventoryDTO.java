@@ -16,12 +16,12 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @Data
 public class PostInventoryDTO {
-    private int id;                 // 자유게시글 번호
-    private String title;           // 자유게시글 제목
-    private String created_at;      // 자유게시글 작성일
-    private String updated_at;      // 자유게시글 수정일
-    private int view;               // 자유게시글 추천수
-    private String writeType;       // 회원 타입 구분
-    private String writeName;       // 자유게시글 작성자
+    private int id;
+    private String title;
+    private String created_at;
+    private String updated_at;
+    private int view;
+    private String writeType;
+    private String writeName;
 
 }
