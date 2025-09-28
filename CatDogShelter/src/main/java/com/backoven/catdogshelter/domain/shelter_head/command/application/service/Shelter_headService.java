@@ -9,5 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 /* security 폴더에 JwtAuthenticationProvider 클래스에서 아이디를 입력 받으면 UserDetailsService(처음부터 설치되어 잇엇음)
    에 있는 loadUserByUsername을 호출한다. */
 public interface Shelter_headService extends UserDetailsService {
+    Shelter_headDTO getShelter_headById(String memNo);
+
     void registUser(Shelter_headDTO userDTO);
 }

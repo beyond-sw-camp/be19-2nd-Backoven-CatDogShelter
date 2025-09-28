@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.Integer.parseInt;
+
 @Service
 @Slf4j
 public class Shelter_headServiceImpl implements Shelter_headService {
@@ -35,6 +37,13 @@ public class Shelter_headServiceImpl implements Shelter_headService {
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 
+    }
+
+    @Override
+    public Shelter_headDTO getShelter_headById(String memNo) {
+        Shelter_headEntity shelterHead = shelter_headRepository.findById(Integer.parseInt(memNo)).get();
+        Shelter_headDTO shelterHeadDTO = modelMapper.map(shelterHead, Shelter_headDTO.class);
+        return  shelterHeadDTO;
     }
 
     @Override

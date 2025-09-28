@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.shelter_head.command.application.controller;
 
 import com.backoven.catdogshelter.domain.shelter_head.command.application.dto.RequestRegistShelter_headDTO;
+import com.backoven.catdogshelter.domain.shelter_head.command.application.dto.ResponseFindShelter_headDTO;
 import com.backoven.catdogshelter.domain.shelter_head.command.application.dto.ResponseRegistShelter_headDTO;
 import com.backoven.catdogshelter.domain.shelter_head.command.application.dto.Shelter_headDTO;
 import com.backoven.catdogshelter.domain.shelter_head.command.application.service.Shelter_headService;
@@ -8,12 +9,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
-@RequestMapping("/post")
+@RequestMapping("/shelter_head")
 @Controller
 public class Shelter_headExController {
 
@@ -38,6 +37,16 @@ public class Shelter_headExController {
 
         ResponseRegistShelter_headDTO responseUser = modelMapper.map(userDTO, ResponseRegistShelter_headDTO.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+    }
+
+    @GetMapping("/users/{memNo}")
+    public ResponseEntity<ResponseFindShelter_headDTO> getUsers(@PathVariable String memNo){
+        Shelter_headDTO shelterHeadDTO = shelter_headService.getShelter_headById(memNo);
+
+        ResponseFindShelter_headDTO responseFindShelterHeadDTO =
+                modelMapper.map(shelterHeadDTO, ResponseFindShelter_headDTO.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseFindShelterHeadDTO);
     }
 }
 

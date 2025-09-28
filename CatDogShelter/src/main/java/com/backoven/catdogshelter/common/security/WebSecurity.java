@@ -5,23 +5,32 @@ package com.backoven.catdogshelter.common.security;
    이 대 entity와 DTO의 암호화 필드명이 같으면 안된다. */
 
 import jakarta.servlet.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 public class WebSecurity {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private Environment env;            // JWT Token의 payload에 만료시간 만들다가 추가함
+    private final JwtUtil jwtUtil;
 
-    public WebSecurity(JwtAuthenticationProvider jwtAuthenticationProvider) {
+    @Autowired
+    public WebSecurity(JwtAuthenticationProvider jwtAuthenticationProvider,
+                       Environment env, JwtUtil jwtUtil) {
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+        this.env = env;
+        this.jwtUtil = jwtUtil;
     }
 
     /* 만들어진 프로바이더 bean으로 등록 */
@@ -37,15 +46,22 @@ public class WebSecurity {
         http.authorizeHttpRequests(authz ->
                 authz.requestMatchers("/**").permitAll()
                     .anyRequest().authenticated()
-        );
+        )
+                /* Session 방식이 아닌 JWT Token 방식을 사용하겠다 */
+                /* Session 방식이 아닌 JWT Token 방식으로 인증된 회원(Authentication)을 Local Thread로 저장하겠다 */
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilter((getAuthenticationFilter(authenticationManager())));
+
+        /* 로그인 이후 토큰을 들고 온다면 JwtFilter를 추가해서 검증하도록 함 */
+        http.addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     /* 필터를 등록하기 위해 사용하는 메소드 */
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager);
+        return new AuthenticationFilter(authenticationManager,env);
     }
 }

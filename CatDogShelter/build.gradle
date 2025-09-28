@@ -45,6 +45,15 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'  // DTO - 엔티티 스왑 (속성이 동일한 경우에 자동으로 해주는 거임)
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // 로그인 시점에 인증된 회원을 위한 JWT 토큰 작성, 이후 토큰 유효성 검사
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
 }
 
 tasks.named('test') {
