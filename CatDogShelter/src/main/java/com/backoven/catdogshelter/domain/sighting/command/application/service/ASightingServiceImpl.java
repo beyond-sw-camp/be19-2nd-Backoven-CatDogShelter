@@ -298,7 +298,7 @@ public class ASightingServiceImpl implements ASightingService {
 
     @Override
     @Transactional
-    public void deleteFile(int postId) {
+    public void deleteSightinPostFile(int postId) {
         List<SightingPostFiles> files = sightingPostFilesRepository.findByPostId(postId);
 
         for (SightingPostFiles spfile : files) {

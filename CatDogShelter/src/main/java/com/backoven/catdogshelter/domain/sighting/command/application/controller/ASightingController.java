@@ -162,8 +162,8 @@ public class ASightingController {
 
     // 이미지 삭제
     @DeleteMapping("/{postId}/files")
-    public ResponseEntity<?> deleteFile(@PathVariable int postId) {
-        aSightingService.deleteFile(postId);
+    public ResponseEntity<?> deleteSightinPostFile(@PathVariable int postId) {
+        aSightingService.deleteSightinPostFile(postId);
 
         return ResponseEntity.noContent().build();
     }
