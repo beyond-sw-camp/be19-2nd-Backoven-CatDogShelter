@@ -25,7 +25,6 @@ public class DonationExController {
     private final DonationPostCommandService donationPostService;
     private final DonationPostCommentCommandService donationCommentService;
     private final DonationPostLikeCommandService donationLikeService;
-    private final DonationPostReportCommandService donationReportService;
     private final DonationPostReportCommentCommandService donationPostCommentReportService;
     private final DonationPostFileService donationPostFileService;
 
@@ -61,13 +60,21 @@ public class DonationExController {
         );
     }
 
-    /* =============== JPA - CRD =============== */
+    /* =============== JPA - CUD =============== */
 
     // 게시글 생성 (보호소장만 가능) 제목+내용+파일업로드
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> createDonationPost(
-            @RequestPart("post") CreateDonationPostRequest request,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("headId") Long headId,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+
+        CreateDonationPostRequest request = new CreateDonationPostRequest();
+        request.setTitle(title);
+        request.setContent(content);
+        request.setHeadId(headId);
+
 
         Long postId = donationPostService.createDonationPost(request, files);
         return ResponseEntity.ok(postId);
@@ -77,9 +84,15 @@ public class DonationExController {
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateDonationPost(
             @PathVariable Long postId,
-            @RequestPart("post") UpdateDonationPostRequest dto,   // JSON
-            @RequestPart(value = "files", required = false) List<MultipartFile> files, // 새 파일
-            @RequestParam Long headId) { // 작성자 검증용
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam Long headId,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+
+        UpdateDonationPostRequest dto = new UpdateDonationPostRequest();
+        dto.setPostId(postId);
+        dto.setTitle(title);
+        dto.setContent(content);
 
         donationPostService.updateDonationPost(dto, headId, files);
         return ResponseEntity.ok().build();
@@ -153,21 +166,6 @@ public class DonationExController {
     }
 
 
-
-
-
-    // 게시글 신고
-    @PostMapping("/{id}/report")
-    public ResponseEntity<Void> createReportDonationPost(@PathVariable Long id,
-                                           @RequestParam ReportCategory category,
-                                           @RequestParam(required = false) String detail,
-                                           @RequestParam Long userId) {
-        UserEntity user = new UserEntity();
-        user.setId(userId); // 더미 (추후 UserService 연동)
-
-        donationReportService.createReportDonationPost(id, category, detail, user);
-        return ResponseEntity.ok().build();
-    }
 
 
     // 댓글 신고
