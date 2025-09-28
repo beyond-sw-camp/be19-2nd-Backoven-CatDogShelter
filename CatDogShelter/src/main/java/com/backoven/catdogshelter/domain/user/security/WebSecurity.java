@@ -56,6 +56,7 @@ public class WebSecurity {
                         .requestMatchers(HttpMethod.GET, "/catdogshelter/user/**").authenticated() // 조회는 인증 필요
                         .requestMatchers(HttpMethod.PUT, "/catdogshelter/user/**").authenticated() // 수정도 인증 필요
                         .requestMatchers("/catdogshelter/adoption-post/**").permitAll() // 수정도 인증 필요
+                        .requestMatchers("/catdogshelter/admin/**").permitAll() // 수정도 인증 필요
                         .anyRequest().authenticated())
                 // 세션을 안쓰겟다
                 /* 설명. Session 방식이 아닌 JWT Token 방식을 사용하겠다. */
