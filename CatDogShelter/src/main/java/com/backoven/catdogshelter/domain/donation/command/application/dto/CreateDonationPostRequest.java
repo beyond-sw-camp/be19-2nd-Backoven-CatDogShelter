@@ -11,6 +11,6 @@ import java.util.List;
 public class CreateDonationPostRequest {
     private String title;
     private String content;
-    private Long headId;
+    private Integer headId;
     private List<String> filePaths; // 파일 업로드 경로
 }

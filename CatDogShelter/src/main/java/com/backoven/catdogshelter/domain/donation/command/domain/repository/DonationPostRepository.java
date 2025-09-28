@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface DonationPostRepository extends JpaRepository<DonationPost, Long> {
+public interface DonationPostRepository extends JpaRepository<DonationPost, Integer> {
     // head(보호소장) 이름으로 조회
     List<DonationPost> findByHeadCeoName(String ceoName);
 

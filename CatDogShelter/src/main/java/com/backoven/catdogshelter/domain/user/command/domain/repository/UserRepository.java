@@ -1,9 +1,11 @@
-//package com.backoven.catdogshelter.domain.user.command.domain.repository;
-//
-//import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.UserEntity;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-///* 설명. JPA를 위한 인터페이스(<테이블 entity, PK 타입>) */
-//
-//public interface UserRepository extends JpaRepository<UserEntity, Long> {
-//}
+package com.backoven.catdogshelter.domain.user.command.domain.repository;
+
+import com.backoven.catdogshelter.common.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+
+    UserEntity findByEmail(String email);
+
+    UserEntity findByUserAccount(String userAccount);
+}

@@ -1,7 +1,7 @@
 package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity;
 
-import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
-import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.UserEntity;
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -17,7 +17,7 @@ import org.hibernate.annotations.Where;
 public class DonationPostLiked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "post_id")
     private DonationPost post;
@@ -26,5 +26,5 @@ public class DonationPostLiked {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "head_id")
-    private ShelterUserEntity head;
+    private ShelterHeadEntity head;
 }

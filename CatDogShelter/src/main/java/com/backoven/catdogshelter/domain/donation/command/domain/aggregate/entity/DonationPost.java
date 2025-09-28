@@ -1,6 +1,6 @@
 package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity;
 
-import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DonationPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private String title;
 
@@ -38,7 +38,7 @@ public class DonationPost {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "head_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private ShelterUserEntity head; //보호소장FK
+    private ShelterHeadEntity head; //보호소장FK
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DonationPostFiles> files = new ArrayList<>();

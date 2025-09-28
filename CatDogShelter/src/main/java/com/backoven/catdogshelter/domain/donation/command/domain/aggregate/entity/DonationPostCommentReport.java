@@ -1,8 +1,8 @@
 package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity;
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.ReportCategory;
-import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
-import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +16,7 @@ import lombok.*;
 public class DonationPostCommentReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(name="category")
@@ -37,5 +37,5 @@ public class DonationPostCommentReport {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "head_id")
-    private ShelterUserEntity head;
+    private ShelterHeadEntity head;
 }

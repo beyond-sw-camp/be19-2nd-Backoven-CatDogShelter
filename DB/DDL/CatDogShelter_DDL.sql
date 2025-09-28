@@ -1,4 +1,3 @@
-
 use CatDogShelter;
 -- 기존 테이블 삭제
 
@@ -200,10 +199,7 @@ CREATE TABLE message (
     CONSTRAINT fk_msg_send_head FOREIGN KEY (send_head_id) REFERENCES shelter_head(head_id)
 );
 
--- =========================
--- 봉사모임(봉사활동 공고)
--- =========================
--- 봉사모임(봉사활동 공고) --
+
 CREATE TABLE volunteerAssociation (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
@@ -219,7 +215,7 @@ CREATE TABLE volunteerAssociation (
     sigungu_id INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_va_user FOREIGN KEY (head_id) REFERENCES shelter_head(head_id),
-    CONSTRAINT fk_va_sigungu FOREIGN KEY (sigungu_id) REFERENCES sigungu(sigungu_id)
+  
 );
 
 -- 봉사모임 신청내역 --
@@ -231,7 +227,6 @@ CREATE TABLE volunteerAssociationApplicationDetails (
     user_id INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_vaad_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteerassociation(id),
-    CONSTRAINT fk_vaad_user FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 -- 봉사후기 게시판 --
@@ -362,7 +357,11 @@ CREATE TABLE adoptionPostLiked (
     PRIMARY KEY (id),
     CONSTRAINT fk_apl_post FOREIGN KEY (post_id) REFERENCES adoptionPost(id),
     CONSTRAINT fk_apl_user FOREIGN KEY (user_id) REFERENCES user(user_id),
-    CONSTRAINT fk_apl_head FOREIGN KEY (head_id) REFERENCES shelter_head(head_id)
+    CONSTRAINT fk_apl_head FOREIGN KEY (head_id) REFERENCES shelter_head(head_id),
+    -- 중복 방지: 회원이 누른 경우
+    UNIQUE (post_id, user_id),
+    -- 중복 방지: 보호소장이 누른 경우
+    UNIQUE (post_id, head_id)
 );
 -- 입양 게시판 신고 --
 CREATE TABLE adoptionPostReport (
@@ -832,78 +831,3 @@ CREATE TABLE noticeFiles (
     PRIMARY KEY (id),
     CONSTRAINT fk_nf_notice FOREIGN KEY (notice_id) REFERENCES notice(id)
 );
--- adoptionPost
--- 회원이 누른 경우 중복 방지
-ALTER TABLE adoptionPostLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- adoptionPost
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE adoptionPostLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- donationPost
--- 회원이 누른 경우 중복 방지
-ALTER TABLE donationPostLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- donationPost
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE donationPostLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- missingPost
--- 회원이 누른 경우 중복 방지
-ALTER TABLE missingPostLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- missingPost
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE missingPostLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- post
--- 회원이 누른 경우 중복 방지
-ALTER TABLE postLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- post
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE postLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- sightingPost
--- 회원이 누른 경우 중복 방지
-ALTER TABLE sightingPostLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- sightingPost
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE sightingPostLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- volunteerPost
--- 회원이 누른 경우 중복 방지
-ALTER TABLE volunteerPostLiked
-ADD CONSTRAINT uq_post_user UNIQUE (post_id, user_id);
-
--- volunteerPost
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE volunteerPostLiked
-ADD CONSTRAINT uq_post_head UNIQUE (post_id, head_id);
-
-
--- notice
--- 회원이 누른 경우 중복 방지
-ALTER TABLE noticeLiked
-ADD CONSTRAINT uq_post_user UNIQUE (notice_id, user_id);
-
--- notice
--- 보호소장이 누른 경우 중복 방지
-ALTER TABLE noticeLiked
-ADD CONSTRAINT uq_post_head UNIQUE (notice_id, head_id);

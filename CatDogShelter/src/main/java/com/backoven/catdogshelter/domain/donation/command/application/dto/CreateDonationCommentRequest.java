@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateDonationCommentRequest {
-    private Long postId;
+    private Integer postId;
     private String content;
-    private Long userId;
+    private Integer userId;
 }

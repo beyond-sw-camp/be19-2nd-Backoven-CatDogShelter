@@ -1,8 +1,6 @@
 package com.backoven.catdogshelter.domain.post.query.service;
 
-import com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO;
-import com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO;
-import com.backoven.catdogshelter.domain.post.query.dto.PostLikedDescDTO;
+import com.backoven.catdogshelter.domain.post.query.dto.*;
 import com.backoven.catdogshelter.domain.post.query.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/* service 명 중복 방지를 위해 alias 사용 */
 @Service("postQueryService")
 public class PostService {
 
@@ -18,14 +17,21 @@ public class PostService {
     private final PostViewDescMapper postViewDescMapper;
     private final PostCreatedAtDescMapper postCreatedAtDescMapper;
     private final PostLikedDescMapper postLikedDescMapper;
+    private final PostReportMapper postReportMapper;
+    private final PostCommentReportDetailMapper postCommentReportDetailMapper;
 
     @Autowired
-    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper, PostViewDescMapper postViewDescMapper, PostCreatedAtDescMapper postCreatedAtDescMapper, PostLikedDescMapper postLikedDescMapper) {
+    public PostService(PostInventoryMapper postInventoryMapper, PostDetailMapper postDetailMapper,
+                       PostViewDescMapper postViewDescMapper, PostCreatedAtDescMapper postCreatedAtDescMapper,
+                       PostLikedDescMapper postLikedDescMapper, PostReportMapper postReportMapper, PostCommentReportDetailMapper postCommentReportDetailMapper
+    ) {
         this.postInventoryMapper = postInventoryMapper;
         this.postDetailMapper = postDetailMapper;
         this.postViewDescMapper = postViewDescMapper;
         this.postCreatedAtDescMapper = postCreatedAtDescMapper;
         this.postLikedDescMapper = postLikedDescMapper;
+        this.postReportMapper = postReportMapper;
+        this.postCommentReportDetailMapper = postCommentReportDetailMapper;
     }
 
     public List<PostInventoryDTO> selectPostInventory() {
@@ -51,7 +57,18 @@ public class PostService {
         return postCreatedAtDescMapper.selectPostCreatedAtDesc();
     }
 
+    /* 자유게시글별 좋아요 수 조회 */
     public List<PostLikedDescDTO> likedPostInventory() {
         return postLikedDescMapper.selectPostLikedDesc();
+    }
+
+    /* 자유게시글별 신고 내역 상세 조회(신고 횟수 포함) */
+    public List<PostReportDetailDTO> selectPostReport(int postId) {
+        return postReportMapper.selectPostReportDetail(postId);
+    }
+
+    /* 자유게시글 댓급별 신고 내역 상세 조회(신고 횟수 포함) */
+    public List<PostCommentReportDetailDTO> selectPostCommentReport(int postCommentId) {
+        return postCommentReportDetailMapper.selectPostCommentReportDetail(postCommentId);
     }
 }

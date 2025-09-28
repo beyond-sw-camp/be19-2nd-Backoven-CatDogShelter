@@ -14,7 +14,7 @@ import lombok.*;
 public class DonationPostFiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     @Column(name = "file_rename")
     private String fileRename;
 

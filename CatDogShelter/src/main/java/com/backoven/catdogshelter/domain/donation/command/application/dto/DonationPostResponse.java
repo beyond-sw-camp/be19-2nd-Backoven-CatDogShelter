@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class DonationPostResponse {
-    private Long id;
+    private Integer id;
     private String title;
     private String content;
     private String createdAt;
@@ -45,10 +45,10 @@ public class DonationPostResponse {
 
     @Getter
     public static class HeadResponse {
-        private Long id;
+        private Integer id;
         private String userName;
 
-        public HeadResponse(Long id, String userName) {
+        public HeadResponse(Integer id, String userName) {
             this.id = id;
             this.userName = userName;
         }
@@ -56,7 +56,7 @@ public class DonationPostResponse {
 
     @Getter
     public static class FileResponse {
-        private Long id;
+        private Integer id;
         private String fileRename;
         private String filePath;
         private String uploadedAt;

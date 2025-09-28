@@ -1,12 +1,12 @@
 package com.backoven.catdogshelter.domain.donation.command.application.service;
 
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationCommentRequest;
 import com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity.DonationPost;
 import com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity.DonationPostComment;
 import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostCommentRepository;
 import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostRepository;
-import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +21,12 @@ public class DonationPostCommentCommandService {
 
 
     //특정 게시글에 댓글작성
-    public Long createDonationPostComment(CreateDonationCommentRequest dto) {
+    public Integer createDonationPostComment(CreateDonationCommentRequest dto) {
         DonationPost post = donationPostRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         UserEntity user = new UserEntity();
-        user.setId(dto.getUserId()); // 더미 UserEntity (추후 UserService 연동)
+        user.setUserId(dto.getUserId()); // 더미 UserEntity (추후 UserService 연동)
 
         DonationPostComment comment = new DonationPostComment();
         comment.setContent(dto.getContent());
@@ -39,12 +39,12 @@ public class DonationPostCommentCommandService {
 
     //댓글 수정(작성자 본인만)
     @Transactional
-    public void updateDonationPostComment(Long id, Long userId, String content) {
+    public void updateDonationPostComment(Integer id, Integer userId, String content) {
         DonationPostComment comment = donationPostCommentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
         // 작성자 본인 검증
-        if (comment.getUser() == null || !comment.getUser().getId().equals(userId)) {
+        if (comment.getUser() == null || !comment.getUser().getUserId().equals(userId)) {
             throw new IllegalStateException("댓글 작성자만 수정할 수 있습니다.");
         }
 
@@ -54,12 +54,12 @@ public class DonationPostCommentCommandService {
 
 
     //댓글 삭제(작성자 본인만)
-    public void deleteDonationPostComment(Long id, Long userId) {
+    public void deleteDonationPostComment(Integer id, Integer userId) {
         DonationPostComment comment = donationPostCommentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
         // 작성자 본인인지 확인
-        if (comment.getUser() == null || !comment.getUser().getId().equals(userId)) {
+        if (comment.getUser() == null || !comment.getUser().getUserId().equals(userId)) {
             throw new IllegalStateException("댓글 작성자만 삭제할 수 있습니다.");
         }
 

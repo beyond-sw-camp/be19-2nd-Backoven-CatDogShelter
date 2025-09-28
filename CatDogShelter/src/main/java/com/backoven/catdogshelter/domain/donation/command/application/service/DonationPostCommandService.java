@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.donation.command.application.service;
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationPostRequest;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.UpdateDonationPostRequest;
@@ -7,7 +8,6 @@ import com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entit
 import com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity.DonationPostFiles;
 import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostFilesRepository;
 import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostRepository;
-import com.backoven.catdogshelter.domain.shelteruser.command.domain.aggregate.entity.ShelterUserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ public class DonationPostCommandService {
 
     // 게시글 단건 조회
     @Transactional(readOnly = true)
-    public DonationPost getPost(Long id) {
+    public DonationPost getPost(Integer id) {
         return donationPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("DonationPost not found"));
     }
@@ -58,7 +58,7 @@ public class DonationPostCommandService {
 
     //게시글 작성(보호소장만) 제목, 내용, 파일첨부
     @Transactional
-    public Long createDonationPost(CreateDonationPostRequest dto, List<MultipartFile> files) {
+    public Integer createDonationPost(CreateDonationPostRequest dto, List<MultipartFile> files) {
         // 1) 게시글 저장
         DonationPost post = new DonationPost();
         post.setTitle(dto.getTitle());
@@ -66,7 +66,7 @@ public class DonationPostCommandService {
         post.setCreatedAt(DateTimeUtil.now());
 
         // head: 조회 없이 id만 세팅 (FK만 연결됨)
-        ShelterUserEntity head = new ShelterUserEntity();
+        ShelterHeadEntity head = new ShelterHeadEntity();
         head.setId(dto.getHeadId());
         post.setHead(head);
 
@@ -105,7 +105,7 @@ public class DonationPostCommandService {
 
     //게시글 수정(작성자 본인만 가능) 파일첨부&삭제
     @Transactional
-    public void updateDonationPost(UpdateDonationPostRequest dto, Long headId, List<MultipartFile> files) {
+    public void updateDonationPost(UpdateDonationPostRequest dto, Integer headId, List<MultipartFile> files) {
         DonationPost post = donationPostRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
@@ -121,7 +121,7 @@ public class DonationPostCommandService {
 
         // 2) 삭제할 파일 처리
         if (dto.getDeleteFileIds() != null && !dto.getDeleteFileIds().isEmpty()) {
-            for (Long fileId : dto.getDeleteFileIds()) {
+            for (Integer fileId : dto.getDeleteFileIds()) {
                 DonationPostFiles file = donationPostFilesRepository.findById(fileId)
                         .orElseThrow(() -> new IllegalArgumentException("삭제할 파일이 존재하지 않습니다."));
 
@@ -172,7 +172,7 @@ public class DonationPostCommandService {
 
     // 게시글 삭제(작성자 본인만)
     @Transactional
-    public void deleteDonationPost(Long id, Long headId) {
+    public void deleteDonationPost(Integer id, Integer headId) {
         DonationPost post = donationPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 

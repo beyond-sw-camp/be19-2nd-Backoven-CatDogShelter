@@ -2,13 +2,20 @@ package com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity;
 
 /* 자유게시글 입력, 수정, 삭제에 필요한 Entity */
 
+
+import com.backoven.catdogshelter.common.util.DateTimeUtil;
+
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 
 
 @Entity
@@ -44,13 +51,17 @@ public class PostEntity {
     @Column(name="head_id")
     private Integer headId;
 
-    public void setCreatedAtNow() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+    // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = DateTimeUtil.now();
     }
 
-    public void setUpdatedAtNow() {
-        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = DateTimeUtil.now();
     }
-
 
 }

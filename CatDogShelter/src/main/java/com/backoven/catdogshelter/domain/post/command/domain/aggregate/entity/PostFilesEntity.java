@@ -1,5 +1,7 @@
 package com.backoven.catdogshelter.domain.post.command.domain.aggregate.entity;
 
+
+import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,5 +32,12 @@ public class PostFilesEntity {
 
     @Column(name="post_id")
     private int postId;
+
+
+    // util 폴더 안 DateTimeUtil 클래스를 통해 현재 시간 표시
+    @PrePersist
+    public void prePersist() {
+        this.uploadedAt = DateTimeUtil.now();
+    }
 
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DonationPostCommentResponse {
-    private Long id;
+    private Integer id;
     private String content;
     private String writerName;
     private boolean isDeleted;

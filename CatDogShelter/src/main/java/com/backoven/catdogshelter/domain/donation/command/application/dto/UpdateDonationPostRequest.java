@@ -10,10 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDonationPostRequest {
-    private Long postId;
+    private Integer postId;
     private String title;
     private String content;
-    private Long headId;
+    private Integer headId;
     private String headName; // ceoName
-    private List<Long> deleteFileIds; // 삭제할 파일 id 리스트리스트
+    private List<Integer> deleteFileIds; // 삭제할 파일 id 리스트리스트
 }

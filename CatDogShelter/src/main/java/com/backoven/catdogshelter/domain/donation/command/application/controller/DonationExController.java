@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.donation.command.application.controller;
 
 
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.ReportCategory;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationCommentRequest;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationPostRequest;
@@ -8,7 +9,7 @@ import com.backoven.catdogshelter.domain.donation.command.application.dto.Donati
 import com.backoven.catdogshelter.domain.donation.command.application.dto.UpdateDonationPostRequest;
 import com.backoven.catdogshelter.domain.donation.command.application.service.*;
 import com.backoven.catdogshelter.domain.donation.command.domain.aggregate.entity.DonationPost;
-import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.UserEntity;
+import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,13 @@ public class DonationExController {
     private final DonationPostLikeCommandService donationLikeService;
     private final DonationPostReportCommentCommandService donationPostCommentReportService;
     private final DonationPostFileService donationPostFileService;
+    private final UserRepository userRepository;
 
       /*===============JPA - READ=============== */
 
     // 게시글 단건 조회(조회>mybatis에서 다 구현했음)
     @GetMapping("/{id}")
-    public ResponseEntity<DonationPostResponse> getPost(@PathVariable Long id) {
+    public ResponseEntity<DonationPostResponse> getPost(@PathVariable Integer id) {
         DonationPost post = donationPostService.getPost(id);
         return ResponseEntity.ok(new DonationPostResponse(post)); // DTO 변환
     }
@@ -64,10 +66,10 @@ public class DonationExController {
 
     // 게시글 생성 (보호소장만 가능) 제목+내용+파일업로드
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Long> createDonationPost(
+    public ResponseEntity<Integer> createDonationPost(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam("headId") Long headId,
+            @RequestParam("headId") Integer headId,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
         CreateDonationPostRequest request = new CreateDonationPostRequest();
@@ -76,17 +78,17 @@ public class DonationExController {
         request.setHeadId(headId);
 
 
-        Long postId = donationPostService.createDonationPost(request, files);
+        Integer postId = donationPostService.createDonationPost(request, files);
         return ResponseEntity.ok(postId);
     }
 
     //게시글 수정 (본인만 가능) 파일 삭제,첨부 가능
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateDonationPost(
-            @PathVariable Long postId,
+            @PathVariable Integer postId,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam Long headId,
+            @RequestParam Integer headId,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
         UpdateDonationPostRequest dto = new UpdateDonationPostRequest();
@@ -101,8 +103,8 @@ public class DonationExController {
 
     // 게시글 삭제 (작성자 본인만 가능)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDonationPost(@PathVariable Long id,
-                                           @RequestParam Long headId) { // 작성자(보호소장) ID
+    public ResponseEntity<Void> deleteDonationPost(@PathVariable Integer id,
+                                           @RequestParam Integer headId) { // 작성자(보호소장) ID
         donationPostService.deleteDonationPost(id, headId);
         return ResponseEntity.noContent().build(); // 204
     }
@@ -121,7 +123,7 @@ public class DonationExController {
 
     // 좋아요 누르기
     @PostMapping("/{id}/like")
-    public ResponseEntity<Void> updateLikeDonationPost(@PathVariable Long id, @RequestParam Long userId) {
+    public ResponseEntity<Void> updateLikeDonationPost(@PathVariable Integer id, @RequestParam Integer userId) {
         donationLikeService.updateLikeDonationPost(id, userId);
         return ResponseEntity.ok().build();
     }
@@ -129,7 +131,7 @@ public class DonationExController {
 
     // 좋아요 취소
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> updateUnLikeDonationPost(@PathVariable Long id, @RequestParam Long userId) {
+    public ResponseEntity<Void> updateUnLikeDonationPost(@PathVariable Integer id, @RequestParam Integer userId) {
         donationLikeService.updateUnLikeDonationPost(id, userId);
         return ResponseEntity.noContent().build(); // 204
     }
@@ -138,7 +140,7 @@ public class DonationExController {
 
     //특정 게시글에 댓글 작성
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Long> createDonationPostComment(@PathVariable Long id,
+    public ResponseEntity<Integer> createDonationPostComment(@PathVariable Integer id,
                                            @RequestBody CreateDonationCommentRequest request) {
         request.setPostId(id); // PathVariable로 받은 게시글 ID를 DTO에 주입
         return ResponseEntity.ok(donationCommentService.createDonationPostComment(request));
@@ -148,8 +150,8 @@ public class DonationExController {
 
     // 댓글 수정 (작성자 본인만 가능)
     @PutMapping("/comments/{id}")
-    public ResponseEntity<Void> updateDonationPostComment(@PathVariable Long id,
-                                              @RequestParam Long userId, // 댓글 작성자 ID
+    public ResponseEntity<Void> updateDonationPostComment(@PathVariable Integer id,
+                                              @RequestParam Integer userId, // 댓글 작성자 ID
                                               @RequestBody String content) {
         donationCommentService.updateDonationPostComment(id, userId, content);
         return ResponseEntity.ok().build();
@@ -159,8 +161,8 @@ public class DonationExController {
 
     // 댓글 삭제 (작성자 본인만 가능)
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Void> deleteDonationPostComment(@PathVariable Long id,
-                                              @RequestParam Long userId) {
+    public ResponseEntity<Void> deleteDonationPostComment(@PathVariable Integer id,
+                                              @RequestParam Integer userId) {
         donationCommentService.deleteDonationPostComment(id, userId);
         return ResponseEntity.noContent().build(); // 204 반환 권장
     }
@@ -170,12 +172,13 @@ public class DonationExController {
 
     // 댓글 신고
     @PostMapping("/comments/{id}/report")
-    public ResponseEntity<Void> createReportDonationPostComment(@PathVariable Long id,
+    public ResponseEntity<Void> createReportDonationPostComment(@PathVariable Integer id,
                                               @RequestParam ReportCategory category,
                                               @RequestParam(required = false) String detail,
-                                              @RequestParam Long userId) {
-        UserEntity user = new UserEntity();
-        user.setId(userId);
+                                              @RequestParam Integer userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
         donationPostCommentReportService.createReportDonationPostComment(id, category, detail, user);
         return ResponseEntity.ok().build();
     }
