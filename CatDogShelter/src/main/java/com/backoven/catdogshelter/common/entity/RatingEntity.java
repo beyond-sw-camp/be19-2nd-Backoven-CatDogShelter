@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.entity;
+package com.backoven.catdogshelter.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

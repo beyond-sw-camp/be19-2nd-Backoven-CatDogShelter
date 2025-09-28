@@ -1,4 +1,5 @@
 package com.backoven.catdogshelter.domain.user.command.domain.aggregate.enumeration;
 
-public enum ex {
+public enum UserStatus {
+    GENERAL, BLACK, CANCEL
 }
