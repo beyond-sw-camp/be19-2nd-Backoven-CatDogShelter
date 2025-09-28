@@ -23,10 +23,7 @@ public interface DonationPostQueryMapper {
     List<DonationPostQueryDTO> selectAllDonationPostsLatest(@Param("limit") int limit);
 
     // REQ-028 조회수 증가
-    void increaseView(@Param("id") Long id);
-
-    // 게시글 조회(view 증가)
-    DonationPostQueryDTO selectPostById(Long id);
+    void increaseView(@Param("id") Integer id);
 
     List<DonationPostQueryDTO> selectAllDonationPosts();
 

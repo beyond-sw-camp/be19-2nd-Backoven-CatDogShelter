@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/missing-posts")
+@RequestMapping("/missing-posts/query")
 @RequiredArgsConstructor
 public class MissingPostQueryController {
     private final MissingPostQueryService service;

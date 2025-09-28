@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 public class DonationPostCommentDTO {
-    private int id;
+    private Integer id;
     private String content;
     private String createdAt;
     private String userRating; //등급

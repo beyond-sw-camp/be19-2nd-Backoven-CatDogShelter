@@ -18,6 +18,11 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        WebMvcConfigurer.super.addResourceHandlers(registry);
+        // URL: http://localhost:8080/uploads/파일명
+        // 실제 폴더: /Users/dong/uploads/
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:/Users/dong/uploads/");
     }
+
+
 }
