@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/donation-posts")
+@RequestMapping("/donation-posts/query")
 @RequiredArgsConstructor
 public class DonationPostQueryController {
 
@@ -49,7 +49,7 @@ public class DonationPostQueryController {
 
     //REQ-028 조회 수 증가
     @PostMapping("/{id}/view")
-    public void increaseView(@PathVariable Long id) {
+    public void increaseView(@PathVariable Integer id) {
         service.increaseView(id);
     }
 

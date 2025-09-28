@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: CatDogShelter
+    name: CatDogShelter-user-service
   jpa:
     hibernate:
       naming:
@@ -29,9 +29,12 @@ spring:
   # url, username, password은 다른 yml에서 작성
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/CatDogShelter
-    username:
-    password:
+    url: jdbc:mariadb://localhost:3306/catdogshelter
+    username: root
+    password: 1221
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
@@ -41,6 +44,21 @@ logging:
   level:
     root: info
 
-filepath: # 윈도우: C:\\uploadFiles
-# max: /User/??/uploadFiles
+file:
+#  upload-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads
+  upload-dir: /Users/dong/Desktop/2nd/CatDogShelter/uploads
+filepath: /Users/dong/Desktop/2nd/CatDogShelter/uploads
 
+# 로그인
+token:
+  expiration_time: 43200000
+  secret: "VKKCjFzrzJQE8oM69GmgavfauYLnHnQeG4k1ab/lrYtrEQMk7o0/3j8KmqM33prEOWs5IdSVhQsbKiV3UzFhHQ=="
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
