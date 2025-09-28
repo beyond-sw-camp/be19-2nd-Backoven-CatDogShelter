@@ -5,6 +5,9 @@ import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enume
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.Gender;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.YnOption;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -53,4 +56,12 @@ public class AdoptionPostCommandDTO {
     private Integer headId;
 
     private Integer sigunguId;
+
+    // 업로드할 파일
+    private List<MultipartFile> files;
+
+    private List<AdoptionPostFileDTO> filess;
+    private List<AdoptionPostCommentDTO> comments;
+    private List<AdoptionPostLikedDTO> likes;
+    private List<AdoptionPostReportDTO> reports;
 }

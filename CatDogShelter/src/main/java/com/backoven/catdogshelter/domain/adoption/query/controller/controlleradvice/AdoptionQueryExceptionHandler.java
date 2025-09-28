@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.domain.adoption.command.application.controller.controlleradvice;
+package com.backoven.catdogshelter.domain.adoption.query.controller.controlleradvice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class AdoptionCommandExceptionHandler {
-
+public class AdoptionQueryExceptionHandler {
     // IllegalArgumentException 처리
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
