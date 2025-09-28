@@ -42,9 +42,7 @@ logging:
     root: debug
 
 file:
-  adoption-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads/adoption
-  sighting-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads/sighting
-
+  upload-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads
 
 # 로그인
 token:
