@@ -6,6 +6,7 @@ import com.backoven.catdogshelter.domain.user.command.application.dto.requestlog
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.user.UserDTO;
 import com.backoven.catdogshelter.common.entity.UserEntity;
+import com.backoven.catdogshelter.domain.user.command.domain.aggregate.enumeration.UserStatus;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.QuestionCategoryRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.SigunguRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
@@ -169,5 +170,18 @@ public class UserServiceImpl implements UserService {
             return;
         }
         throw new IllegalArgumentException("질문/답변 불일치");
+    }
+
+    @Override
+    public void deleterUserByPassword(int userId, RequestModifyPasswordUserDTO updatedUser) {
+        UserEntity foundUser = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+        // 기존 비밀번호와 일치하지 않다면 예외처리
+        if(!bCryptPasswordEncoder.matches(updatedUser.getCurrentPwd(), foundUser.getEncryptPwd())){
+            throw new IllegalArgumentException();
+        }
+
+        // 탈퇴 -> soft delete (상태 변경)
+        foundUser.setUserStatus(UserStatus.CANCEL);
     }
 }

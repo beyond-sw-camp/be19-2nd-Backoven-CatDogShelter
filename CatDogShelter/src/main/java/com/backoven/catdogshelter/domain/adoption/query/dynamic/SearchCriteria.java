@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class SearchCriteria {
-
     // 키워드 검색 (title/content/breed 중 하나)
     private String searchType;   // "title", "content", "breed"
     private String keyword;      // 검색어

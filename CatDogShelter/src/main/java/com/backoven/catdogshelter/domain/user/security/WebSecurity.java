@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.user.security;
 
+import com.backoven.catdogshelter.domain.user.command.domain.repository.LoginHistoryRepository;
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,15 +27,17 @@ public class WebSecurity {
     // JWT 토큰의 payload에 만료시간 만들다가 추가
     private Environment env;
     private JwtUtil jwtUtil;
-
+    private final LoginHistoryRepository loginHistoryRepository;
     @Autowired
     public WebSecurity(
             JwtAuthenticationProvider jwtAuthenticationProvider,
             Environment env,
-            JwtUtil jwtUtil) {
+            JwtUtil jwtUtil,
+            LoginHistoryRepository loginHistoryRepository) {
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.env = env;
         this.jwtUtil = jwtUtil;
+        this.loginHistoryRepository = loginHistoryRepository;
     }
 
     // 매니저 안에 여러개 프로바이더 등록
@@ -55,8 +58,7 @@ public class WebSecurity {
                         .requestMatchers(HttpMethod.POST, "/catdogshelter/login").permitAll() // 로그인
                         .requestMatchers(HttpMethod.GET, "/catdogshelter/user/**").authenticated() // 조회는 인증 필요
                         .requestMatchers(HttpMethod.PUT, "/catdogshelter/user/**").authenticated() // 수정도 인증 필요
-                        .requestMatchers("/catdogshelter/adoption-post/**").permitAll() // 수정도 인증 필요
-                        .requestMatchers("/catdogshelter/admin/**").permitAll() // 수정도 인증 필요
+                        .requestMatchers("/catdogshelter/admin/**").permitAll()
                         .anyRequest().authenticated())
                 // 세션을 안쓰겟다
                 /* 설명. Session 방식이 아닌 JWT Token 방식을 사용하겠다. */
@@ -67,7 +69,7 @@ public class WebSecurity {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         //  AuthenticationFilter 생성 + 로그인 URL 변경
         AuthenticationFilter authenticationFilter =
-                new AuthenticationFilter(authenticationManager(), env);
+                new AuthenticationFilter(authenticationManager(), env, loginHistoryRepository);
         authenticationFilter.setFilterProcessesUrl("/catdogshelter/login"); // 기본 /login → /catdogshelter/login
 
         /* 설명. 매니지를 지닌 필터 등록 */
@@ -76,12 +78,15 @@ public class WebSecurity {
         /* 설명. 로그인 이후 토큰을 들고 온다면
         *       JwtFilter를 추가해서 검증하도록 함 */
         http.addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return http
+                .csrf().disable()
+                .addFilter(authenticationFilter)
+                .build();
     }
 
     // 필터 등록 메소드
     /* 설명. Filter를 등록하기 위해 사용하는 메소드 */
     private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new AuthenticationFilter(authenticationManager, env);
+        return new AuthenticationFilter(authenticationManager, env, loginHistoryRepository);
     }
 }

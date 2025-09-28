@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class CustomUserDetails extends User {
     private final Integer userId;
-
+//    private final Integer headId;
     public CustomUserDetails(Integer userId, String username, String password,
                              Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
