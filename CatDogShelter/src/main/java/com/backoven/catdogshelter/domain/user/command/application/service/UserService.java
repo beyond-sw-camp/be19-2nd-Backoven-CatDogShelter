@@ -16,4 +16,6 @@ public interface UserService extends UserDetailsService {
     UserDTO modifyUser(int userId, RequestModifyUserDTO updatedUser);
 
     void modifyUserPassword(int userId, RequestModifyPasswordUserDTO updatedUser);
+
+    void deleterUserByPassword(int userId, RequestModifyPasswordUserDTO updatedUser);
 }
