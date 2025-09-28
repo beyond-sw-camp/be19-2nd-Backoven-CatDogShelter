@@ -1,18 +1,22 @@
-package com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.entity;
+package com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.entity.AdoptionPost;
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
+import com.backoven.catdogshelter.common.entity.SigunguEntity;
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.AnimalType;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.Gender;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.AdoptionPostStatus;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.YnOption;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "adoptionPost")
 public class AdoptionPostEntity {
@@ -38,7 +42,7 @@ public class AdoptionPostEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "animal_type", nullable = false)
-    private AnimalType animalType;   // CAT, DOG
+    private AnimalType animalType;
 
     @Column(length = 20, nullable = false)
     private String breed;
@@ -51,22 +55,22 @@ public class AdoptionPostEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Gender gender;   // MALE, FEMALE
+    private Gender gender;
 
     @Column(nullable = false)
     private Double weight;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AdoptionPostStatus status;   // PROTECTING, ADOPTED
+    private AdoptionPostStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private YnOption vaccination;   // Y, N
+    private YnOption vaccination;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private YnOption neutering;     // Y, N
+    private YnOption neutering;
 
     @Column(nullable = false)
     private Integer view = 0;
@@ -77,7 +81,7 @@ public class AdoptionPostEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
 
-    // FK 매핑 (User, ShelterHead, Sigungu)
+    // FK 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_ap_user"))
     private UserEntity user;
@@ -90,4 +94,16 @@ public class AdoptionPostEntity {
     @JoinColumn(name = "sigungu_id", nullable = false, foreignKey = @ForeignKey(name = "fk_ap_sigungu"))
     private SigunguEntity sigungu;
 
+    // ====== 연관관계 ======
+    @OneToMany(mappedBy = "adoptionPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdoptionPostFileEntity> files = new ArrayList<>();
+
+    @OneToMany(mappedBy = "adoptionPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdoptionPostCommentEntity> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "adoptionPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdoptionPostLikedEntity> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "adoptionPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdoptionPostReportEntity> reports = new ArrayList<>();
 }
