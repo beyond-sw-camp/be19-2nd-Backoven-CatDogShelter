@@ -18,6 +18,7 @@ import static com.backoven.catdogshelter.domain.adoption.query.template.Template
 public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
     private AdoptionMapper adoptionMapper;
 
+    @Override
     public List<AdoptionPostAllQueryDTO> selectAdoptionAllPosts() {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper = sqlSession.getMapper(AdoptionMapper.class);
@@ -25,15 +26,16 @@ public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
         sqlSession.close();
         return adotpionPostList;
     }
-
+    @Override
     public AdoptionPostDetailQueryDTO selectAdoptionPostById(int adoptionPostId) {
         SqlSession sqlSession = getSqlSession();
-        adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
+        adoptionMapper = sqlSession.getMapper(AdoptionMapper.class);
+        adoptionMapper.updateAdoptionPostView(adoptionPostId); // 조회수 증가
+        sqlSession.commit(); // 조회수 update commit
         AdoptionPostDetailQueryDTO adoptionPostDetailDTO = adoptionMapper.selectAdoptionPostById(adoptionPostId);
         sqlSession.close();
         return adoptionPostDetailDTO;
     }
-
     @Override
     public List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByView() {
         SqlSession sqlSession = getSqlSession();
@@ -42,7 +44,6 @@ public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
         sqlSession.close();
         return adotpionPostList;
     }
-
     @Override
     public List<AdoptionPostAllQueryDTO> selectAdoptionAllPostsByLiked() {
         SqlSession sqlSession = getSqlSession();
@@ -51,7 +52,7 @@ public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
         sqlSession.close();
         return adotpionPostList;
     }
-
+    @Override
     public List<AdoptionPostAllQueryDTO> selectAdoptionPostByKeyword(SearchCriteria keyword) {
         SqlSession sqlSession = getSqlSession();
         adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);
@@ -59,7 +60,7 @@ public class AdoptionPostQueryServiceImpl implements AdoptionPostQueryService {
         sqlSession.close();
         return adotpionPostList;
     }
-
+    @Override
     public List<AdoptionPostAllQueryDTO> selectAdoptionPostByAnimalCondition(SearchCriteria animalCondition){
         SqlSession sqlSession = getSqlSession();
         adoptionMapper =sqlSession.getMapper(AdoptionMapper.class);

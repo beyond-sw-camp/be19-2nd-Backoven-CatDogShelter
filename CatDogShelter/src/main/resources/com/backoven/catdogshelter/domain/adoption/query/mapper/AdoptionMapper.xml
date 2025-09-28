@@ -90,6 +90,7 @@
             <result property="fileRename" column="file_rename"/>
             <result property="filePath" column="file_path"/>
             <result property="uploadedAt" column="uploaded_at"/>
+            <result property="fileUrl" column="file_url"/>
         </collection>
 
         <!-- 1 : N 댓글 리스트 -->
@@ -143,6 +144,7 @@
              , f.file_rename
              , f.file_path
              , f.uploaded_at
+             , CONCAT(f.file_path, f.file_rename) AS file_url
         <!-- 댓글 -->
              , c.id AS comment_id
              , c.content AS comment_content
@@ -169,6 +171,15 @@
          WHERE ap.id = #{id}
          GROUP BY ap.id, f.id, c.id, sg.sigungu_id, si.sido_id
     </select>
+
+    <!-- 조회수 증가 -->
+    <update id="updateAdoptionPostView" parameterType="int">
+        UPDATE adoptionPost
+        SET view = view + 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 추천 -->
 
     <!-- 입양게시판 조회수순 조회-->
     <select id="selectAllAdoptionPostsByView"
