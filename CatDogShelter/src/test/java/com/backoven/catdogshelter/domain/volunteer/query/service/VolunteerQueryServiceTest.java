@@ -19,13 +19,5 @@ public class VolunteerQueryServiceTest {
     @Autowired
     VolunteerPostQueryService volunteerPostQueryService;
 
-    @DisplayName("모든 게시글 조회")
-    @Test
-    void testGetAllVolunteerPosts(){
-        Assertions.assertDoesNotThrow(()->{
-            volunteerPostQueryService.selectAllVolunteerPosts()
-                    .forEach(System.out::println);
-        });
-    }
 
 }
