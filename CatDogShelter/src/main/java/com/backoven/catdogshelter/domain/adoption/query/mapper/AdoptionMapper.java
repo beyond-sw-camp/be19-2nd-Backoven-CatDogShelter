@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public interface AdoptionMapper {
+
     // 전체 게시판 목록 조회
     List<AdoptionPostAllQueryDTO> selectAllAdoptionPosts();
     // 게시글 조회
@@ -21,5 +22,4 @@ public interface AdoptionMapper {
     List<AdoptionPostAllQueryDTO> selectAdoptionPostByKeyword(SearchCriteria condition);
     // 컨디션 조회
     List<AdoptionPostAllQueryDTO> selectAdoptionPostByAnimalCondition(SearchCriteria animalCodition);
-
 }

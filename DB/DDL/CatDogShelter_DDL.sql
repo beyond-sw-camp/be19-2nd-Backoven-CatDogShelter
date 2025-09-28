@@ -199,10 +199,7 @@ CREATE TABLE message (
     CONSTRAINT fk_msg_send_head FOREIGN KEY (send_head_id) REFERENCES shelter_head(head_id)
 );
 
--- =========================
--- 봉사모임(봉사활동 공고)
--- =========================
--- 봉사모임(봉사활동 공고) --
+
 CREATE TABLE volunteerAssociation (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
@@ -218,7 +215,7 @@ CREATE TABLE volunteerAssociation (
     sigungu_id INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_va_user FOREIGN KEY (head_id) REFERENCES shelter_head(head_id),
-    CONSTRAINT fk_va_sigungu FOREIGN KEY (sigungu_id) REFERENCES sigungu(sigungu_id)
+  
 );
 
 -- 봉사모임 신청내역 --
@@ -230,7 +227,6 @@ CREATE TABLE volunteerAssociationApplicationDetails (
     user_id INT NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT fk_vaad_volunteer FOREIGN KEY (volunteer_id) REFERENCES volunteerassociation(id),
-    CONSTRAINT fk_vaad_user FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 -- 봉사후기 게시판 --

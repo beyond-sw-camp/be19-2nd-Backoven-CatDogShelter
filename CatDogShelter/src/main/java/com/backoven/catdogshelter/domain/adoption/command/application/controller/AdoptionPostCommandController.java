@@ -2,7 +2,6 @@ package com.backoven.catdogshelter.domain.adoption.command.application.controlle
 
 import com.backoven.catdogshelter.domain.adoption.command.application.dto.*;
 import com.backoven.catdogshelter.domain.adoption.command.application.service.AdoptionPostCommandService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -19,24 +18,15 @@ import java.nio.file.Paths;
 
 @Slf4j
 @RestController
-@RequestMapping("catdogshelter/adoption-post")
+@RequestMapping("/catdogshelter/adoption-post")
 public class AdoptionPostCommandController {
 
     private final AdoptionPostCommandService adoptionPostCommandService;
 
     @Autowired
-    public AdoptionPostCommandController(
-            AdoptionPostCommandService adoptionPostCommandService) {
+    public AdoptionPostCommandController(AdoptionPostCommandService adoptionPostCommandService) {
         this.adoptionPostCommandService = adoptionPostCommandService;
     }
-    /*
-    // 게시글 조회수 증가 -> GET
-    @PostMapping("/{postId}")
-    public ResponseEntity<?> insertAdoptionPostView(@PathVariable int postId){
-        adoptionPostCommandService.insertAdoptionPostView(postId);
-        return ResponseEntity
-                .ok().build();
-    }*/
 
     // 게시글 좋아요 토글 (회원 or 보호소장)
     @PostMapping("/{postId}/liked")
@@ -44,100 +34,95 @@ public class AdoptionPostCommandController {
             @PathVariable int postId,
             @RequestBody AdoptionPostLikedDTO dto) {
         boolean resultLiked = adoptionPostCommandService.updateAdoptionPostLiked(postId, dto.getUserId(), dto.getHeadId());
-        if(resultLiked) return ResponseEntity.ok().body("해당 게시글을 추천하였습니다.");
+        if (resultLiked) return ResponseEntity.ok().body("해당 게시글을 추천하였습니다.");
         return ResponseEntity.ok().body("해당 게시글 추천을 취소하였습니다.");
     }
+
     // 게시글 등록 + 파일 업로드
     @PostMapping("/regist")
     public ResponseEntity<?> registAdoptionPost(
-            @ModelAttribute AdoptionPostCommandDTO newPost
-    ) throws IOException {
+            @ModelAttribute AdoptionPostCommandDTO newPost) throws IOException {
         adoptionPostCommandService.registAdoptionPost(newPost);
         return ResponseEntity.created(URI.create("/adoption/post/board")).build();
     }
+
     // 게시글 수정 + 파일 재업로드
     @PutMapping("/{postId}")
     public ResponseEntity<?> modifyAdoptionPost(
             @PathVariable int postId,
             @ModelAttribute AdoptionPostCommandDTO modifyPost) throws IOException {
-
         adoptionPostCommandService.modifyAdoptionPost(postId, modifyPost);
-
         return ResponseEntity.ok().body("게시글이 수정되었습니다.");
     }
+
     // 게시글 파일 조회
     @GetMapping("/{postId}/files/{fileName}")
     public ResponseEntity<Resource> serveFile(
             @PathVariable int postId,
             @PathVariable String fileName) throws IOException {
 
-        // 실제 저장 경로 (postId는 여기선 사용 안 하지만 RESTful 경로를 위해 포함)
         Path file = Paths.get("/Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads/")
                 .resolve(fileName);
 
         Resource resource = new UrlResource(file.toUri());
-
         if (!resource.exists() || !resource.isReadable()) {
             return ResponseEntity.notFound().build();
         }
 
-        // 확장자 기반 Content-Type 설정
         String contentType = Files.probeContentType(file);
         if (contentType == null) {
-            contentType = "application/octet-stream"; // 알 수 없는 경우
+            contentType = "application/octet-stream";
         }
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
-    // 게시글 삭제 -> soft delete, 상태 변경
+
+    // 게시글 삭제 -> soft delete
     @PutMapping("/{postId}/blind")
-    public ResponseEntity<?> removeAdoptionPost(@PathVariable int postId){
+    public ResponseEntity<?> removeAdoptionPost(@PathVariable int postId) {
         adoptionPostCommandService.deleteAdoptionPost(postId);
         return ResponseEntity.ok().body("게시글이 삭제되었습니다.");
     }
-    // 게시글에 댓글 등록
+
+    // 댓글 등록
     @PostMapping("/{postId}/comment")
     public ResponseEntity<?> registAdoptionPostComment(
             @PathVariable int postId,
             @RequestBody AdoptionPostCommentDTO newComment) {
-
         adoptionPostCommandService.registAdoptionPostComment(postId, newComment);
-
         return ResponseEntity.ok().body("댓글이 등록되었습니다.");
-//                .created(URI.create("adoption/post/"+postId)).build();
     }
-    // 게시글에 댓글 수정
+
+    // 댓글 수정
     @PutMapping("/{postId}/comment/{commentId}")
     public ResponseEntity<?> modifyAdoptionPostComment(
             @PathVariable int postId,
             @PathVariable int commentId,
-            @RequestBody AdoptionPostCommentDTO adoptionPostComment){
-
-        adoptionPostCommandService.modifyAdoptionPostComment(postId,commentId,adoptionPostComment);
-
+            @RequestBody AdoptionPostCommentDTO adoptionPostComment) {
+        adoptionPostCommandService.modifyAdoptionPostComment(postId, commentId, adoptionPostComment);
         return ResponseEntity.ok().body("댓글이 수정되었습니다.");
-//        AdoptionPostCommentDTO responseDto = modelMapper.map(foundComment, AdoptionPostCommentDTO.class);
-//        return ResponseEntity.ok(responseDto);
     }
-    // 게시글에 댓글 삭제 -> soft delete, 상태 변경
-    @PutMapping("{postId}/comment/{commentId}/blind")
+
+    // 댓글 삭제 -> soft delete
+    @PutMapping("/{postId}/comment/{commentId}/blind")
     public ResponseEntity<?> deleteAdoptionPostComment(
             @PathVariable int postId,
-            @PathVariable int commentId){
-
-        adoptionPostCommandService.deleteAdoptionPostComment(postId,commentId);
+            @PathVariable int commentId) {
+        adoptionPostCommandService.deleteAdoptionPostComment(postId, commentId);
         return ResponseEntity.ok().body("댓글이 삭제되었습니다.");
     }
+
     // 게시글 신고
     @PostMapping("/{postId}/report")
     public ResponseEntity<?> registAdoptionPostReport(
             @PathVariable int postId,
-            @RequestBody AdoptionPostReportDTO adoptionPostReportDto){
+            @RequestBody AdoptionPostReportDTO adoptionPostReportDto) {
         adoptionPostCommandService.registAdoptionPostReport(postId, adoptionPostReportDto);
         return ResponseEntity.ok().body("게시글이 신고되었습니다.");
     }
+
     // 댓글 신고
     @PostMapping("/{postId}/report/comment/{commentId}")
     public ResponseEntity<?> registAdoptionPostCommentReport(

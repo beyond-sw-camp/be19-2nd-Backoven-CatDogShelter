@@ -26,4 +26,4 @@ public class AdoptionQueryExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorBody);
     }
-}
+
