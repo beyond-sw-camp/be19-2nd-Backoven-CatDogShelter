@@ -1,5 +1,4 @@
-
-package com.backoven.catdogshelter.domain.user.command.domain.repository;//package com.backoven.catdogshelter.domain.user.command.domain.repository;
+package com.backoven.catdogshelter.domain.shelteruser.command.domain.repository;//package com.backoven.catdogshelter.domain.user.command.domain.repository;
 //
 //import org.springframework.data.jpa.repository.JpaRepository;
 //
