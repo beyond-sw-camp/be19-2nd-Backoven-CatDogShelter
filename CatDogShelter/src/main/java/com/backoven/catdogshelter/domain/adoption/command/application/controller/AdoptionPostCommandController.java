@@ -3,6 +3,12 @@ package com.backoven.catdogshelter.domain.adoption.command.application.controlle
 import com.backoven.catdogshelter.domain.adoption.command.application.dto.*;
 import com.backoven.catdogshelter.domain.adoption.command.application.service.AdoptionPostCommandService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -29,16 +35,14 @@ public class AdoptionPostCommandController {
             AdoptionPostCommandService adoptionPostCommandService) {
         this.adoptionPostCommandService = adoptionPostCommandService;
     }
-    /*
-    // 게시글 조회수 증가 -> GET
-    @PostMapping("/{postId}")
-    public ResponseEntity<?> insertAdoptionPostView(@PathVariable int postId){
-        adoptionPostCommandService.insertAdoptionPostView(postId);
-        return ResponseEntity
-                .ok().build();
-    }*/
 
     // 게시글 좋아요 토글 (회원 or 보호소장)
+    @Operation(summary = "게시글 추천",
+            description = "토글과 같이 추천과 추천취소가 실행")
+    @ApiResponses(value ={
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AdoptionPostLikedDTO.class)))})
     @PostMapping("/{postId}/liked")
     public ResponseEntity<?> updateAdoptionPostLiked(
             @PathVariable int postId,
@@ -48,6 +52,12 @@ public class AdoptionPostCommandController {
         return ResponseEntity.ok().body("해당 게시글 추천을 취소하였습니다.");
     }
     // 게시글 등록 + 파일 업로드
+    @Operation(summary = "게시글 등록",
+            description = "파일과 함께 게시글 등록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "생성 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AdoptionPostCommandDTO.class)))})
     @PostMapping("/regist")
     public ResponseEntity<?> registAdoptionPost(
             @ModelAttribute AdoptionPostCommandDTO newPost
@@ -56,6 +66,12 @@ public class AdoptionPostCommandController {
         return ResponseEntity.created(URI.create("/adoption/post/board")).build();
     }
     // 게시글 수정 + 파일 재업로드
+    @Operation(summary = "게시글 수정",
+            description = "파일과 재업로드 포함 게시글 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AdoptionPostCommandDTO.class)))})
     @PutMapping("/{postId}")
     public ResponseEntity<?> modifyAdoptionPost(
             @PathVariable int postId,
@@ -66,6 +82,11 @@ public class AdoptionPostCommandController {
         return ResponseEntity.ok().body("게시글이 수정되었습니다.");
     }
     // 게시글 파일 조회
+    @Operation(summary = "게시글 파일 조회", description = "게시글에 첨부된 파일 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "파일 조회 성공",
+                    content = @Content(mediaType = "application/octet-stream")),
+            @ApiResponse(responseCode = "404", description = "파일 없음")})
     @GetMapping("/{postId}/files/{fileName}")
     public ResponseEntity<Resource> serveFile(
             @PathVariable int postId,
@@ -92,12 +113,16 @@ public class AdoptionPostCommandController {
                 .body(resource);
     }
     // 게시글 삭제 -> soft delete, 상태 변경
+    @Operation(summary = "게시글 삭제", description = "게시글을 soft delete 처리")
+    @ApiResponse(responseCode = "200", description = "삭제 성공")
     @PutMapping("/{postId}/blind")
     public ResponseEntity<?> removeAdoptionPost(@PathVariable int postId){
         adoptionPostCommandService.deleteAdoptionPost(postId);
         return ResponseEntity.ok().body("게시글이 삭제되었습니다.");
     }
     // 게시글에 댓글 등록
+    @Operation(summary = "댓글 등록", description = "게시글에 댓글 작성")
+    @ApiResponse(responseCode = "200", description = "댓글 등록 성공")
     @PostMapping("/{postId}/comment")
     public ResponseEntity<?> registAdoptionPostComment(
             @PathVariable int postId,
@@ -109,6 +134,8 @@ public class AdoptionPostCommandController {
 //                .created(URI.create("adoption/post/"+postId)).build();
     }
     // 게시글에 댓글 수정
+    @Operation(summary = "댓글 수정", description = "게시글의 댓글 수정")
+    @ApiResponse(responseCode = "200", description = "댓글 수정 성공")
     @PutMapping("/{postId}/comment/{commentId}")
     public ResponseEntity<?> modifyAdoptionPostComment(
             @PathVariable int postId,
@@ -122,6 +149,8 @@ public class AdoptionPostCommandController {
 //        return ResponseEntity.ok(responseDto);
     }
     // 게시글에 댓글 삭제 -> soft delete, 상태 변경
+    @Operation(summary = "댓글 삭제", description = "댓글 soft delete 처리")
+    @ApiResponse(responseCode = "200", description = "댓글 삭제 성공")
     @PutMapping("{postId}/comment/{commentId}/blind")
     public ResponseEntity<?> deleteAdoptionPostComment(
             @PathVariable int postId,
@@ -131,6 +160,8 @@ public class AdoptionPostCommandController {
         return ResponseEntity.ok().body("댓글이 삭제되었습니다.");
     }
     // 게시글 신고
+    @Operation(summary = "게시글 신고", description = "게시글 신고 접수")
+    @ApiResponse(responseCode = "200", description = "신고 성공")
     @PostMapping("/{postId}/report")
     public ResponseEntity<?> registAdoptionPostReport(
             @PathVariable int postId,
@@ -139,6 +170,8 @@ public class AdoptionPostCommandController {
         return ResponseEntity.ok().body("게시글이 신고되었습니다.");
     }
     // 댓글 신고
+    @Operation(summary = "댓글 신고", description = "댓글 신고 접수")
+    @ApiResponse(responseCode = "200", description = "신고 성공")
     @PostMapping("/{postId}/report/comment/{commentId}")
     public ResponseEntity<?> registAdoptionPostCommentReport(
             @PathVariable int postId,

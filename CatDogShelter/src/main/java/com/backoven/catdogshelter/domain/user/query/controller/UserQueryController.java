@@ -3,6 +3,11 @@ package com.backoven.catdogshelter.domain.user.query.controller;
 import com.backoven.catdogshelter.domain.user.query.dto.LoginHistoryDTO;
 import com.backoven.catdogshelter.domain.user.query.dto.UserQueryDTO;
 import com.backoven.catdogshelter.domain.user.query.service.UserQueryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +29,10 @@ public class UserQueryController {
         this.userQueryService = userQueryService;
     }
 
+
+    @Operation(summary = "전체 회원 조회", description = "모든 회원 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "성공",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserQueryDTO.class))))
     @GetMapping("/user/all")
     public ResponseEntity<?> selectAllUsers(){
         List<UserQueryDTO> users = userQueryService.selectAllUsers();
