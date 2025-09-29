@@ -10,13 +10,14 @@ import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enume
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostFileRepository;
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostLikedRepository;
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostRepository;
-import com.backoven.catdogshelter.domain.adoption.command.domain.repository.ShelterHeadRepository;
+import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionShelterHeadRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class AdoptionPostCommandService {
     private final AdoptionPostFileRepository adoptionPostFileRepository;
     private final AdoptionPostLikedRepository adoptionPostLikedRepository;
     private final UserRepository userRepository;
-    private final ShelterHeadRepository headRepository;
+    private final AdoptionShelterHeadRepository headRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -43,7 +44,7 @@ public class AdoptionPostCommandService {
             AdoptionPostFileRepository adoptionPostFileRepository,
             AdoptionPostLikedRepository adoptionPostLikedRepository,
             UserRepository userRepository,
-            ShelterHeadRepository headRepository,
+            AdoptionShelterHeadRepository headRepository,
             ModelMapper modelMapper) {
         this.adoptionPostRepository = adoptionPostRepository;
         this.adoptionPostFileRepository = adoptionPostFileRepository;
@@ -99,7 +100,7 @@ public class AdoptionPostCommandService {
     @SneakyThrows
     @Transactional
     public void registAdoptionPost(AdoptionPostCommandDTO newPost) throws IOException {
-                AdoptionPostEntity postEntity = new AdoptionPostEntity();
+        AdoptionPostEntity postEntity = new AdoptionPostEntity();
 
         // 기본 정보
         postEntity.setTitle(newPost.getTitle());
@@ -271,11 +272,35 @@ public class AdoptionPostCommandService {
         // 저장 (cascade = ALL이면 댓글도 같이 저장됨)
         adoptionPostRepository.save(foundPost);
     }
+    @Transactional
+    public void modifyAdoptionPostComment(int postId, int commentId, AdoptionPostCommentDTO adoptionPostComment) {
+        AdoptionPostEntity foundPost = adoptionPostRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
+        AdoptionPostCommentEntity foundComment = foundPost.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+        foundComment.setContent(adoptionPostComment.getContent());
+        foundComment.setUpdatedAt(DateTimeUtil.now());
+    }
+
+    @Transactional
+    public void deleteAdoptionPostComment(int postId, int commentId) {
+        AdoptionPostEntity foundPost =
+                adoptionPostRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+        AdoptionPostCommentEntity foundComment = foundPost.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+        foundComment.setIsBlinded(true);
+    }
 
     @Transactional
     public void registAdoptionPostReport(
             int postId, AdoptionPostReportDTO adoptionPostReportDTO) {
-        AdoptionPostEntity foundPost =
+        try { AdoptionPostEntity foundPost =
                 adoptionPostRepository.findById(postId)
                         .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
         AdoptionPostReportEntity adoptionPostReportEntity = new AdoptionPostReportEntity();
@@ -298,27 +323,16 @@ public class AdoptionPostCommandService {
 
         foundPost.getReports().add(adoptionPostReportEntity);
         adoptionPostRepository.save(foundPost);
-    }
-
-    @Transactional
-    public void modifyAdoptionPostComment(int postId, int commentId, AdoptionPostCommentDTO adoptionPostComment) {
-        AdoptionPostEntity foundPost = adoptionPostRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-
-        AdoptionPostCommentEntity foundComment = foundPost.getComments().stream()
-                .filter(c -> c.getId().equals(commentId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
-
-        foundComment.setContent(adoptionPostComment.getContent());
-        foundComment.setUpdatedAt(DateTimeUtil.now());
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("이미 신고한 게시글입니다.", e);
+        }
     }
 
     @Transactional
     public void registAdoptionPostCommentReport(
             int postId, int commentId, AdoptionPostCommentReportDTO dto) {
 
-        // 1. 게시글 조회
+        try {// 1. 게시글 조회
         AdoptionPostEntity post = adoptionPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
 
@@ -352,14 +366,9 @@ public class AdoptionPostCommandService {
 
         // 6. 저장 (cascade 설정이 되어있다면 comment → report도 함께 저장됨)
         adoptionPostRepository.save(post);
-    }
-
-    public void deleteAdoptionPostComment(int postId, int commentId) {
-        AdoptionPostEntity adoptionPostEntity =
-                adoptionPostRepository.findById(postId)
-                        .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
-
-        //List< = adoptionPostEntity.getComments()
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("이미 신고한 댓글입니다.", e);
+        }
     }
 
 }

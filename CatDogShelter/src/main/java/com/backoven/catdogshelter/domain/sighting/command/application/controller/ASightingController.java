@@ -41,8 +41,13 @@ public class ASightingController {
 
     // 게시글 수정
     @PutMapping("/post/{postId}")
-    public ResponseEntity<?> modifySightingPost(@PathVariable int postId,@RequestBody RequestSightingPostDTO modifyPostDTO) {
-        aSightingService.modifySightingPost(postId, modifyPostDTO);
+    public ResponseEntity<?> modifySightingPost(@PathVariable int postId,
+                                                @RequestParam("modifyPostDTO") String modifyPostDTOJson,    // RequestParam과 RequestBody 동시 사용 불가
+                                                @RequestParam List<MultipartFile> multiFiles) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        RequestSightingPostDTO modifyPostDTO = objectMapper.readValue(modifyPostDTOJson, RequestSightingPostDTO.class);
+
+        aSightingService.modifySightingPost(postId, modifyPostDTO, multiFiles);
 
         return ResponseEntity
                 .created(URI.create("/sighting-post/" + postId))   // Response Header 중 "Location"에 담겨 돌아옴
@@ -162,8 +167,8 @@ public class ASightingController {
 
     // 이미지 삭제
     @DeleteMapping("/{postId}/files")
-    public ResponseEntity<?> deleteFile(@PathVariable int postId) {
-        aSightingService.deleteFile(postId);
+    public ResponseEntity<?> deleteSightinPostFile(@PathVariable int postId) {
+        aSightingService.deleteSightinPostFile(postId);
 
         return ResponseEntity.noContent().build();
     }

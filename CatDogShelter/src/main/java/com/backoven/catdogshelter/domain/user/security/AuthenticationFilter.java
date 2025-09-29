@@ -1,6 +1,8 @@
 package com.backoven.catdogshelter.domain.user.security;
 
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestLoginDTO;
+import com.backoven.catdogshelter.domain.user.command.domain.aggregate.entity.LoginHistoryEntity;
+import com.backoven.catdogshelter.domain.user.command.domain.repository.LoginHistoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +35,16 @@ public class AuthenticationFilter
             extends UsernamePasswordAuthenticationFilter {
 
     private Environment env;
+    private final LoginHistoryRepository loginHistoryRepository;
+
     public AuthenticationFilter(AuthenticationManager authenticationManager,
-                                Environment env) {
+                                Environment env,
+                                LoginHistoryRepository loginHistoryRepository) {
         /* 설명. 우리가 만든 프로바이더를 알고있는 매니저를 인지시킴 */
         super(authenticationManager);
         this.env = env;
+        this.loginHistoryRepository = loginHistoryRepository;
+
     }
 
     // 필터에서 가장 먼저 실행되는 메서드
@@ -96,7 +104,6 @@ public class AuthenticationFilter
 
         String username = customUser.getUsername();
         Integer userId = customUser.getUserId();
-
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", roles);
         claims.put("userId", userId);
@@ -115,5 +122,15 @@ public class AuthenticationFilter
         // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         /* 설명. 2. 매개변수에서 */
         // @AuthenticationPrincipal UserDetails user
+        // ===== 로그인 기록 저장 =====
+        LoginHistoryEntity history = LoginHistoryEntity.builder()
+                .ipAddress(request.getRemoteAddr())
+                .loggedAt(LocalDateTime.now().toString())
+                .userId(customUser.getUserId())
+//                .headId(customUser.get())
+                .build();
+
+        loginHistoryRepository.save(history);
+        log.info("로그인 히스토리 저장 완료: {}", history);
     }
 }
