@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.user.security;
 
 import jakarta.servlet.Filter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -94,8 +95,15 @@ public class WebSecurity {
                 .csrf(csrf -> csrf.disable()) // REST API니까 CSRF는 꺼줌
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()         // 로그인/회원가입 관련 API는 누구나 접근
-                        .requestMatchers("/donation-posts/**").permitAll() // 👉 인증 없이 접근 가능
-                        .anyRequest().authenticated()                   // 그 외는 인증 필요
+                        .requestMatchers("/donation-posts/**").permitAll() // 인증 없이 접근 가능
+                        .requestMatchers("/missing-posts/**").permitAll()// 인증 없이 접근 가능
+                        .requestMatchers(
+                                "/missing-posts/comments/**/report/**",
+                                "/donation-posts/comments/**/report/**",
+                                "/missing-posts/**/report",
+                                "/donation-posts/**/report"
+                        ).permitAll()
+                        .anyRequest().authenticated()          // 그 외는 인증 필요
                 );
 
         return http.build();

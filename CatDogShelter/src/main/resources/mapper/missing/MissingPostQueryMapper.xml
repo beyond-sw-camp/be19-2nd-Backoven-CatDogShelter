@@ -14,7 +14,8 @@
         p.view            AS view,      -- 조회수
         r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
-        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
+        IFNULL(COUNT(mpl.id), 0) AS likeCount ,          -- 추천수
+        p.status
         FROM missingPost p
         LEFT JOIN user u ON p.user_id = u.user_id
         LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
@@ -42,7 +43,8 @@
             p.view            AS view,       -- 조회수
             r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName,  -- 작성자 이름
-        IFNULL(COUNT(mpl.id), 0) AS likeCount            -- 추천수
+        IFNULL(COUNT(mpl.id), 0) AS likeCount  ,          -- 추천수
+         p.status
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
@@ -63,7 +65,8 @@
             p.view            AS view,      -- 조회수
             r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
-        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
+        IFNULL(COUNT(mpl.id), 0) AS likeCount   ,        -- 추천수
+         p.status
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
@@ -84,7 +87,8 @@
             p.view            AS view,      -- 조회수
             r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름
-        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
+        IFNULL(COUNT(mpl.id), 0) AS likeCount,           -- 추천수
+         p.status
         FROM missingPost p
             LEFT JOIN user u ON p.user_id = u.user_id
             LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
@@ -107,7 +111,8 @@
         p.view            AS view,      -- 조회수
         r.name      AS userRating, -- 사용자 등급
         COALESCE(u.user_name, sh.ceo_name) AS userName, -- 작성자 이름 (회원/보호소장)
-        IFNULL(COUNT(mpl.id), 0) AS likeCount           -- 추천수
+        IFNULL(COUNT(mpl.id), 0) AS likeCount ,          -- 추천수
+         p.status
         FROM missingPost p
         LEFT JOIN user u ON p.user_id = u.user_id
         LEFT JOIN shelter_head sh ON p.head_id = sh.head_id

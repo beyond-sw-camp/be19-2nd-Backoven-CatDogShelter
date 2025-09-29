@@ -28,7 +28,7 @@ public interface MissingPostQueryMapper {
 
 
     // REQ-028 조회수 증가
-    void increaseView(@Param("id") Long id);
+    void increaseView(@Param("id") Integer id);
 
     //실종신고 게시글 상세내용 조회(게시글 하나 안에서)
     MissingPostQueryDetailDTO selectMissingPostDetail(int postId);

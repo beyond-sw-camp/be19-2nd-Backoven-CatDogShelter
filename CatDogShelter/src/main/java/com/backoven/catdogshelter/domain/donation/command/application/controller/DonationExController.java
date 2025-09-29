@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.donation.command.application.controller;
 
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.ReportCategory;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationCommentRequest;
@@ -168,18 +169,29 @@ public class DonationExController {
     }
 
 
+    // 일반 사용자 댓글 신고
+    @PostMapping("/{commentId}/report/user")
+    public ResponseEntity<Void> createReportDonationPostCommentByUser(@PathVariable Integer commentId,
+                                                    @RequestParam ReportCategory category,
+                                                    @RequestParam(required = false) String detail,
+                                                    @RequestParam Integer userId) {
+        UserEntity user = new UserEntity();
+        user.setUserId(userId); // TODO: UserService 연동 필요
 
+        donationPostCommentReportService.createReportDonationPostCommentByUser(commentId, category, detail, user);
+        return ResponseEntity.ok().build();
+    }
 
-    // 댓글 신고
-    @PostMapping("/comments/{id}/report")
-    public ResponseEntity<Void> createReportDonationPostComment(@PathVariable Integer id,
-                                              @RequestParam ReportCategory category,
-                                              @RequestParam(required = false) String detail,
-                                              @RequestParam Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+    // 보호소장 댓글 신고
+    @PostMapping("/{commentId}/report/head")
+    public ResponseEntity<Void> createReportDonationPostCommentByHead(@PathVariable Integer commentId,
+                                                    @RequestParam ReportCategory category,
+                                                    @RequestParam(required = false) String detail,
+                                                    @RequestParam Integer headId) {
+        ShelterHeadEntity head = new ShelterHeadEntity();
+        head.setId(headId); // TODO: HeadService 연동 필요
 
-        donationPostCommentReportService.createReportDonationPostComment(id, category, detail, user);
+        donationPostCommentReportService.createReportDonationPostCommentByHead(commentId, category, detail, head);
         return ResponseEntity.ok().build();
     }
 

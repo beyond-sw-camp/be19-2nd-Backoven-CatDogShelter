@@ -12,14 +12,14 @@ import java.util.List;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MissingPostQueryDetailDTO {
-    private Long id;
+    private Integer id;
     private String title;
     private String content;
     private String createdAt;
-    private int view;
+    private Integer view;
     private String userRating;       // 등급
     private String userName;   // 작성자 이름
-    private int likeCount;     // 좋아요 수 (인기글에서 사용)
+    private Integer likeCount;     // 좋아요 수 (인기글에서 사용)
 
     private List<MissingPostFileDTO> files;
     private List<MissingPostCommentDTO> comments;

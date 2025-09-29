@@ -47,15 +47,15 @@ public class MissingPostQueryService {
 
 
     //조회수 증가 로직
-    public void increaseView(Long id) {
+    public void increaseView(Integer id) {
         mapper.increaseView(id);
     }
 
 
     // 실종신고 게시글 내용 상세 조회
-    public MissingPostQueryDetailDTO selectMissingPostDetail(int postId) {
+    public MissingPostQueryDetailDTO selectMissingPostDetail(Integer postId) {
         // 조회수 증가
-        mapper.increaseView((long)postId);
+        mapper.increaseView(postId);
 
         // 상세 조회
         MissingPostQueryDetailDTO dto = mapper.selectMissingPostDetail(postId);

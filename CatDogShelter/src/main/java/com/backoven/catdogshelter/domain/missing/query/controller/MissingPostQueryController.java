@@ -47,7 +47,7 @@ public class MissingPostQueryController {
 
     //REQ-028 조회 수 증가(Post 테스트용)
     @PostMapping("/{id}/view")
-    public void increaseView(@PathVariable Long id) {
+    public void increaseView(@PathVariable Integer id) {
         service.increaseView(id);
     }
 
