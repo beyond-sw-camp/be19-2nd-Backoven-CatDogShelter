@@ -92,6 +92,7 @@
             <result property="uploadedAt" column="uploaded_at"/>
             <result property="fileUrl" column="file_url"/>
 
+        </collection>
         <!-- 1 : N 댓글 리스트 -->
         <collection property="comments"
                     ofType="com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostCommentDTO">
