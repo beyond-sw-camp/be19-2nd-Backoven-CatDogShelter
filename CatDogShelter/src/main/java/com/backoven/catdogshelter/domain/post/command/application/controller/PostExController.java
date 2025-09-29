@@ -83,8 +83,6 @@ public class PostExController {
     public void reportPostComment(@RequestBody PostCommentReportDTO postCommentReport){
         postService.reportPostComment(postCommentReport);
     }
+
 }
-
-
-
 
