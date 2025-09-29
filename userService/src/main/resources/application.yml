@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: CatDogShelter-user-service
+    name: CATDOGSHELTER-USER-SERVICE
   jpa:
     hibernate:
       naming:
