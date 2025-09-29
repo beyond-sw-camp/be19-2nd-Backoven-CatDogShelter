@@ -104,7 +104,6 @@ public class AuthenticationFilter
 
         String username = customUser.getUsername();
         Integer userId = customUser.getUserId();
-
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("auth", roles);
         claims.put("userId", userId);
