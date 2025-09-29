@@ -75,7 +75,7 @@ public class QSightingController {
     @GetMapping("/file/{filePath}/{fileName}")
     public ResponseEntity<Resource> getSightingPostFile(@PathVariable String filePath,
                                             @PathVariable String fileName,
-                                            @Value("${filepath}") String commonPath) throws IOException {
+                                            @Value("${file.upload-dir}") String commonPath) throws IOException {
         Path path = Paths.get(commonPath + "/" + filePath + "/" + fileName);
         Resource resource = new UrlResource(path.toUri());
 
