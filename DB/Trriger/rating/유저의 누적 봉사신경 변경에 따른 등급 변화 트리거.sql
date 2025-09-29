@@ -1,5 +1,3 @@
-DROP TRIGGER IF EXISTS trg_user_before_update_rating;
-
 DELIMITER //
 
 CREATE TRIGGER trg_user_before_update_rating
@@ -29,7 +27,6 @@ BEGIN
             END IF;
 
         END IF;
-
     END IF;
 END//
 

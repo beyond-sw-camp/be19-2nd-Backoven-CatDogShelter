@@ -8,7 +8,7 @@ import java.util.List;
 public interface ASightingService {
     int registSightingPost(RequestSightingPostDTO newPostDTO, List<MultipartFile> multiFiles);
 
-    void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO);
+    void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO, List<MultipartFile> multiFiles);
 
     boolean removeSightingPost(int postId);
 
