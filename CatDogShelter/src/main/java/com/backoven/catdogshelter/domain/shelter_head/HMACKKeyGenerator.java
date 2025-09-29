@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.common.security;
+package com.backoven.catdogshelter.domain.shelter_head;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;

@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.common.security;
+package com.backoven.catdogshelter.domain.shelter_head.security;
 
 
 import jakarta.servlet.FilterChain;
@@ -15,11 +15,11 @@ import java.io.IOException;
 /* 회원이 토큰을 들고왔을 때 처리하는 필터 */
 /* 한 번의 요청에 단 한번만 동작하는 필터로 주로 만듦 */
 @Slf4j
-public class JwtFilter extends OncePerRequestFilter {
+public class Shelter_headJwtFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUntil;
+    private final Shelter_headJwtUtil jwtUntil;
 
-    public JwtFilter(JwtUtil jwtUntil) {
+    public Shelter_headJwtFilter(Shelter_headJwtUtil jwtUntil) {
         this.jwtUntil = jwtUntil;
     }
 

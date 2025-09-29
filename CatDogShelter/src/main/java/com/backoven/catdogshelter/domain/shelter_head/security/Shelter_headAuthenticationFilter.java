@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.common.security;
+package com.backoven.catdogshelter.domain.shelter_head.security;
 
 /* 기존의 필더(UsernamePasswordAuthenticationFilter)에서 상속받아 우리만의 방식으로 필터링을 처리한다  */
 
@@ -17,8 +17,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -30,11 +28,11 @@ import java.util.stream.Collectors;
 
 
 @Slf4j
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class Shelter_headAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private Environment env;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, Environment env) {
+    public Shelter_headAuthenticationFilter(AuthenticationManager authenticationManager, Environment env) {
         /* 우리가 만든 프로바이더를 알고 있는 매니저를 인지시킴 */
         super(authenticationManager);
 

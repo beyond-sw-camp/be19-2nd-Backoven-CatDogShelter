@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.common.security;
+package com.backoven.catdogshelter.domain.shelter_head.security;
 
 import com.backoven.catdogshelter.domain.shelter_head.command.application.service.Shelter_headService;
 import io.jsonwebtoken.*;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class Shelter_headJwtUtil {
 
     private final Key key;
     private final Shelter_headService shelter_headService;
 
-    public JwtUtil(@Value("${token.secret}")String key,
-                   Shelter_headService shelter_headService) {
+    public Shelter_headJwtUtil(@Value("${token.secret}")String key,
+                               Shelter_headService shelter_headService) {
         /* 설명. String -> Key로 변환 */
         byte[] keyBytes = Decoders.BASE64.decode(key);
         this.key = Keys.hmacShaKeyFor(keyBytes);

@@ -1,4 +1,4 @@
-package com.backoven.catdogshelter.common.security;
+package com.backoven.catdogshelter.domain.shelter_head.security;
 
 import com.backoven.catdogshelter.domain.shelter_head.command.application.service.Shelter_headService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 /* Service 계층의 Shelter_headService를 활용해 DB에서 사용자 조회 후 인증 */
 @Slf4j
 @Component
-public class JwtAuthenticationProvider implements AuthenticationProvider {
+public class Shelter_headJwtAuthenticationProvider implements AuthenticationProvider {
 
     private final Shelter_headService shelter_headService;
     private final PasswordEncoder passwordEncoder;      // 평문과 암호화 된 다이제스트를 비교하기 위한 도구
 
-    public JwtAuthenticationProvider(Shelter_headService shelter_headService, PasswordEncoder passwordEncoder) {
+    public Shelter_headJwtAuthenticationProvider(Shelter_headService shelter_headService, PasswordEncoder passwordEncoder) {
         this.shelter_headService = shelter_headService;
 
         this.passwordEncoder = passwordEncoder;
