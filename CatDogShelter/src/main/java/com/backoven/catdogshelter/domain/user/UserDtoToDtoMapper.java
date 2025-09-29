@@ -4,7 +4,8 @@ import com.backoven.catdogshelter.domain.user.command.application.dto.requestlog
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestRegistUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.user.UserDTO;
 
-public class UserMapper {
+// dto끼리의 매핑
+public class UserDtoToDtoMapper {
 
     // RequestRegistUserDTO -> UserDTO 변환
     public static UserDTO toUserDTO(RequestRegistUserDTO request) {
