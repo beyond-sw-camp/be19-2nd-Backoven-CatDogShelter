@@ -35,7 +35,7 @@ public class DonationPostCommandService {
     @Transactional(readOnly = true)
     public DonationPost getPost(Integer id) {
         return donationPostRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("DonationPost not found"));
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
     }
 
 
@@ -181,10 +181,7 @@ public class DonationPostCommandService {
             throw new IllegalStateException("게시글 작성자만 삭제할 수 있습니다.");
         }
 
-        donationPostRepository.delete(post); //
+        donationPostRepository.delete(post);
     }
-
-
-
 
 }

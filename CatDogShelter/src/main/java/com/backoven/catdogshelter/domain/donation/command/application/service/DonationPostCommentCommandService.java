@@ -53,16 +53,17 @@ public class DonationPostCommentCommandService {
     }
 
 
+    @Transactional
     //댓글 삭제(작성자 본인만)
     public void deleteDonationPostComment(Integer id, Integer userId) {
         DonationPostComment comment = donationPostCommentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        // 작성자 본인인지 확인
         if (comment.getUser() == null || !comment.getUser().getUserId().equals(userId)) {
             throw new IllegalStateException("댓글 작성자만 삭제할 수 있습니다.");
         }
 
-        comment.softDelete();
+        comment.softDelete(); // 영속 상태에서 필드 변경
+        // 별도의 save() 필요 없음 (flush 시점에 자동 반영)
     }
 }

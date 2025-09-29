@@ -1,26 +1,24 @@
-package com.backoven.catdogshelter.domain.donation.command.application.service;
+package com.backoven.catdogshelter.domain.missing.command.application.service;
 
-
-import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostFilesRepository;
-import com.backoven.catdogshelter.domain.donation.command.domain.repository.DonationPostRepository;
+import com.backoven.catdogshelter.domain.missing.command.domain.repository.MissingPostFilesRepository;
+import com.backoven.catdogshelter.domain.missing.command.domain.repository.MissingPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
 @Service
 @RequiredArgsConstructor
-public class DonationPostFileService {
-    private final DonationPostRepository donationPostRepository;
-    private final DonationPostFilesRepository donationPostFilesRepository;
+@Transactional
+public class MissingPostFileService {
+    private final MissingPostRepository missingPostRepository;
+    private final MissingPostFilesRepository missingPostFilesRepository;
 
     private final String uploadDir = "/Users/dong/uploads/"; // 로컬 저장 경로
-
 
     public byte[] downloadImage(String fileName) {
         try {
