@@ -7,7 +7,9 @@ import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.enti
 import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.entity.AssociationEntity;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.ApplicationDetailsRepository;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.AssociationRepository;
-import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.UserRepository;
+
+import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerUserRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,16 @@ public class ApplicationDetailsCommandServiceImpl implements ApplicationDetailsC
     private final ApplicationDetailsRepository applicationDetailsRepository;
     private final ModelMapper modelMapper;
     private final AssociationRepository associationRepository;
-    private final UserRepository userRepository;
+    private final VolunteerUserRepository volunteerUserRepository;
 
     @Autowired
     public ApplicationDetailsCommandServiceImpl(ApplicationDetailsRepository applicationDetailsRepository,
-                                                ModelMapper modelMapper, AssociationRepository associationRepository, UserRepository userRepository){
+                                                ModelMapper modelMapper, AssociationRepository associationRepository, VolunteerUserRepository volunteerUserRepository){
         this.applicationDetailsRepository = applicationDetailsRepository;
         this.modelMapper = modelMapper;
         this.associationRepository = associationRepository;
-        this.userRepository = userRepository;
+        this.volunteerUserRepository = volunteerUserRepository;
+
     }
 
     // 봉사모임 신청내역 추가
@@ -52,7 +55,9 @@ public class ApplicationDetailsCommandServiceImpl implements ApplicationDetailsC
         // 새로운 신청내역 객체 생성 후 값 넣어주기
         ApplicationDetailsEntity application = new ApplicationDetailsEntity();
         AssociationEntity association = associationRepository.getReferenceById(newApplication.getVolunteerId());
-        UserEntity user = userRepository.getReferenceById(newApplication.getUserId());
+
+        UserEntity user = volunteerUserRepository.getReferenceById(newApplication.getUserId());
+
         application.setAssociation(association);
         application.setUser(user);
 
