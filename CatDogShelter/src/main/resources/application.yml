@@ -1,13 +1,13 @@
 # 공통 설정 + 템플릿
 
 server:
-  port: 8080
+  port: 0
   tomcat:
     max-connections: 200
 
 spring:
   application:
-    name: CatDogShelter-user-service
+    name: CatDogShelter-post-service
   jpa:
     hibernate:
       naming:
