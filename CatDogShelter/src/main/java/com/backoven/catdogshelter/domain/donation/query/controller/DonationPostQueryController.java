@@ -19,7 +19,7 @@ public class DonationPostQueryController {
 
     private final DonationPostQueryService service;
 
-    //REQ-021게시글 서치 조회
+    //게시글 서치 조회
     @GetMapping("/search")
     public List<DonationPostQueryDTO> selectDonationPostSearch(@RequestParam(required = false) String keyword,
                                                  @RequestParam(defaultValue = "1") int page,
@@ -27,27 +27,27 @@ public class DonationPostQueryController {
         return service.selectDonationPostSearch(keyword, page, size);
     }
 
-    //REQ-029 조회수 기준 인기글
+    //조회수 기준 인기글
     @GetMapping("/popular/view")
     public List<DonationPostQueryDTO> selectAllDonationPostsByView(
             @RequestParam(defaultValue = "10") int limit) {
         return service.selectAllDonationPostsByView(limit);
     }
 
-    //REQ-030 추천수 기준 인기글
+    // 추천수 기준 인기글
     @GetMapping("/popular/like")
     public List<DonationPostQueryDTO> selectAllDonationPostsByLiked(
             @RequestParam(defaultValue = "10") int limit) {
         return service.selectAllDonationPostsByLiked(limit);
     }
 
-    //REQ-031 최신 게시글
+    //최신 게시글
     @GetMapping("/latest")
     public List<DonationPostQueryDTO> selectAllDonationPostsLatest(@RequestParam(defaultValue = "5") int limit) {
         return service.selectAllDonationPostsLatest(limit);
     }
 
-    //REQ-028 조회 수 증가
+    //조회 수 증가
     @PostMapping("/{id}/view")
     public void increaseView(@PathVariable Integer id) {
         service.increaseView(id);

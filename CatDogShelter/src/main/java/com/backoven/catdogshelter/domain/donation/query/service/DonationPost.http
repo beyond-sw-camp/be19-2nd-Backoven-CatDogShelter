@@ -1,4 +1,4 @@
-###REQ-021게시글 서치 목록 조회
+###게시글 서치 목록 조회
 GET localhost:8080/donation-posts/query/search?keyword=사료
 Content-Type: application/json
 ###조회수 기준 인기글 목록 조회

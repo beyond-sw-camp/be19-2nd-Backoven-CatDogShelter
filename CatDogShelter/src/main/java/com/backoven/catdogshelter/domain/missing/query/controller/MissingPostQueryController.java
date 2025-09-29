@@ -17,7 +17,7 @@ import java.util.Map;
 public class MissingPostQueryController {
     private final MissingPostQueryService service;
 
-    //REQ-021게시글 서치 조회
+    //게시글 서치 조회
     @GetMapping("/search")
     public List<MissingPostQueryDTO> selectMissingPostSearch(@RequestParam(required = false) String keyword,
                                                  @RequestParam(defaultValue = "1") int page,
@@ -25,27 +25,27 @@ public class MissingPostQueryController {
         return service.selectMissingPostSearch(keyword, page, size);
     }
 
-    //REQ-029 조회수 기준 인기글
+    //조회수 기준 인기글
     @GetMapping("/popular/view")
     public List<MissingPostQueryDTO> selectAllMissingPostsByView(
             @RequestParam(defaultValue = "10") int limit) {
         return service.selectAllMissingPostsByView(limit);
     }
 
-    //REQ-030 추천수 기준 인기글
+    //추천수 기준 인기글
     @GetMapping("/popular/like")
     public List<MissingPostQueryDTO> selectAllMissingPostsByLiked(
             @RequestParam(defaultValue = "10") int limit) {
         return service.selectAllMissingPostsByLiked(limit);
     }
 
-    //REQ-031 최신 작성 게시글
+    //최신 작성 게시글
     @GetMapping("/latest")
     public List<MissingPostQueryDTO> selectAllMissingPostsLatest(@RequestParam(defaultValue = "5") int limit) {
         return service.selectAllMissingPostsLatest(limit);
     }
 
-    //REQ-028 조회 수 증가(Post 테스트용)
+    //조회 수 증가(Post 테스트용)
     @PostMapping("/{id}/view")
     public void increaseView(@PathVariable Integer id) {
         service.increaseView(id);

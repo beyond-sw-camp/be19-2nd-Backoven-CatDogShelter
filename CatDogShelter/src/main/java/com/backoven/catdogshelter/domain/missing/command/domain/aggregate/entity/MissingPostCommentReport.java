@@ -32,7 +32,7 @@ public class MissingPostCommentReport {
     @Column(name = "created_at")
     private String createdAt;
 
-    // 처리 여부 (예: false=미처리, true=처리됨)
+    // 실종 처리 여부
     @Column(nullable = false)
     private boolean status = false;
 

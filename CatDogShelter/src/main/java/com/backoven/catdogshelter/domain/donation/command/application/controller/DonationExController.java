@@ -29,7 +29,6 @@ public class DonationExController {
     private final DonationPostLikeCommandService donationLikeService;
     private final DonationPostReportCommentCommandService donationPostCommentReportService;
     private final DonationPostFileService donationPostFileService;
-    private final UserRepository userRepository;
 
       /*===============JPA - READ=============== */
 
@@ -107,7 +106,7 @@ public class DonationExController {
     public ResponseEntity<Void> deleteDonationPost(@PathVariable Integer id,
                                            @RequestParam Integer headId) { // 작성자(보호소장) ID
         donationPostService.deleteDonationPost(id, headId);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -134,7 +133,7 @@ public class DonationExController {
     @DeleteMapping("/{id}/like")
     public ResponseEntity<Void> updateUnLikeDonationPost(@PathVariable Integer id, @RequestParam Integer userId) {
         donationLikeService.updateUnLikeDonationPost(id, userId);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -165,7 +164,7 @@ public class DonationExController {
     public ResponseEntity<Void> deleteDonationPostComment(@PathVariable Integer id,
                                               @RequestParam Integer userId) {
         donationCommentService.deleteDonationPostComment(id, userId);
-        return ResponseEntity.noContent().build(); // 204 반환 권장
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -176,7 +175,7 @@ public class DonationExController {
                                                     @RequestParam(required = false) String detail,
                                                     @RequestParam Integer userId) {
         UserEntity user = new UserEntity();
-        user.setUserId(userId); // TODO: UserService 연동 필요
+        user.setUserId(userId);
 
         donationPostCommentReportService.createReportDonationPostCommentByUser(commentId, category, detail, user);
         return ResponseEntity.ok().build();
@@ -189,7 +188,7 @@ public class DonationExController {
                                                     @RequestParam(required = false) String detail,
                                                     @RequestParam Integer headId) {
         ShelterHeadEntity head = new ShelterHeadEntity();
-        head.setId(headId); // TODO: HeadService 연동 필요
+        head.setId(headId);
 
         donationPostCommentReportService.createReportDonationPostCommentByHead(commentId, category, detail, head);
         return ResponseEntity.ok().build();

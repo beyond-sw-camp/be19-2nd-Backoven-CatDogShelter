@@ -7,6 +7,7 @@ import com.backoven.catdogshelter.domain.missing.command.application.dto.CreateM
 import com.backoven.catdogshelter.domain.missing.command.application.dto.CreateMissingPostRequest;
 import com.backoven.catdogshelter.domain.missing.command.application.dto.UpdateMissingPostRequest;
 import com.backoven.catdogshelter.domain.missing.command.application.service.*;
+import com.backoven.catdogshelter.domain.missing.command.domain.aggregate.entity.MissingPost;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -223,7 +224,7 @@ public class MissingExController {
                                                     @RequestParam(required = false) String detail,
                                                     @RequestParam Integer userId) {
         UserEntity user = new UserEntity();
-        user.setUserId(userId); // TODO: UserService 연동 필요
+        user.setUserId(userId); //
 
         missingPostCommentReportService.createReportMissingPostCommentByUser(commentId, category, detail, user);
         return ResponseEntity.ok().build();
@@ -236,10 +237,11 @@ public class MissingExController {
                                                     @RequestParam(required = false) String detail,
                                                     @RequestParam Integer headId) {
         ShelterHeadEntity head = new ShelterHeadEntity();
-        head.setId(headId); // TODO: HeadService 연동 필요
+        head.setId(headId); //
 
         missingPostCommentReportService.createReportMissingPostCommentByHead(commentId, category, detail, head);
         return ResponseEntity.ok().build();
     }
+
 }
 

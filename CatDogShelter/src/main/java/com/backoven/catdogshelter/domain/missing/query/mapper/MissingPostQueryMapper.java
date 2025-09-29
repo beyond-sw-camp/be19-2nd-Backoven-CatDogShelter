@@ -10,24 +10,24 @@ import java.util.List;
 
 @Mapper
 public interface MissingPostQueryMapper {
-    // REQ-021 게시글 목록 조회 (검색 + 페이징)
+    // 게시글 목록 조회 (검색 + 페이징)
     List<MissingPostQueryDTO> selectMissingPostSearch(@Param("keyword") String keyword,
                                           @Param("offset") int offset,
                                           @Param("limit") int limit);
 
-    // REQ-029 조회수 기준 인기 게시글
+    // 조회수 기준 인기 게시글
     List<MissingPostQueryDTO>   selectAllMissingPostsByView(@Param("limit") int limit);
-    // REQ-030 추천수 기준 인기 게시글
+    //추천수 기준 인기 게시글
     List<MissingPostQueryDTO> selectAllMissingPostsByLiked(@Param("limit") int limit);
 
-    // REQ-031 최신 게시글 조회
+    //  최신 게시글 조회
     List<MissingPostQueryDTO> selectAllMissingPostsLatest(@Param("limit") int limit);
 
     //게시판보드, 게시글 목록 조회 쿼리
     List<MissingPostQueryDTO> selectAllMissingPosts();
 
 
-    // REQ-028 조회수 증가
+    // 조회수 증가
     void increaseView(@Param("id") Integer id);
 
     //실종신고 게시글 상세내용 조회(게시글 하나 안에서)

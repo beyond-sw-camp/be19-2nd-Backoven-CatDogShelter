@@ -14,24 +14,24 @@ import java.util.List;
 public class MissingPostQueryService {
 
     private final MissingPostQueryMapper mapper;
-    //REQ-021게시글 서치 조회
+    //게시글 서치 조회
 
     public List<MissingPostQueryDTO> selectMissingPostSearch(String keyword, int page, int size) {
         int offset = (page - 1) * size;
         return mapper.selectMissingPostSearch(keyword, offset, size);
     }
-    //REQ-029 조회수 기준 인기글
+    //조회수 기준 인기글
 
     public List<MissingPostQueryDTO> selectAllMissingPostsByView(int limit) {
         return mapper.selectAllMissingPostsByView(limit);
     }
-    //REQ-030 추천수 기준 인기글
+    //추천수 기준 인기글
 
     public List<MissingPostQueryDTO> selectAllMissingPostsByLiked(int limit) {
         return mapper.selectAllMissingPostsByLiked(limit);
     }
 
-    //REQ-031 최신 작성 게시글
+    //최신 작성 게시글
 
     public List<MissingPostQueryDTO> selectAllMissingPostsLatest(int limit) {
         return mapper.selectAllMissingPostsLatest(limit);
