@@ -35,7 +35,7 @@ public class ASightingServiceImpl implements ASightingService {
     private final SightingPostLikedRepository sightingPostLikedRepository;
     private final ModelMapper modelMapper;
 
-    @Value("${filepath}")
+    @Value("${file.upload-dir}")
     private String imgCommonPath;
 
     @Autowired
@@ -81,8 +81,11 @@ public class ASightingServiceImpl implements ASightingService {
                             // 폴더 만들기 실패 에러
                         }
                     }
+
                     File dest = new File(dir, saveName);
                     multiFile.transferTo(dest);
+
+
 
                     SightingPostFiles spfile = new SightingPostFiles();
                     spfile.setPostId(newPost.getId());
@@ -104,7 +107,7 @@ public class ASightingServiceImpl implements ASightingService {
     // 게시글 수정
     @Override
     @Transactional
-    public void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO) {
+    public void modifySightingPost(int postId, RequestSightingPostDTO modifyPostDTO, List<MultipartFile> multiFiles) {
         // 변경하려는 게시글이 규칙을 지키지 않았다면
         dSightingService.validate(modifyPostDTO);
 
@@ -115,6 +118,7 @@ public class ASightingServiceImpl implements ASightingService {
         // DB에서 정보 불러오기
         SightingPost foundPost = sightingPostRepository.findById(postId).orElse(null);
 
+        String now = DateTimeUtil.now();
         if (foundPost != null) {
             // 정보 변경 + 업데이트 날짜 추가
             foundPost.setTitle(modifyPost.getTitle());
@@ -125,7 +129,53 @@ public class ASightingServiceImpl implements ASightingService {
             foundPost.setAnimalType(modifyPost.getAnimalType());
             foundPost.setBreed(modifyPost.getBreed());
             foundPost.setSigunguId(modifyPost.getSigunguId());
-            foundPost.setUpdatedAt(DateTimeUtil.now());
+            foundPost.setUpdatedAt(now);
+        }
+
+        if (multiFiles != null) {
+            // 1. 기존 파일 삭제
+            List<SightingPostFiles> files = sightingPostFilesRepository.findByPostId(postId);
+            for (SightingPostFiles spfile : files) {
+
+                Path path = Paths.get(imgCommonPath,spfile.getFilePath(), spfile.getFileRename());
+                if(Files.exists(path)) {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            sightingPostFilesRepository.deleteAll(files);
+
+            // 2. 새로 들어온 파일 저장
+            try {
+                for(MultipartFile multiFile : multiFiles) {
+                    String originFileName = multiFile.getOriginalFilename();
+                    String ext = originFileName.substring(originFileName.lastIndexOf("."));
+                    String saveName = UUID.randomUUID().toString().replace("-", "") + ext;
+
+                    File dir = new File(imgCommonPath, "Sighting");
+                    if(!dir.exists()) {
+                        if(!dir.mkdirs()) {
+                            // 폴더 만들기 실패 에러
+                        }
+                    }
+
+                    File dest = new File(dir, saveName);
+                    multiFile.transferTo(dest);
+
+
+                    SightingPostFiles spfile = new SightingPostFiles();
+                    spfile.setPostId(postId);
+                    spfile.setFileRename(saveName);
+                    spfile.setUploadedAt(now);
+
+                    sightingPostFilesRepository.save(spfile);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

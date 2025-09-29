@@ -36,9 +36,6 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
 
-mybatis:
-  mapper-locations: classpath:mapper/**/*.xml
-
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
