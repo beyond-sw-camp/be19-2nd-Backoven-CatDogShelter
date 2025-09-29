@@ -43,7 +43,7 @@ logging:
 
 file:
   upload-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads
-
+filepath: =/Users/haeone/Desktop/uploads
 # 로그인
 token:
   expiration_time: 43200000
