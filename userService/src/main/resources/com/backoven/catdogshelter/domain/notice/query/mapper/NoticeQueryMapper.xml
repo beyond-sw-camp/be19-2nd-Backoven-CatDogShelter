@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.notice.query.mapper.NoticeQueryMapper">
+
+    <!-- 공지사항 전체 목록 조회 -->
+    <resultMap id="noticesMap" type="com.backoven.catdogshelter.domain.notice.query.dto.NoticeQueryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="writer" column="NAME"/>
+        <result property="likes" column="LIKE_COUNT"/>
+    </resultMap>
+    <select id="selectNotices" resultMap="noticesMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CREATED_AT
+             , B.NAME
+             , LC.LIKE_COUNT
+          FROM NOTICE A
+          JOIN RATING B ON A.RATING_ID = B.ID
+          LEFT JOIN (SELECT
+                            NOTICE_ID
+                          , COUNT(*) AS LIKE_COUNT
+                       FROM NOTICELIKED
+                      GROUP BY NOTICE_ID) LC ON (A.ID = LC.NOTICE_ID)
+         ORDER BY A.CREATED_AT DESC
+    </select>
+
+    <!-- 공지사항 검색 목록 조회 -->
+    <select id="selectNoticesByKeyword" parameterType="string" resultMap="noticesMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CREATED_AT
+             , B.NAME
+             , LC.LIKE_COUNT
+          FROM NOTICE A
+          JOIN RATING B ON A.RATING_ID = B.ID
+          LEFT JOIN (SELECT
+                            NOTICE_ID
+                          , COUNT(*) AS LIKE_COUNT
+                       FROM NOTICELIKED GROUP BY NOTICE_ID) LC ON (A.ID = LC.NOTICE_ID)
+        <where>
+            <if test="keyword != null">
+                A.TITLE LIKE CONCAT ('%', #{keyword}, '%')
+                OR A.CONTENT LIKE CONCAT ('%', #{keyword}, '%')
+            </if>
+        </where>
+         ORDER BY A.CREATED_AT DESC
+    </select>
+
+    <!-- 공지사항 상세 조회 -->
+    <resultMap id="detailMap" type="com.backoven.catdogshelter.domain.notice.query.dto.NoticePostQueryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="created" column="CREATED_AT"/>
+        <result property="updated" column="UPDATED_AT"/>
+        <result property="writer" column="NAME"/>
+        <result property="likes" column="LIKE_COUNT"/>
+        <collection property="files" column="id" select="selectNoticePostFiles"
+                    ofType="com.backoven.catdogshelter.domain.notice.query.dto.NoticePostFileQueryDTO"/>
+    </resultMap>
+    <select id="selectNotice" parameterType="_int" resultMap="detailMap">
+        SELECT
+               A.ID
+             , A.TITLE
+             , A.CONTENT
+             , A.CREATED_AT
+             , A.UPDATED_AT
+             , B.NAME
+             , LC.LIKE_COUNT
+          FROM NOTICE A
+          JOIN RATING B ON A.RATING_ID = B.ID
+          LEFT JOIN (SELECT
+                            NOTICE_ID
+                          , COUNT(*) AS LIKE_COUNT
+                       FROM NOTICELIKED
+                      GROUP BY NOTICE_ID) LC ON (A.ID = LC.NOTICE_ID)
+         WHERE A.ID = #{id}
+    </select>
+
+    <!-- 파일 목록 (공지사항 1:N) -->
+    <resultMap id="noticeFileMap"
+               type="com.backoven.catdogshelter.domain.notice.query.dto.NoticePostFileQueryDTO">
+        <result property="rename" column="FILE_RENAME"/>
+        <result property="path"   column="FILE_PATH"/>
+    </resultMap>
+    <select id="selectNoticePostFiles" parameterType="_int" resultMap="noticeFileMap">
+        SELECT
+               FILE_RENAME
+             , FILE_PATH
+          FROM NOTICEFILES
+         WHERE NOTICE_id = #{id}
+         ORDER BY UPLOADED_AT ASC, ID ASC
+    </select>
+</mapper>
