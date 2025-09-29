@@ -1,0 +1,63 @@
+### GET request AlladoptionPost
+GET localhost:8080/adoption/post/board
+
+### GET request adoptionPost
+GET localhost:8080/adoption/post/1
+
+### Post with Json body
+POST localhost:8080/adoption/post/regist
+Content-Type: application/json
+
+{
+  "title": "테스트용 입양 게시글입니다",
+  "content": "이 글은 실제 동물 입양과 무관한 테스트 데이터입니다. API와 DB 연동이 정상적으로 동작하는지 확인하기 위해 작성되었습니다.",
+  "createdAt": "2025-09-01",
+  "updatedAt": "2025-09-05",
+  "userPhone": "010-1111-2222",
+  "animalType": "CAT",
+  "breed": "코숏",
+  "age": 2,
+  "color": "검정",
+  "gender": "FEMALE",
+  "weight": 3.20,
+  "status": "PROTECTING",
+  "vaccination": "Y",
+  "neutering": "Y",
+  "view": 102,
+  "isBlind": false,
+  "isDeleted": false,
+  "userId": 1,
+  "headId": null,
+  "sigunguId": 1
+}
+
+### PUT modify post
+PUT localhost:8080/adoption/post/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "테스트용 입양 게시글 수정입니다.",
+  "content": "이 글은 실제 동물 입양과 무관한 테스트 데이터입니다. API와 DB 연동이 정상적으로 동작하는지 확인하기 위해 작성되었습니다.",
+  "createdAt": "2025-09-01",
+  "updatedAt": "2025-09-05",
+  "userPhone": "010-1111-2222",
+  "animalType": "CAT",
+  "breed": "코숏",
+  "age": 2,
+  "color": "검정",
+  "gender": "FEMALE",
+  "weight": 3.20,
+  "status": "PROTECTING",
+  "vaccination": "Y",
+  "neutering": "Y",
+  "view": 102,
+  "isBlind": false,
+  "isDeleted": false,
+  "userId": 1,
+  "headId": null,
+  "sigunguId": 1
+}
+
+### DELETE softdelete post
+PUT localhost:8080/adoption/post/1/blind
