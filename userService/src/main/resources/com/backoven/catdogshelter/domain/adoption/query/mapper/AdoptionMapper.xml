@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.adoption.query.mapper.AdoptionMapper">
+
+    <!-- 입양게시판 목록 조회를 위한 매핑 -->
+    <resultMap id="adoptionPostQueryResultMap"
+               type="com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostAllQueryDTO">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="animalType" column="animal_type"/>
+        <result property="displayDate" column="display_date"/>
+        <result property="writerName" column="writer_name"/>
+        <result property="userRating" column="user_rating"/>
+        <result property="view" column="view"/>
+        <result property="recommendCount" column="recommend_count"/>
+        <result property="sidoName" column="sido_name"/>
+        <result property="sigunguName" column="sigungu_name"/>
+    </resultMap>
+
+    <!-- 입양게시판 목록 조회 -->
+    <!-- WHERE 조건: 입양되지 않은 상태 조회 -->
+    <!-- 번호, 제목, 동물종류, 작성일, 작성자, 조회수, 추천수, 지역(시도,시군) -->
+    <select id="selectAllAdoptionPosts"
+            resultMap="adoptionPostQueryResultMap">
+        SELECT
+               ap.id
+             , ap.title
+             , ap.animal_type
+             , CASE
+                 WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+                 ELSE ap.created_at
+                 END AS display_date
+             , CASE
+                 WHEN u.user_name IS NOT NULL
+                 THEN u.user_name            -- 회원이면 이름
+                 ELSE sh.company_name        -- 보호소장이면 보호소명
+                 END AS writer_name
+             , CASE
+                 WHEN u.user_name IS NOT NULL
+                 THEN r.name               -- 회원이면 등급
+                 ELSE NULL                 -- 보호소장이면 등급 없음
+                 END AS user_rating
+             , ap.view
+             , COUNT(apl.id) AS recommend_count
+             , si.sido_name
+             , sg.sigungu_name
+          FROM adoptionPost ap
+          LEFT JOIN adoptionPostLiked apl ON ap.id = apl.post_id
+          LEFT JOIN user u ON ap.user_id = u.user_id
+          LEFT JOIN rating r ON u.rating_id = r.id
+          LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+          LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+          LEFT JOIN sido si ON sg.sido_id = si.sido_id
+         WHERE ap.status = 'PROTECTING'
+           AND ap.is_blind = 0
+         GROUP BY ap.id, ap.title, ap.animal_type, ap.created_at, ap.updated_at,
+                  ap.user_id, ap.head_id, u.user_name, r.name, sh.company_name, ap.view,
+                  si.sido_name, sg.sigungu_name
+         ORDER BY ap.created_at DESC
+    </select>
+
+    <!-- 입양게시판 게시글 조회 매핑 -->
+    <resultMap id="adoptionPostDetailResultMap"
+               type="com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostDetailQueryDTO">
+
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="writerName" column="writer_name"/>
+        <result property="userRating" column="user_rating"/>
+        <result property="view" column="view"/>
+        <result property="recommendCount" column="recommend_count"/>
+        <result property="animalType" column="animal_type"/>
+        <result property="breed" column="breed"/>
+        <result property="age" column="age"/>
+        <result property="color" column="color"/>
+        <result property="gender" column="gender"/>
+        <result property="weight" column="weight"/>
+        <result property="status" column="status"/>
+        <result property="vaccination" column="vaccination"/>
+        <result property="neutering" column="neutering"/>
+
+        <!-- 1: N 파일 리스트 -->
+        <collection property="files"
+                    ofType="com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostFileDTO">
+            <id property="id" column="file_id"/>
+            <result property="fileRename" column="file_rename"/>
+            <result property="filePath" column="file_path"/>
+            <result property="uploadedAt" column="uploaded_at"/>
+            <result property="fileUrl" column="file_url"/>
+
+        </collection>
+        <!-- 1 : N 댓글 리스트 -->
+        <collection property="comments"
+                    ofType="com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostCommentDTO">
+            <id property="id" column="comment_id"/>
+            <result property="content" column="comment_content"/>
+            <result property="displayDate" column="comment_display_date"/>
+            <result property="writerName" column="comment_writer_name"/>
+        </collection>
+    </resultMap>
+
+    <!-- 입양게시판 번호를 통해 해당 게시글 조회   -->
+    <select id="selectAdoptionPostById"
+            parameterType="_int"
+            resultMap="adoptionPostDetailResultMap">
+        SELECT
+               ap.id
+             , ap.title
+             , ap.content
+             , ap.user_phone
+             , ap.view
+             , CASE
+                   WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+                   ELSE ap.created_at
+                END AS post_display_date
+        <!-- 작성자 -->
+            , CASE
+                WHEN u.user_name IS NOT NULL
+                THEN u.user_name            -- 회원이면 이름
+                ELSE sh.company_name        -- 보호소장이면 보호소명
+                END AS writer_name
+            , CASE
+                WHEN u.user_name IS NOT NULL
+                THEN r.name                 -- 회원이면 등급
+                ELSE NULL                   -- 보호소장이면 등급 없음
+                END AS user_rating
+        <!-- 추천수 -->
+             , COALESCE(COUNT(DISTINCT l.id), 0) AS recommend_count
+             , ap.animal_type
+             , ap.breed
+             , ap.age
+             , ap.color
+             , ap.gender
+             , ap.weight
+             , ap.status
+             , ap.vaccination
+             , ap.neutering
+        <!-- 파일 -->
+             , f.id AS file_id
+             , f.file_rename
+             , f.file_path
+             , f.uploaded_at
+             , CONCAT(f.file_path, f.file_rename) AS file_url
+        <!-- 댓글 -->
+             , c.id AS comment_id
+             , c.content AS comment_content
+             , CASE
+                   WHEN c.updated_at IS NOT NULL THEN c.updated_at
+                   ELSE c.created_at
+               END AS comment_display_date
+            , COALESCE(cu.user_name, ch.company_name) AS comment_writer_name
+        <!-- 지역 -->
+            , sg.sigungu_name
+            , si.sido_name
+         FROM adoptionPost ap
+         LEFT JOIN user u ON ap.user_id = u.user_id
+         LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+         LEFT JOIN rating r ON u.rating_id = r.id
+         LEFT JOIN adoptionPostLiked l ON ap.id = l.post_id
+         LEFT JOIN adoptionPostFiles f ON ap.id = f.post_id
+         LEFT JOIN adoptionPostComment c ON ap.id = c.post_id
+          AND c.is_blinded = FALSE
+         LEFT JOIN user cu ON c.user_id = cu.user_id
+         LEFT JOIN shelter_head ch ON c.head_id = ch.head_id
+         LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+         LEFT JOIN sido si ON sg.sido_id = si.sido_id
+         WHERE ap.id = #{id}
+         GROUP BY ap.id, f.id, c.id, sg.sigungu_id, si.sido_id
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="updateAdoptionPostView" parameterType="int">
+        UPDATE adoptionPost
+        SET view = view + 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 입양게시판 조회수순 조회-->
+    <select id="selectAllAdoptionPostsByView"
+            resultMap="adoptionPostQueryResultMap">
+        SELECT
+               ap.id
+             , ap.title
+             , ap.animal_type
+             , CASE
+                WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+                ELSE ap.created_at
+                END AS display_date
+             , CASE
+                WHEN u.user_name IS NOT NULL
+                THEN u.user_name            -- 회원이면 이름
+                ELSE sh.company_name        -- 보호소장이면 보호소명
+                END AS writer_name
+             , CASE
+                WHEN u.user_name IS NOT NULL
+                THEN r.name               -- 회원이면 등급
+                ELSE NULL                 -- 보호소장이면 등급 없음
+                END AS user_rating
+             , ap.view
+             , COUNT(apl.id) AS recommend_count
+             , si.sido_name
+             , sg.sigungu_name
+          FROM adoptionPost ap
+          LEFT JOIN adoptionPostLiked apl ON ap.id = apl.post_id
+          LEFT JOIN user u ON ap.user_id = u.user_id
+          LEFT JOIN rating r ON u.rating_id = r.id
+          LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+          LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+          LEFT JOIN sido si ON sg.sido_id = si.sido_id
+         WHERE ap.status = 'PROTECTING'
+          AND ap.is_blind = 0
+         GROUP BY ap.id, ap.title, ap.animal_type, ap.created_at, ap.updated_at,
+                  ap.user_id, ap.head_id, u.user_name, r.name, sh.company_name, ap.view,
+                  si.sido_name, sg.sigungu_name
+         ORDER BY ap.view DESC
+    </select>
+
+    <!-- 입양게시판 추천수순 조회-->
+    <select id="selectAllAdoptionPostByLiked"
+            resultMap="adoptionPostQueryResultMap">
+        SELECT
+        ap.id
+        , ap.title
+        , ap.animal_type
+        , CASE
+        WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+        ELSE ap.created_at
+        END AS display_date
+        , CASE
+        WHEN u.user_name IS NOT NULL
+        THEN u.user_name            -- 회원이면 이름
+        ELSE sh.company_name        -- 보호소장이면 보호소명
+        END AS writer_name
+        , CASE
+        WHEN u.user_name IS NOT NULL
+        THEN r.name               -- 회원이면 등급
+        ELSE NULL                 -- 보호소장이면 등급 없음
+        END AS user_rating
+        , ap.view
+        , COUNT(apl.id) AS recommend_count
+        , si.sido_name
+        , sg.sigungu_name
+        FROM adoptionPost ap
+        LEFT JOIN adoptionPostLiked apl ON ap.id = apl.post_id
+        LEFT JOIN user u ON ap.user_id = u.user_id
+        LEFT JOIN rating r ON u.rating_id = r.id
+        LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+        LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+        LEFT JOIN sido si ON sg.sido_id = si.sido_id
+        WHERE ap.status = 'PROTECTING'
+        AND ap.is_blind = 0
+        GROUP BY ap.id, ap.title, ap.animal_type, ap.created_at, ap.updated_at,
+        ap.user_id, ap.head_id, u.user_name, r.name, sh.company_name, ap.view,
+        si.sido_name, sg.sigungu_name
+        ORDER BY recommend_count DESC
+    </select>
+
+    <!-- 키워드 검색 -->
+    <select id="selectAdoptionPostByKeyword"
+            parameterType="com.backoven.catdogshelter.domain.adoption.query.dynamic.SearchCriteria"
+            resultMap="adoptionPostQueryResultMap">
+        SELECT
+               ap.id
+             , ap.title
+             , ap.animal_type
+             , CASE
+                    WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+                    ELSE ap.created_at
+                    END AS display_date     <!-- 수정일 있으면 수정일, 없으면 생성일 -->
+             , COALESCE(u.user_name, sh.company_name) AS writer_name  <!-- 유저 or 보호소장 -->
+             , ap.view
+             , COALESCE(COUNT(apl.id), 0) AS recommend_count          <!-- 추천 수 -->
+             , si.sido_name
+             , sg.sigungu_name
+          FROM adoptionPost ap
+          LEFT JOIN adoptionPostLiked apl ON ap.id = apl.post_id
+          LEFT JOIN user u ON ap.user_id = u.user_id
+          LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+          LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+          LEFT JOIN sido si ON sg.sido_id = si.sido_id
+         WHERE ap.status = 'PROTECTING'
+           AND ap.is_blind = FALSE
+        <choose>
+            <when test="searchType == 'title'">
+                AND ap.title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="searchType == 'content'">
+                AND ap.content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="searchType == 'breed'">
+                AND ap.breed LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+        </choose>
+         GROUP BY ap.id, ap.title, ap.animal_type, ap.created_at, ap.updated_at,
+                  ap.user_id, ap.head_id, u.user_name, sh.company_name,
+                  ap.view, si.sido_name, sg.sigungu_name
+         ORDER BY ap.created_at DESC
+    </select>
+
+    <!-- 동물 상태별 검색 -->
+    <select id="selectAdoptionPostByAnimalCondition"
+            parameterType="com.backoven.catdogshelter.domain.adoption.query.dynamic.SearchCriteria"
+            resultMap="adoptionPostQueryResultMap">
+        SELECT
+               ap.id
+             , ap.title
+             , ap.animal_type
+             , CASE
+                    WHEN ap.updated_at IS NOT NULL THEN ap.updated_at
+                    ELSE ap.created_at
+                    END AS display_date
+             , COALESCE(u.user_name, sh.company_name) AS writer_name
+             , ap.view
+             , COALESCE(COUNT(apl.id), 0) AS recommend_count
+             , si.sido_name
+             , sg.sigungu_name
+          FROM adoptionPost ap
+          LEFT JOIN adoptionPostLiked apl ON ap.id = apl.post_id
+          LEFT JOIN user u ON ap.user_id = u.user_id
+          LEFT JOIN shelter_head sh ON ap.head_id = sh.head_id
+          LEFT JOIN sigungu sg ON ap.sigungu_id = sg.sigungu_id
+          LEFT JOIN sido si ON sg.sido_id = si.sido_id
+         WHERE ap.status = 'PROTECTING'
+           AND ap.is_blind = FALSE
+        <!-- 동물 종류 -->
+        <if test="animalType != null and animalType != ''">
+            <choose>
+                <when test="animalType == '강아지'">
+                    AND ap.animal_type = 'DOG'
+                </when>
+                <when test="animalType == '고양이'">
+                    AND ap.animal_type = 'CAT'
+                </when>
+            </choose>
+        </if>
+        <!-- 성별 -->
+        <if test="gender != null and gender != ''">
+            AND ap.gender = #{gender}
+        </if>
+        <!-- 예방 접종 -->
+        <if test="vaccination != null and vaccination != ''">
+            AND ap.vaccination = #{vaccination}
+        </if>
+        <!-- 중성화 -->
+        <if test="neutering != null and neutering != ''">
+            AND ap.neutering = #{neutering}
+        </if>
+         GROUP BY ap.id, ap.title, ap.animal_type, ap.created_at, ap.updated_at,
+                  ap.user_id, ap.head_id, u.user_name, sh.company_name,
+                  ap.view, si.sido_name, sg.sigungu_name
+         ORDER BY ap.created_at DESC
+    </select>
+
+</mapper>
