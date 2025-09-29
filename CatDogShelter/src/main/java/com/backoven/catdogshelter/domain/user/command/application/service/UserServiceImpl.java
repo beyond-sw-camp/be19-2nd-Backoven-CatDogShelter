@@ -2,10 +2,11 @@ package com.backoven.catdogshelter.domain.user.command.application.service;
 
 import com.backoven.catdogshelter.common.entity.QuestionCategoryEntity;
 import com.backoven.catdogshelter.common.entity.SigunguEntity;
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyPasswordUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.user.UserDTO;
-import com.backoven.catdogshelter.common.entity.UserEntity;
+import com.backoven.catdogshelter.domain.user.command.domain.aggregate.enumeration.UserStatus;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.QuestionCategoryRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.SigunguRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
@@ -16,7 +17,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -169,5 +169,18 @@ public class UserServiceImpl implements UserService {
             return;
         }
         throw new IllegalArgumentException("질문/답변 불일치");
+    }
+
+    @Override
+    public void deleterUserByPassword(int userId, RequestModifyPasswordUserDTO updatedUser) {
+        UserEntity foundUser = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+        // 기존 비밀번호와 일치하지 않다면 예외처리
+        if(!bCryptPasswordEncoder.matches(updatedUser.getCurrentPwd(), foundUser.getEncryptPwd())){
+            throw new IllegalArgumentException();
+        }
+
+        // 탈퇴 -> soft delete (상태 변경)
+        foundUser.setUserStatus(UserStatus.CANCEL);
     }
 }
