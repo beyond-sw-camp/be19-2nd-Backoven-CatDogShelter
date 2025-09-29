@@ -7,7 +7,9 @@ import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.enti
 import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.entity.AssociationEntity;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.ApplicationDetailsRepository;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.AssociationRepository;
+
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerUserRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ public class ApplicationDetailsCommandServiceImpl implements ApplicationDetailsC
         this.modelMapper = modelMapper;
         this.associationRepository = associationRepository;
         this.volunteerUserRepository = volunteerUserRepository;
+
     }
 
     // 봉사모임 신청내역 추가
@@ -52,7 +55,9 @@ public class ApplicationDetailsCommandServiceImpl implements ApplicationDetailsC
         // 새로운 신청내역 객체 생성 후 값 넣어주기
         ApplicationDetailsEntity application = new ApplicationDetailsEntity();
         AssociationEntity association = associationRepository.getReferenceById(newApplication.getVolunteerId());
+
         UserEntity user = volunteerUserRepository.getReferenceById(newApplication.getUserId());
+
         application.setAssociation(association);
         application.setUser(user);
 

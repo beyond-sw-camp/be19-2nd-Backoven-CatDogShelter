@@ -7,8 +7,10 @@ import com.backoven.catdogshelter.domain.volunteer.command.application.dto.Assoc
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.ReqAssociationDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.entity.AssociationEntity;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.AssociationRepository;
+
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerShelterHeadRepository;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerSigunguRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AssociationCommandServiceImpl implements AssociationCommandService {
     private final AssociationRepository associationRepository;
+
     private final VolunteerShelterHeadRepository volunteerShelterHeadRepository;
     private final VolunteerSigunguRepository volunteerSigunguRepository;
     private final ModelMapper modelMapper;
@@ -29,6 +32,7 @@ public class AssociationCommandServiceImpl implements AssociationCommandService 
         this.associationRepository = associationRepository;
         this.volunteerShelterHeadRepository = volunteerShelterHeadRepository;
         this.volunteerSigunguRepository = volunteerSigunguRepository;
+
         this.modelMapper = modelMapper;
     }
 
@@ -53,6 +57,7 @@ public class AssociationCommandServiceImpl implements AssociationCommandService 
         // 2) 연관은 "프록시"로만 연결 (중요!) 나중에 시큐리티 적용을 위한 보호소장 회원 및 소속 시군쿠 코드의 그래프 검색
         ShelterHeadEntity head = volunteerShelterHeadRepository.getReferenceById(associationDTO.getHeadId()); // 타입에 맞게
         SigunguEntity sigungu = volunteerSigunguRepository.getReferenceById(associationDTO.getSigunguId());
+
         log.info("확인2: {}", associationEntity);
         head.setId(associationDTO.getHeadId().intValue());
         sigungu.setId(associationDTO.getSigunguId());
