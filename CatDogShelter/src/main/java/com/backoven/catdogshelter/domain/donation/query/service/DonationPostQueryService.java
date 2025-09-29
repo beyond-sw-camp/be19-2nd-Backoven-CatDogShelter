@@ -32,7 +32,7 @@ public class DonationPostQueryService {
         return mapper.selectAllDonationPostsLatest(limit);
     }
 
-    public void increaseView(Long id) {
+    public void increaseView(Integer id) {
         mapper.increaseView(id);
     }
 
@@ -43,9 +43,9 @@ public class DonationPostQueryService {
     }
 
     // 물품기부 게시글 내용 상세 조회
-    public DonationPostQueryDTO selectDonationPostDetail(int postId) {
+    public DonationPostQueryDTO selectDonationPostDetail(Integer postId) {
         // 조회수 증가
-        mapper.increaseView((long) postId);
+        mapper.increaseView((Integer) postId);
 
         // 상세 조회
         DonationPostQueryDTO dto = mapper.selectDonationPostDetail(postId);

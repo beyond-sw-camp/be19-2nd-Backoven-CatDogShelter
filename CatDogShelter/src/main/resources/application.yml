@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: CatDogShelter
+    name: CatDogShelter-user-service
   jpa:
     hibernate:
       naming:
@@ -31,22 +31,35 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/catdogshelter
     username: root
-    password: mariadb
+    password: 1221
 
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
 
 
+
 # fatal -> error -> warn -> info -> debug -> trace
 logging:
   level:
-    root: debug
+    root: info
 
+file:
+#  upload-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads
+  upload-dir: /Users/dong/Desktop/2nd/CatDogShelter/uploads
+filepath: /Users/dong/Desktop/2nd/CatDogShelter/uploads
 
-filepath: /Users/haeone/Desktop/be19-2nd-backoven-petShelter
-
-# 12시간의 만료 시간 + HMackSha 512 비밀키
+# 로그인
 token:
-  expiration_time: 4320000
-  secret: v5hCn5IRZ7oIh6b+rOX8+AY47O9ifI/ndlpgYZoBZSOYB3O49CwP875M0Xz7CMiRuaOVlPoUIjERTtV1F2YFwg==
+  expiration_time: 43200000
+  secret: "VKKCjFzrzJQE8oM69GmgavfauYLnHnQeG4k1ab/lrYtrEQMk7o0/3j8KmqM33prEOWs5IdSVhQsbKiV3UzFhHQ=="
+
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 

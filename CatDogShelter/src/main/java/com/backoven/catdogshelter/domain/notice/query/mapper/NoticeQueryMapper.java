@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.notice.query.mapper;
 
+import com.backoven.catdogshelter.domain.notice.query.dto.NoticePostFileQueryDTO;
 import com.backoven.catdogshelter.domain.notice.query.dto.NoticePostQueryDTO;
 import com.backoven.catdogshelter.domain.notice.query.dto.NoticeQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,5 +18,6 @@ public interface NoticeQueryMapper {
     List<NoticeQueryDTO> selectNoticesByKeyword(String keyword);
 
     // 공지사항 상세 조회
+    List<NoticePostFileQueryDTO> selectNoticePostFiles(int id);
     NoticePostQueryDTO selectNotice(int id);
 }

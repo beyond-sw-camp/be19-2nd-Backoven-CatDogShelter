@@ -9,24 +9,21 @@ import java.util.List;
 
 @Mapper
 public interface DonationPostQueryMapper {
-    // REQ-021 게시글 목록 조회 (검색 + 페이징)
+    // 게시글 목록 조회 (검색 + 페이징)
     List<DonationPostQueryDTO> selectDonationPostSearch(@Param("keyword") String keyword,
                                            @Param("limit") int limit,
                                            @Param("offset") int offset);
 
-    // REQ-029 조회수 기준 인기 게시글
+    //  조회수 기준 인기 게시글
     List<DonationPostQueryDTO> selectAllDonationPostsByView(@Param("limit") int limit);
-    // REQ-030 추천수 기준 인기 게시글
+    //  추천수 기준 인기 게시글
     List<DonationPostQueryDTO> selectAllDonationPostsByLiked(@Param("limit") int limit);
 
-    // REQ-031 최신 게시글 조회
+    //  최신 게시글 조회
     List<DonationPostQueryDTO> selectAllDonationPostsLatest(@Param("limit") int limit);
 
-    // REQ-028 조회수 증가
-    void increaseView(@Param("id") Long id);
-
-    // 게시글 조회(view 증가)
-    DonationPostQueryDTO selectPostById(Long id);
+    //조회수 증가
+    void increaseView(@Param("id") Integer id);
 
     List<DonationPostQueryDTO> selectAllDonationPosts();
 

@@ -20,4 +20,12 @@ public class VolunteerQueryServiceTest {
     VolunteerPostQueryService volunteerPostQueryService;
 
 
+    @DisplayName("모든 게시글 조회")
+    @Test
+    void testGetAllVolunteerPosts(){
+        Assertions.assertDoesNotThrow(()->{
+            volunteerPostQueryService.getVolunteerPostList()
+                    .forEach(System.out::println);
+        });
+    }
 }

@@ -1,5 +1,8 @@
 package com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.entity;
 
+import com.backoven.catdogshelter.common.entity.QuestionCategoryEntity;
+import com.backoven.catdogshelter.common.entity.RatingEntity;
+import com.backoven.catdogshelter.common.entity.SigunguEntity;
 import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enumeration.AdoptionPostStatus;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
@@ -65,3 +68,4 @@ public class UserEntity {
     private QuestionCategoryEntity questionCategory;
 
 }
+

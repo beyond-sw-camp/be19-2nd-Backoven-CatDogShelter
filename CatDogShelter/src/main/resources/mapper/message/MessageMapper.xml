@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "com.backoven.catdogshelter.domain.message.query.mapper.MessageMapper">
+    <!-- 보낸 유저 정보 -->
+    <resultMap id = "sendUserResultMap" type = "com.backoven.catdogshelter.domain.message.query.dto.MessageUserDTO">
+        <result property = "userId" column = "send_user_id"/>
+        <result property = "headId" column = "send_head_id"/>
+        <result property = "name" column = "send_name"/>
+        <result property = "ratingName" column = "send_rating_name"/>
+    </resultMap>
+
+    <resultMap id = "messageSummarySubjectResultMap" type = "com.backoven.catdogshelter.domain.message.query.dto.MessageSummaryDTO">
+        <id property = "id" column = "id"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <association property = "user" resultMap = "sendUserResultMap"/>
+    </resultMap>
+
+    <select id = "selectMessageSummarySubject" parameterType = "hashmap" resultMap = "messageSummarySubjectResultMap">
+        SELECT
+               m.id
+             , m.created_at
+             , m.status
+             , CASE
+                 WHEN send_user_id IS NOT NULL THEN u.user_name
+                 WHEN send_head_id IS NOT NULL THEN sh.company_name
+           END AS send_name
+             , m.send_user_id
+             , m.send_head_id
+             , CASE
+                   WHEN send_user_id IS NOT NULL THEN rating.name
+                   WHEN send_head_id IS NOT NULL THEN NULL
+           END AS send_rating_name
+          FROM message AS m
+          LEFT JOIN user AS u ON (m.send_user_id = u.user_id)
+          LEFT JOIN shelter_head AS sh ON (m.send_head_id = sh.head_id)
+          LEFT JOIN rating ON (u.rating_id = rating.id)
+        <where>
+            <if test="userId != null">
+                AND m.subject_user_id = #{userId}
+            </if>
+            <if test="headId != null">
+                AND m.subject_head_id = #{headId}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 받은 유저 정보 -->
+    <resultMap id = "subjectUserResultMap" type = "com.backoven.catdogshelter.domain.message.query.dto.MessageUserDTO">
+        <result property = "userId" column = "subject_user_id"/>
+        <result property = "headId" column = "subject_head_id"/>
+        <result property = "name" column = "subject_name"/>
+        <result property = "ratingName" column = "subject_rating_name"/>
+    </resultMap>
+
+    <resultMap id = "messageSummarySendResultMap" type = "com.backoven.catdogshelter.domain.message.query.dto.MessageSummaryDTO">
+        <id property = "id" column = "id"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <association property = "user" resultMap = "subjectUserResultMap"/>
+    </resultMap>
+
+    <select id = "selectMessageSummarySend" parameterType= "hashmap" resultMap = "messageSummarySendResultMap">
+        SELECT
+               m.id
+             , m.created_at
+             , m.status
+             , CASE
+                   WHEN subject_user_id IS NOT NULL THEN u.user_name
+                   WHEN subject_head_id IS NOT NULL THEN sh.company_name
+           END AS subject_name
+             , m.subject_user_id
+             , m.subject_head_id
+             , CASE
+                   WHEN subject_user_id IS NOT NULL THEN rating.name
+                   WHEN subject_head_id IS NOT NULL THEN NULL
+           END AS subject_rating_name
+          FROM message AS m
+                 LEFT JOIN user AS u ON (m.subject_user_id = u.user_id)
+                 LEFT JOIN shelter_head AS sh ON (m.subject_head_id = sh.head_id)
+                 LEFT JOIN rating ON (u.rating_id = rating.id)
+        <where>
+            <if test="userId != null">
+                AND m.send_user_id = #{userId}
+            </if>
+            <if test="headId != null">
+                AND m.send_head_id = #{headId}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id = "messageDetailsResultMap" type = "com.backoven.catdogshelter.domain.message.query.dto.MessageDetailsDTO" >
+        <id property = "id" column = "id"/>
+        <result property = "content" column = "content"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "subjectNumber" column = "subject_number"/>
+        <association property="sendUser" resultMap = "sendUserResultMap"/>
+        <association property="subjectUser" resultMap = "subjectUserResultMap"/>
+    </resultMap>
+
+    <select id = "selectMessageDetails" parameterType = "_int" resultMap = "messageDetailsResultMap">
+        SELECT
+               m.id
+             , m.content
+             , m.created_at
+             , m.subject_number
+
+             -- 받은 사람(subject)
+             , m.subject_user_id
+             , m.subject_head_id
+             , CASE
+                   WHEN m.subject_user_id IS NOT NULL THEN sub_u.user_name
+                   WHEN m.subject_head_id IS NOT NULL THEN sub_sh.company_name
+            END AS subject_name
+             , CASE
+                   WHEN m.subject_user_id IS NOT NULL THEN sub_r.name
+                   WHEN m.subject_head_id IS NOT NULL THEN NULL
+            END AS subject_rating_name
+
+             -- 보낸 사람(send)
+             , m.send_user_id
+             , m.send_head_id
+             , CASE
+                   WHEN m.send_user_id IS NOT NULL THEN send_u.user_name
+                   WHEN m.send_head_id IS NOT NULL THEN send_sh.company_name
+            END AS send_name
+             , CASE
+                   WHEN m.send_user_id IS NOT NULL THEN send_r.name
+                   WHEN m.send_head_id IS NOT NULL THEN NULL
+            END AS send_rating_name
+
+        FROM message AS m
+        LEFT JOIN user AS sub_u ON (m.subject_user_id = sub_u.user_id)
+        LEFT JOIN shelter_head AS sub_sh ON (m.subject_head_id = sub_sh.head_id)
+        LEFT JOIN rating AS sub_r ON (sub_u.rating_id = sub_r.id)
+
+        LEFT JOIN user AS send_u ON (m.send_user_id = send_u.user_id)
+        LEFT JOIN shelter_head AS send_sh ON (m.send_head_id = send_sh.head_id)
+        LEFT JOIN rating AS send_r ON (send_u.rating_id = send_r.id)
+       WHERE m.id = #{messageId}
+    </select>
+
+    <update id = "updateMessageStatus" parameterType = "_int">
+        UPDATE message
+           SET status = true
+         WHERE id = #{messageId}
+    </update>
+
+
+</mapper>

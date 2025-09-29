@@ -8,6 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class DonationPostFileDTO {
-    private int id;
+    private Integer id;
     private String fileRename;
 }
