@@ -10,7 +10,7 @@ import com.backoven.catdogshelter.domain.adoption.command.domain.aggregate.enume
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostFileRepository;
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostLikedRepository;
 import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionPostRepository;
-import com.backoven.catdogshelter.domain.adoption.command.domain.repository.ShelterHeadRepository;
+import com.backoven.catdogshelter.domain.adoption.command.domain.repository.AdoptionShelterHeadRepository;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class AdoptionPostCommandService {
     private final AdoptionPostFileRepository adoptionPostFileRepository;
     private final AdoptionPostLikedRepository adoptionPostLikedRepository;
     private final UserRepository userRepository;
-    private final ShelterHeadRepository headRepository;
+    private final AdoptionShelterHeadRepository headRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -44,7 +44,7 @@ public class AdoptionPostCommandService {
             AdoptionPostFileRepository adoptionPostFileRepository,
             AdoptionPostLikedRepository adoptionPostLikedRepository,
             UserRepository userRepository,
-            ShelterHeadRepository headRepository,
+            AdoptionShelterHeadRepository headRepository,
             ModelMapper modelMapper) {
         this.adoptionPostRepository = adoptionPostRepository;
         this.adoptionPostFileRepository = adoptionPostFileRepository;
