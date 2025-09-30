@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.donation.query.mapper.DonationPostQueryMapper">
+
+    <!-- 게시글 서치 목록 조회 -->
+    <select id="selectDonationPostSearch" resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        SELECT
+        p.id              AS id,          -- 게시글 번호
+        p.title           AS title,       -- 제목
+        p.created_at      AS createdAt,   -- 작성일
+        p.updated_at      AS updatedAt,   -- 수정일
+        p.view            AS view,        -- 조회수
+        sh.company_name   AS shelterName, -- 보호소 이름
+        sh.ceo_name       AS userName     -- 보호소장 이름
+        FROM donationPost p
+        LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+        <if test="keyword != null and keyword != ''">
+            WHERE (
+            p.title LIKE CONCAT('%', #{keyword}, '%')
+            OR sh.company_name LIKE CONCAT('%', #{keyword}, '%')
+            OR sh.ceo_name LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+        ORDER BY p.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 조회수 기준 인기 게시글 목록 조회 -->
+    <select id="selectAllDonationPostsByView" resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        SELECT
+            p.id              AS id,          -- 게시글 번호
+            p.title           AS title,       -- 제목
+            p.created_at      AS createdAt,   -- 작성일
+            p.updated_at      AS updatedAt,   -- 수정일
+            p.view            AS view,        -- 조회수
+        sh.company_name   AS shelterName, -- 보호소 이름
+        sh.ceo_name       AS userName,    -- 보호소장 이름
+        IFNULL(COUNT(l.id), 0) AS likeCount -- 추천수
+        FROM donationPost p
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN donationPostLiked l ON p.id = l.post_id
+        GROUP BY p.id, p.title, p.created_at, p.updated_at, p.view, sh.company_name, sh.ceo_name
+        ORDER BY p.view DESC
+            LIMIT #{limit}
+    </select>
+
+    <!-- 추천수 기준 인기 게시글 -->
+    <select id="selectAllDonationPostsByLiked" resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        SELECT
+            p.id              AS id,          -- 게시글 번호
+            p.title           AS title,       -- 제목
+            p.created_at      AS createdAt,   -- 작성일
+            p.updated_at      AS updatedAt,   -- 수정일
+            p.view            AS view,        -- 조회수
+        sh.company_name   AS shelterName, -- 보호소 이름
+        sh.ceo_name       AS userName,    -- 보호소장 이름
+        IFNULL(COUNT(l.id), 0) AS likeCount -- 추천수
+        FROM donationPost p
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN donationPostLiked l ON p.id = l.post_id
+        GROUP BY p.id, p.title, p.created_at, p.updated_at, p.view, sh.company_name, sh.ceo_name
+        ORDER BY likeCount DESC
+            LIMIT #{limit}
+    </select>
+
+    <!-- 최신 게시글 -->
+    <select id="selectAllDonationPostsLatest" resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        SELECT
+            p.id              AS id,          -- 게시글 번호
+            p.title           AS title,       -- 제목
+            p.created_at      AS createdAt,   -- 작성일
+            p.updated_at      AS updatedAt,   -- 수정일
+            p.view            AS view,        -- 조회수
+        sh.company_name   AS shelterName, -- 보호소 이름
+        sh.ceo_name       AS userName,    -- 보호소장 이름
+        IFNULL(COUNT(l.id), 0) AS likeCount -- 추천수
+        FROM donationPost p
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN donationPostLiked l ON p.id = l.post_id
+        GROUP BY p.id, p.title, p.created_at, p.updated_at, p.view, sh.company_name, sh.ceo_name
+        ORDER BY p.created_at DESC
+            LIMIT #{limit}
+    </select>
+
+    <!--조회수 증가 -->
+    <update id="increaseView">
+        UPDATE donationPost
+        SET view = view + 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시판보드, 물품기부 게시판 목록 조회 -->
+    <select id="selectAllDonationPosts"
+            resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        SELECT
+            p.id              AS id,          -- 게시글 번호
+            p.title           AS title,       -- 제목
+            p.created_at      AS createdAt,   -- 작성일
+            p.updated_at      AS updatedAt,   -- 수정일
+            p.view            AS view,        -- 조회수
+        sh.company_name   AS shelterName, -- 보호소 이름
+        sh.ceo_name       AS userName,    -- 보호소장 이름
+        IFNULL(COUNT(l.id), 0) AS likeCount -- 추천수
+        FROM donationPost p
+            LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+            LEFT JOIN donationPostLiked l ON p.id = l.post_id
+        GROUP BY p.id, p.title, p.created_at, p.updated_at, p.view, sh.company_name, sh.ceo_name
+        ORDER BY p.id DESC
+    </select>
+
+
+
+    <!-- 물품기부 게시글 상세 조회 -->
+    <select id="selectDonationPostDetail"
+            parameterType="int"
+            resultMap="DonationPostDetailResultMap">
+        SELECT
+            p.id              AS post_id,        -- 게시글 번호
+            p.title           AS post_title,     -- 제목
+            p.content         AS post_content,   -- 내용
+            p.created_at      AS post_created_at,-- 작성일
+            p.updated_at      AS post_updated_at,-- 수정일
+            p.view            AS post_view,      -- 조회수
+            sh.company_name   AS post_shelter_name, -- 보호소 이름
+            sh.ceo_name       AS post_user_name, -- 보호소장 이름
+            IFNULL(l.like_count, 0) AS post_like_count, -- 추천수
+            f.id              AS file_id,
+            f.file_rename     AS file_rename
+        FROM donationPost p
+                 LEFT JOIN shelter_head sh ON p.head_id = sh.head_id
+                 LEFT JOIN (
+            SELECT post_id, COUNT(*) AS like_count
+            FROM donationPostLiked
+            GROUP BY post_id
+        ) l ON p.id = l.post_id
+                 LEFT JOIN donationPostFiles f ON p.id = f.post_id
+        WHERE p.id = #{id}
+    </select>
+
+
+    <!-- 상세 조회 ResultMap -->
+    <resultMap id="DonationPostDetailResultMap"
+               type="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO">
+        <id property="id" column="post_id"/>
+        <result property="title" column="post_title"/>
+        <result property="content" column="post_content"/>
+        <result property="createdAt" column="post_created_at"/>
+        <result property="updatedAt" column="post_updated_at"/>
+        <result property="view" column="post_view"/>
+        <result property="shelterName" column="post_shelter_name"/>
+        <result property="userName" column="post_user_name"/>
+        <result property="likeCount" column="post_like_count"/>
+
+        <!-- 파일 리스트 -->
+        <collection property="files"
+                    ofType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostFileDTO">
+            <id property="id" column="file_id"/>
+            <result property="fileRename" column="file_rename"/>
+        </collection>
+    </resultMap>
+
+
+    <!-- 댓글 목록 (페이징) -->
+    <select id="selectDonationPostDetailComments"
+            resultType="com.backoven.catdogshelter.domain.donation.query.dto.DonationPostCommentDTO">
+        SELECT
+            c.id,
+            c.content,
+            c.created_at AS createdAt,
+            r.name AS userRating, -- 사용자 등급
+            COALESCE(u.user_name, sh.ceo_name) AS userName
+        FROM donationPostComment c
+                 LEFT JOIN user u ON c.user_id = u.user_id
+                 LEFT JOIN rating r ON u.rating_id = r.id
+                 LEFT JOIN shelter_head sh ON c.head_id = sh.head_id
+        WHERE c.post_id = #{postId}
+          AND c.is_deleted = FALSE
+        ORDER BY c.created_at ASC
+            LIMIT #{size} OFFSET #{offset}
+    </select>
+
+
+    <!-- 댓글 총 개수 -->
+    <select id="countComments" resultType="int">
+        SELECT COUNT(*)
+        FROM donationPostComment
+        WHERE post_id = #{postId}
+          AND is_deleted = FALSE
+    </select>
+
+</mapper>
