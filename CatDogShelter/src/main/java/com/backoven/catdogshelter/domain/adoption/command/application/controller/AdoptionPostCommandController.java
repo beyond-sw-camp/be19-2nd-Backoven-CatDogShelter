@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -28,6 +29,7 @@ import java.nio.file.Paths;
 @Slf4j
 @RestController
 @RequestMapping("catdogshelter/adoption-post")
+@Tag(name="입양 게시글 CUD API")
 public class AdoptionPostCommandController {
 
     private final AdoptionPostCommandService adoptionPostCommandService;
