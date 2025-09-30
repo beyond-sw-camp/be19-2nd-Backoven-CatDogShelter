@@ -1,0 +1,10 @@
+### 목록 조회
+GET localhost:8080/sighting-posts/summary
+
+### 목록 조회 + 조건 검색
+GET localhost:8080/sighting-posts/summary?writer=&title=&content=&animalType=CAT&breed=&color=&sigunguCode=&order=
+
+### 상세 조회
+GET localhost:8080/sighting-posts/2
+
+

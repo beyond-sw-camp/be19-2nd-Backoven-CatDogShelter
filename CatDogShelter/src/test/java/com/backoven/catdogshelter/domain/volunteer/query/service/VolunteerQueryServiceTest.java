@@ -19,6 +19,7 @@ public class VolunteerQueryServiceTest {
     @Autowired
     VolunteerPostQueryService volunteerPostQueryService;
 
+
     @DisplayName("모든 게시글 조회")
     @Test
     void testGetAllVolunteerPosts(){
@@ -27,5 +28,4 @@ public class VolunteerQueryServiceTest {
                     .forEach(System.out::println);
         });
     }
-
 }

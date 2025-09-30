@@ -19,7 +19,8 @@ public class DonationPostFileService {
     private final DonationPostRepository donationPostRepository;
     private final DonationPostFilesRepository donationPostFilesRepository;
 
-    private final String uploadDir = "/Users/dong/uploads/"; // 로컬 저장 경로
+//    private final String uploadDir = "/Users/dong/uploads/"; // 로컬 저장 경로
+    private final String uploadDir = "/Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads/"; // 로컬 저장 경로
 
 
     public byte[] downloadImage(String fileName) {
