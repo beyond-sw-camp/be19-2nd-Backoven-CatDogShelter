@@ -127,7 +127,6 @@ public class WebSecurity {
                                 // 메시지 관련
                                 .requestMatchers("/message/**").authenticated() // 메시지는 유저만 사용가능해야하므로 토큰 인증
                                 .requestMatchers("/user-rating/**").permitAll() // 메시지는 유저만 사용가능해야하므로 토큰 인증
-
                                 .anyRequest().authenticated())
                 // 세션을 안쓰겟다
                 /* 설명. Session 방식이 아닌 JWT Token 방식을 사용하겠다. */

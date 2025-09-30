@@ -5,6 +5,8 @@ import com.backoven.catdogshelter.domain.donation.query.dto.DonationPostQueryDTO
 import com.backoven.catdogshelter.domain.donation.query.service.DonationPostQueryService;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +17,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/donation-posts/query")
 @RequiredArgsConstructor
+@Tag(name = "물품기부 게시글 조회 API")
 public class DonationPostQueryController {
 
     private final DonationPostQueryService service;
 
+    @Operation(
+            summary = "게시글 키워드 검색",
+            description = "게시글을 키워드로 검색합니다."
+    )
     //게시글 서치 조회
     @GetMapping("/search")
     public List<DonationPostQueryDTO> selectDonationPostSearch(@RequestParam(required = false) String keyword,
@@ -26,7 +33,10 @@ public class DonationPostQueryController {
                                                  @RequestParam(defaultValue = "10") int size) {
         return service.selectDonationPostSearch(keyword, page, size);
     }
-
+    @Operation(
+            summary = "조회순 게시글 목록 조회",
+            description = "조회 수 기준으로 정렬된 게시글 목록을 조회합니다."
+    )
     //조회수 기준 인기글
     @GetMapping("/popular/view")
     public List<DonationPostQueryDTO> selectAllDonationPostsByView(
@@ -34,6 +44,10 @@ public class DonationPostQueryController {
         return service.selectAllDonationPostsByView(limit);
     }
 
+    @Operation(
+            summary = "추천순 게시글 목록 조회",
+            description = "추천 수 기준으로 정렬된 게시글 목록을 조회합니다."
+    )
     // 추천수 기준 인기글
     @GetMapping("/popular/like")
     public List<DonationPostQueryDTO> selectAllDonationPostsByLiked(
@@ -41,6 +55,10 @@ public class DonationPostQueryController {
         return service.selectAllDonationPostsByLiked(limit);
     }
 
+    @Operation(
+            summary = "최신순 게시글 목록 조회",
+            description = "작성 최신순 기준으로 정렬된 게시글 목록을 조회합니다."
+    )
     //최신 게시글
     @GetMapping("/latest")
     public List<DonationPostQueryDTO> selectAllDonationPostsLatest(@RequestParam(defaultValue = "5") int limit) {
@@ -53,20 +71,30 @@ public class DonationPostQueryController {
         service.increaseView(id);
     }
 
-
-
+    @Operation(
+            summary = "게시글 목록 조회(게시판보드)",
+            description = "게시글 목록을 조회한다."
+    )
     // 게시판보드, 게시글 목록 조회 쿼리
     @GetMapping("/posts")
     public List<DonationPostQueryDTO> selectAllDonationPosts() {
         return service.selectAllDonationPosts();
     }
 
+    @Operation(
+            summary = "게시글 상세 내용 조회",
+            description = "게시글의 상세 내용을 조회한다."
+    )
     // 물품기부 게시글 내용 상세 조회
     @GetMapping("/posts/{postId}")
     public DonationPostQueryDTO selectDonationPostDetail(@PathVariable int postId) {
         return service.selectDonationPostDetail(postId);
     }
 
+    @Operation(
+            summary = "댓글 조회",
+            description = "게시글의 댓글을 조회한다."
+    )
     // 댓글 API 처리
     @GetMapping("/posts/{postId}/comments")
     public Map<String, Object> selectDonationPostDetailComments(@PathVariable int postId,
