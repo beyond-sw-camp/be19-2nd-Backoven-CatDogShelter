@@ -1,26 +1,26 @@
-package com.backoven.catdogshelter.domain.shelter_head.security;
-
-/* 원래는 entity에서 받은 비밀번호를 DTO를 통해서 전달해 주는데, 서비스쪽에서 DTO에 데이터를 받기 전에 암호화 처리를 하여 암호화 된
-   비밀번호를 DTO에게 넘겨주는 형식이다. 그러니까 service에서 controller로 DTO를 통해 데이터가 넘어가기 전에 암호화 처리를 한다
-   이 대 entity와 DTO의 암호화 필드명이 같으면 안된다. */
-
-import jakarta.servlet.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.Collections;
-
+//package com.backoven.catdogshelter.domain.shelter_head.security;
+//
+///* 원래는 entity에서 받은 비밀번호를 DTO를 통해서 전달해 주는데, 서비스쪽에서 DTO에 데이터를 받기 전에 암호화 처리를 하여 암호화 된
+//   비밀번호를 DTO에게 넘겨주는 형식이다. 그러니까 service에서 controller로 DTO를 통해 데이터가 넘어가기 전에 암호화 처리를 한다
+//   이 대 entity와 DTO의 암호화 필드명이 같으면 안된다. */
+//
+//import jakarta.servlet.Filter;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.annotation.Bean;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.core.env.Environment;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.ProviderManager;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.http.SessionCreationPolicy;
+//import org.springframework.security.web.SecurityFilterChain;
+//import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+//
+//import java.util.Collections;
+//
 //@Configuration
-public class Shelter_headWebSecurity {
-
+//public class Shelter_headWebSecurity {
+//
 //    private final Shelter_headJwtAuthenticationProvider jwtAuthenticationProvider;
 //    private Environment env;            // JWT Token의 payload에 만료시간 만들다가 추가함
 //    private final Shelter_headJwtUtil jwtUtil;
@@ -44,7 +44,7 @@ public class Shelter_headWebSecurity {
 //        http.csrf(csrf -> csrf.disable());
 //
 //        http.authorizeHttpRequests(authz ->
-//                authz.requestMatchers("/**").permitAll()
+//                authz.requestMatchers("/").permitAll()
 //                    .anyRequest().authenticated()
 //        )
 //                /* Session 방식이 아닌 JWT Token 방식을 사용하겠다 */
@@ -64,4 +64,4 @@ public class Shelter_headWebSecurity {
 //    private Filter getAuthenticationFilter(AuthenticationManager authenticationManager) {
 //        return new Shelter_headAuthenticationFilter(authenticationManager,env);
 //    }
-}
+//}
