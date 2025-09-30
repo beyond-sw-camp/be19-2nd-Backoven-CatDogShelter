@@ -63,10 +63,10 @@ public class WebSecurity {
                         .requestMatchers("/donation-posts/**").permitAll() // 인증 없이 접근 가능
                         .requestMatchers("/missing-posts/**").permitAll()// 인증 없이 접근 가능
                         .requestMatchers(
-                                "/missing-posts/comments/**/report/**",
-                                "/donation-posts/comments/**/report/**",
-                                "/missing-posts/**/report",
-                                "/donation-posts/**/report").permitAll()
+                                "/missing-posts/comments/*/report/**",// 인증 없이 접근 가능
+                                "/donation-posts/comments/*/report/**",// 인증 없이 접근 가능
+                                "/missing-posts/*/report",// 인증 없이 접근 가능
+                                "/donation-posts/*/report").permitAll()// 인증 없이 접근 가능
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger 허용
                         .anyRequest().authenticated())
                 // 세션을 안쓰겟다
