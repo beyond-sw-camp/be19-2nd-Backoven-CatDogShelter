@@ -4,11 +4,13 @@ package com.backoven.catdogshelter.domain.volunteer.query.controller;
 import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDetailDTO;
 import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerPostDetailService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "봉사후기 API")
 @RestController
 @RequestMapping("/volunteer-posts/post")
 public class VolunteerPostDetailController {

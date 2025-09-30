@@ -7,10 +7,12 @@ import com.backoven.catdogshelter.domain.volunteer.command.application.dto.Volun
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationUpdateDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.application.service.VolunteerAssociationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "봉사모임 API")
 @RestController
 @RequestMapping("/association-posts")
 public class VolunteerAssociationCommandController {

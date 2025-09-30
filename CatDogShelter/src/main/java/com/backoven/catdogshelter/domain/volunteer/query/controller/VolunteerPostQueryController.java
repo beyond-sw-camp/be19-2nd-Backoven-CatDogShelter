@@ -3,13 +3,14 @@ package com.backoven.catdogshelter.domain.volunteer.query.controller;
 
 import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerPostQueryService;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "봉사후기 API")
 @RestController
 @RequestMapping("/volunteer-posts")
 public class VolunteerPostQueryController {
@@ -22,8 +23,7 @@ public class VolunteerPostQueryController {
     }
 
     @Operation(summary = "게시글 목록 조회",
-            description = "조건에 맞는 전체 목록 조회(order: created | views | likes) 내림차순" +
-                    "\n/volunteer-posts/list/views?page=1&size=10")
+            description = "게시판 이용자는 조건에 맞는 전체 목록 조회할 수 있다.(order: created | views | likes) ")
     @GetMapping(value = {"/list/{order}"})
     public Map<String, Object> list(@PathVariable String order,
                                     @RequestParam(required = false) Integer page,
@@ -38,11 +38,8 @@ public class VolunteerPostQueryController {
         return volunteerPostQueryService.list(page, size);
     }
 
-    @Operation(summary = "",
-            description = "게시글 검색 목록 조회" +
-                    "\n/volunteer-posts/search/likes?keyword=산책&page=1&size=10" +
-                    "\n/volunteer-posts/search/created?title=청소&author=행복보호소" +
-                    "\n제목/내용/작성자에 검색어를 포함한 모든 게시글을 목록으로 조회한다.")
+    @Operation(summary = "게시글 검색 목록 조회",
+            description = "게시판 이용자는 검색을 통해 게시글 목록을 조회할 수 있다.")
     @GetMapping(value = {"/search/{order}"})
     public Map<String, Object> search(@PathVariable String order,
                                       @RequestParam(required = false) String keyword,
