@@ -42,8 +42,6 @@ springdoc:
   api-docs:
     path: /api-docs          # OpenAPI JSON 문서 경로
 
-mybatis:
-  mapper-locations: classpath:mapper/**/*.xml
 
 
 
