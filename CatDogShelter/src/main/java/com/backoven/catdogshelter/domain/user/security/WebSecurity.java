@@ -67,7 +67,7 @@ public class WebSecurity {
                                         "/donation-posts/comments/*/report/**",// 인증 없이 접근 가능
                                         "/missing-posts/*/report",// 인증 없이 접근 가능
                                         "/donation-posts/*/report").permitAll()// 인증 없이 접근 가능
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger 허용
+                                .requestMatchers("/v3/api-docs/**", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger 허용
                                 .anyRequest().authenticated())
                 // 세션을 안쓰겟다
                 /* 설명. Session 방식이 아닌 JWT Token 방식을 사용하겠다. */
