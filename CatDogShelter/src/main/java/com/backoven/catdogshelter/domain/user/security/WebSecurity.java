@@ -107,6 +107,24 @@ public class WebSecurity {
                                 "/missing-posts/*/report",// 인증 없이 접근 가능
                                 "/donation-posts/*/report").permitAll()// 인증 없이 접근 가능
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger 허용
+
+                        // 목격 정보 관련
+                        // 비회원 허용
+                        .requestMatchers(HttpMethod.GET, "/sighting-post/summary").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/sighting-post/*").permitAll()  // 게시글 상세 조회
+                        .requestMatchers(HttpMethod.GET, "/sighting-post/file/**").permitAll() // 이미지 조회
+                        // 회원 전용
+                        .requestMatchers(HttpMethod.GET, "/sighting-post/file/post-report/*").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/sighting-post/comment-report/*").authenticated()
+                        // CUD는 회원만
+                        .requestMatchers("/sighting-post/**").authenticated()
+
+                        // 봉사왕 관련
+                        .requestMatchers(HttpMethod.GET, "/volunteer-king/**").permitAll()
+
+                        // 메시지 관련
+                        .requestMatchers("/message/**").authenticated() // 메시지는 유저만 사용가능해야하므로 토큰 인증
+
                         .anyRequest().authenticated())
                 // 세션을 안쓰겟다
                 /* 설명. Session 방식이 아닌 JWT Token 방식을 사용하겠다. */
