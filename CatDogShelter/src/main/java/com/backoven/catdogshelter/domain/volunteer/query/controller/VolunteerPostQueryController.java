@@ -21,8 +21,8 @@ public class VolunteerPostQueryController {
         this.volunteerPostQueryService = volunteerPostQueryService;
     }
 
-    @Operation(summary = "게시글 전체 목록 조회",
-            description = "전체 목록 (order: created | views | likes)  — 내림차순" +
+    @Operation(summary = "게시글 목록 조회",
+            description = "조건에 맞는 전체 목록 조회(order: created | views | likes) 내림차순" +
                     "\n/volunteer-posts/list/views?page=1&size=10")
     @GetMapping(value = {"/list/{order}"})
     public Map<String, Object> list(@PathVariable String order,
@@ -31,6 +31,7 @@ public class VolunteerPostQueryController {
         return volunteerPostQueryService.list(order, page, size);
     }
 
+    @Operation(summary = "게시글 전체 목록 조회", description = "게시판 이용자는 게시글 전체 목록을 페이지로 조회할 수 있다.")
     @GetMapping(value = {"/list", "/", "/search"})
     public Map<String, Object> list(@RequestParam(required = false) Integer page,
                                     @RequestParam(required = false) Integer size) {

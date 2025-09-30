@@ -65,7 +65,7 @@ public class VolunteerPostCommandController {
 
     // 좋아요 토글
     @Operation(summary = "게시글 추천",
-            description = "좋아요를 누르면 내역에 저장되고 " +
+            description = "추천을 누르면 내역에 저장되고 " +
             "\n다시 한 번 누르면 내역이 삭제되어 좋아요 수를 " +
                     "\n늘리거나 줄여서 좋아요 수를 카운트한다.")
     @PostMapping("/{id}/like")
@@ -156,7 +156,7 @@ public class VolunteerPostCommandController {
     @Operation(summary = "댓글 신고",
             description = "게시판 이용자는 " +
             "\n스팸/욕설/음란물/사기/잘못된정보/기타로 댓글을 신고할 수 있다. " +
-            "\n게시판 이용자는 기타카테고리 선택할 시에는 상세한 내용을 필시 작성한다.")
+            "\n게시판 이용자는 기타카테고리 선택할 시에는 상세한 내용을 필히 작성한다.")
     @PostMapping("/comments/{commentId}/report")
     public ResponseEntity<?> reportVolunteerPostComment(
             @PathVariable Integer commentId,
