@@ -9,6 +9,8 @@ import com.backoven.catdogshelter.domain.missing.command.application.dto.UpdateM
 import com.backoven.catdogshelter.domain.missing.command.application.service.*;
 import com.backoven.catdogshelter.domain.missing.command.domain.aggregate.entity.MissingPost;
 import com.backoven.catdogshelter.domain.user.command.domain.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/missing-posts")
+@Tag(name = "실종신고 게시글 CUD API")
 public class MissingExController {
     private final MissingPostCommandService missingPostService;
     private final MissingPostCommentCommandService missingCommentService;
@@ -30,6 +33,10 @@ public class MissingExController {
     private final UserRepository userRepository;
     /* =============== JPA - CUD =============== */
 
+    @Operation(
+            summary = "실종신고 게시글 등록",
+            description = "새로운 실종신고 게시글을 등록합니다."
+    )
     // 게시글 생성
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Integer> createMissingPost(
@@ -78,7 +85,10 @@ public class MissingExController {
         Integer postId = missingPostService.createMissingPost(request, files);
         return ResponseEntity.ok(postId);
     }
-
+    @Operation(
+            summary = "실종신고 게시글 수정",
+            description = "입력값을 id로 하는 게시글의 내용을 글 작성자만 수정합니다. 파일이 들어오면 기존 파일을 전체 삭제 후 새로 들어온 파일을 등록합니다."
+    )
     // 게시글 수정
     @PutMapping(value = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateMissingPost(
@@ -130,6 +140,10 @@ public class MissingExController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "실종신고 게시글 삭제",
+            description = "새입력값을 id로 하는 게시글을 글 작성자만 삭제합니다. 게시글: soft delete"
+    )
     // 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMissingPost(@PathVariable Integer id,
@@ -150,6 +164,10 @@ public class MissingExController {
                 .body(imageData);
     }
 
+    @Operation(
+            summary = "실종신고 게시글 좋아요 증가",
+            description = "실종신고 게시글 좋아요 증가처리, 게시글 하나에 한 회원이 중복 증가 불가능"
+    )
     // 좋아요 누르기
     @PostMapping("/{id}/like")
     public ResponseEntity<Void> updateLikeMissingPost(@PathVariable Integer id, @RequestParam Integer userId) {
@@ -157,6 +175,10 @@ public class MissingExController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "실종신고 게시글 좋아요 감소",
+            description = "실종신고 게시글 좋아요 감소처리, 본인이 좋아요 누른 게시글에만 좋아요 감소처리 가능"
+    )
     // 좋아요 취소
     @DeleteMapping("/{id}/like")
     public ResponseEntity<Void> updateUnLikeMissingPost(@PathVariable Integer id, @RequestParam Integer userId) {
@@ -164,6 +186,10 @@ public class MissingExController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "실종신고 게시글에 댓글 등록",
+            description = "새로운 실종신고 게시글에 댓글을 등록합니다."
+    )
     // 댓글 작성
     @PostMapping("/{id}/comments")
     public ResponseEntity<Integer> createMissingPostComment(@PathVariable Integer id,
@@ -171,6 +197,11 @@ public class MissingExController {
         request.setPostId(id);
         return ResponseEntity.ok(missingCommentService.createMissingPostComment(request));
     }
+
+    @Operation(
+            summary = "실종신고 댓글 수정",
+            description = "실종신고 게시글에 작성되어 있는 댓글을 댓글 작성자 본인만 수정합니다."
+    )
 
     // 댓글 수정
     @PutMapping("/comments/{id}")
@@ -181,6 +212,10 @@ public class MissingExController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "실종신고 댓글 삭제",
+            description = "실종신고 게시글에 작성되어 있는 댓글을 댓글 작성자 본인만 삭제가능합니다. 댓글 삭제 : soft delete"
+    )
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> deleteMissingPostComment(@PathVariable Integer id,
@@ -189,6 +224,10 @@ public class MissingExController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "물품기부 게시글 게시글 신고(일반 사용자)",
+            description = "물품기부 게시글을 신고합니다. 중복신고는 불가능합니다."
+    )
     // 일반 사용자 게시글 신고
     @PostMapping("/{postId}/report/user")
     public ResponseEntity<Void> createReportMissingPostByUser(@PathVariable Integer postId,
@@ -202,6 +241,11 @@ public class MissingExController {
         return ResponseEntity.ok().build();
     }
 
+
+    @Operation(
+            summary = "물품기부 게시글 신고(보호소장)",
+            description = "물품기부 게시글을 신고합니다. 중복신고는 불가능합니다."
+    )
     // 보호소장 게시글 신고
     @PostMapping("/{postId}/report/head")
     public ResponseEntity<Void> createReportMissingPostByHead(@PathVariable Integer postId,
@@ -217,6 +261,10 @@ public class MissingExController {
 
 
 
+    @Operation(
+            summary = "물품기부 게시글 댓글 신고(일반 사용자)",
+            description = "물품기부 게시글에 등록되어있는 댓글을 신고합니다. 중복신고는 불가능합니다."
+    )
     // 일반 사용자 댓글 신고
     @PostMapping("/comments/{commentId}/report/user")
     public ResponseEntity<Void> createReportMissingPostCommentByUser(@PathVariable Integer commentId,
@@ -230,6 +278,10 @@ public class MissingExController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(
+            summary = "실종신고 게시글 댓글 신고(보호소장)",
+            description = "실종신고 게시글에 등록되어있는 댓글을 신고합니다. 중복신고는 불가능합니다."
+    )
     // 보호소장 댓글 신고
     @PostMapping("/comments/{commentId}/report/head")
     public ResponseEntity<Void> createReportMissingPostCommentByHead(@PathVariable Integer commentId,

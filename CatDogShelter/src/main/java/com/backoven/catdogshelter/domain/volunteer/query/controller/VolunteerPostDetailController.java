@@ -28,6 +28,7 @@ public class VolunteerPostDetailController {
     @Operation(summary = "게시판 상세조회",
             description = "{id}번의 게시글을 상세조회하여 내용, 댓글과 이미지를 보여줄 수 있다.")
     @GetMapping("/{id}")
+
     public VolunteerPostDetailDTO getOne(@PathVariable Integer id,
                                          @RequestParam(name = "inc", required = false, defaultValue = "true") boolean inc) {
         return volunteerPostDetailService.getDetail(id, inc);
