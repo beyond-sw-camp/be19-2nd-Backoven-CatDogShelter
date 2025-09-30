@@ -4,6 +4,7 @@ package com.backoven.catdogshelter.domain.notice.query.controller;
 import com.backoven.catdogshelter.domain.notice.query.dto.NoticeDetailDTO;
 import com.backoven.catdogshelter.domain.notice.query.service.NoticeQueryService;
 import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerAssociationQueryService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class NoticeQueryController {
     }
 
     // 공지 상세 + 파일 목록 GET /notice-posts/1
+    @Operation(summary = "게시글 상세 조회", description = "게시글과 파일을 조회할 수 있다.")
     @GetMapping("/{id}")
     public ResponseEntity<?> getDetail(@PathVariable Integer id) {
         NoticeDetailDTO dto = noticeQueryService.getNoticeDetail(id);
@@ -33,8 +35,9 @@ public class NoticeQueryController {
         return ResponseEntity.ok(dto);
     }
 
-    // 공지 목록 (검색/페이징) 예: GET /api/notices?keyword=공지&createdFrom=2025-09-01&createdTo=2025-09-30&page=1&size=10&orderBy=likeCount&orderDir=DESC
-    @GetMapping(value = {"/", "/search"})
+    // 공지 목록 (검색/페이징) 예: GET /notice-posts?keyword=공지&createdFrom=2025-09-01&createdTo=2025-09-30&page=1&size=10&orderBy=likeCount&orderDir=DESC
+    @Operation(summary = "게시글 목록 조회", description = "게시글의 목록을 조건에 따라 조회할 수 있다.")
+    @GetMapping(value = {"", "/search"})
     public Map<String, Object> list(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "createdFrom", required = false) String createdFrom,

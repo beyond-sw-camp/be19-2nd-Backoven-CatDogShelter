@@ -15,6 +15,7 @@ import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.Vol
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerAssociationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@Slf4j
 @Service
 @Transactional
 public class VolunteerAssociationServiceImpl implements VolunteerAssociationService {
@@ -115,7 +117,7 @@ public class VolunteerAssociationServiceImpl implements VolunteerAssociationServ
     }
 
     @Override
-    public void apply(VolunteerApplyRequest req) {
+    public Integer apply(VolunteerApplyRequest req) {
         var assoc = associationRepository.findById(req.getVolunteerId())
                 .orElseThrow(() -> new IllegalArgumentException("봉사모임 없음: " + req.getVolunteerId()));
 
@@ -145,6 +147,9 @@ public class VolunteerAssociationServiceImpl implements VolunteerAssociationServ
         app.setTime(0);
 
         assoc.getApplications().add(app);
+
+        applicationRepository.save(app);
+        return app.getId();
     }
 
     @Override

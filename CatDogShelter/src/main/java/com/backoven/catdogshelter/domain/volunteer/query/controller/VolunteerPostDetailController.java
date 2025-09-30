@@ -3,21 +3,29 @@ package com.backoven.catdogshelter.domain.volunteer.query.controller;
 
 import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostDetailDTO;
 import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerPostDetailService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/volunteer-posts/post")
 public class VolunteerPostDetailController {
 
     private final VolunteerPostDetailService volunteerPostDetailService;
 
-    // 상세 조회
+    @Autowired
+    public VolunteerPostDetailController(VolunteerPostDetailService volunteerPostDetailService) {
+        this.volunteerPostDetailService = volunteerPostDetailService;
+    }
+
+    //
     // - inc=true(default) : 조회수 +1
     // - inc=false         : 조회수 증가 없이 조회
-
-    @GetMapping(value = {"/{id}", "/"})
+    @Operation(summary = "게시판 상세조회",
+            description = "{id}번의 게시글을 상세조회하여 내용, 댓글과 이미지를 보여줄 수 있다.")
+    @GetMapping("/{id}")
     public VolunteerPostDetailDTO getOne(@PathVariable Integer id,
                                          @RequestParam(name = "inc", required = false, defaultValue = "true") boolean inc) {
         return volunteerPostDetailService.getDetail(id, inc);
