@@ -103,6 +103,10 @@ public class WebSecurity {
                                 .requestMatchers("/catdogshelter/**").permitAll()
                                 .requestMatchers("/donation-posts/**").permitAll() // 인증 없이 접근 가능
                                 .requestMatchers("/missing-posts/**").permitAll()// 인증 없이 접근 가능
+                                .requestMatchers("/notice-posts/**").permitAll()// 인증 없이 접근 가능
+                                .requestMatchers("/volunteer-posts/**").permitAll()// 인증 없이 접근 가능
+                                .requestMatchers("/association-posts/**").permitAll()// 인증 없이 접근 가능
+                                .requestMatchers("/association-posts/**").permitAll()// 인증 없이 접근 가능
                                 .requestMatchers(
                                         "/missing-posts/comments/*/report/**",// 인증 없이 접근 가능
                                         "/donation-posts/comments/*/report/**",// 인증 없이 접근 가능

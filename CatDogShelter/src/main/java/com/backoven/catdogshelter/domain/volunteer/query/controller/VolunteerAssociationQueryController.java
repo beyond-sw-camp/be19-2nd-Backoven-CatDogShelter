@@ -1,67 +1,68 @@
 package com.backoven.catdogshelter.domain.volunteer.query.controller;
 
-import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationDTO;
-import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationsListDTO;
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationQueryDTO;
+import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationSearchCond;
 import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerAssociationQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 @RestController
-@RequestMapping("/volunteerassociation-posts")
+@RequestMapping("/association-posts")
 public class VolunteerAssociationQueryController {
 
     private final VolunteerAssociationQueryService volunteerAssociationQueryService;
 
     @Autowired
-    public VolunteerAssociationQueryController(VolunteerAssociationQueryService volunteerAssociationQueryService) {
+    public VolunteerAssociationQueryController(
+            VolunteerAssociationQueryService volunteerAssociationQueryService) {
         this.volunteerAssociationQueryService = volunteerAssociationQueryService;
     }
 
-    // 봉사모임 봉사활동 공고 게시글 목록 조회(번호, 제목, 작성일, 시작일, 상세위치, 작성자 )
-    @GetMapping("/volunteerassociationslist")
-    public ResponseEntity<List<VolunteerAssociationsListDTO>> getVolunteerAssociationsList() {
-
-        List<VolunteerAssociationsListDTO> assocList = volunteerAssociationQueryService.getVolunteerAssociationList();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        return ResponseEntity.ok().headers(headers).body(assocList);
-    }
-
-    // 봉사활동 공고 게시글 상세 조회
-    // (번호, 제목, 내용, 작성일, 봉사시간, 상세위치, 모집마감여부, 봉사종료여부, 모집인원, 시작일, 작성자)
+    // 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<VolunteerAssociationDTO> getVolunteerAssociation(@PathVariable int id) {
-
-        VolunteerAssociationDTO post = volunteerAssociationQueryService.getVolunteerAssociation(id);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        return ResponseEntity.ok().headers(headers).body(post);
+    public ResponseEntity<VolunteerAssociationQueryDTO> selectVolunteerAssociation(@PathVariable Integer id) {
+        var dto = volunteerAssociationQueryService.selectVolunteerAssociation(id);
+        if (dto == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(dto);
     }
 
-    // 검색어 목록조회
-    @GetMapping("/search")
-    public ResponseEntity<List<VolunteerAssociationsListDTO>> selectVolunteerAssociationsByKeyword(@RequestParam(required = false) String keyword) {
-        List<VolunteerAssociationsListDTO> posts = volunteerAssociationQueryService.selectVolunteerAssociationsByKeyword(keyword);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json", Charset.forName("UTF-8")));
+    // 목록 조회 (검색+페이징) - @ModelAttribute 제거, 전부 @RequestParam로 받음
+    @GetMapping(value = {"/","/search"})
+    public ResponseEntity<List<VolunteerAssociationQueryDTO>> selectVolunteerAssociationsBySearch(
+            @RequestParam(required = false) Integer sigunguId,
+            @RequestParam(required = false) Integer headId,
+            @RequestParam(required = false) Boolean deadline,
+            @RequestParam(required = false, name = "isEnd") Boolean isEnd,
 
-        return ResponseEntity.ok().headers(headers).body(posts);
+            @RequestParam(required = false) String keyword,
+
+            @RequestParam(required = false) String startDateFrom,
+            @RequestParam(required = false) String startDateTo,
+
+            @RequestParam(required = false, defaultValue = "createdAt") String orderBy,
+            @RequestParam(required = false, defaultValue = "DESC") String orderDir,
+            @RequestParam(required = false, defaultValue = "10") Integer limit,
+            @RequestParam(required = false, defaultValue = "0") Integer offset
+    ) {
+        VolunteerAssociationSearchCond cond = VolunteerAssociationSearchCond.builder()
+                .sigunguId(sigunguId)
+                .headId(headId)
+                .deadline(deadline)
+                .isEnd(isEnd)
+                .keyword(keyword)
+                .startDateFrom(startDateFrom)
+                .startDateTo(startDateTo)
+                .orderBy(orderBy)
+                .orderDir(orderDir)
+                .limit(limit)
+                .offset(offset)
+                .build();
+
+        List<VolunteerAssociationQueryDTO> list =
+                volunteerAssociationQueryService.selectVolunteerAssociationsBySearch(cond);
+        return ResponseEntity.ok(list);
     }
-
-    // 봉사신청내역 목록
-
-    
-    
 }

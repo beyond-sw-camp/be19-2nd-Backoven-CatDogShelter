@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.notice.command.application.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -9,5 +10,5 @@ public class RequestNoticeDTO {
     private String title;
     private String content;
 
-    List<FileDTO> files;
+    List<MultipartFile> files;
 }
