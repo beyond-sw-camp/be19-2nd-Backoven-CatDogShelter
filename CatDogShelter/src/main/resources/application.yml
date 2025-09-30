@@ -43,6 +43,9 @@ logging:
   level:
     root: info
 
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+
 file:
 #  upload-dir: /Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads
   upload-dir: /Users/dong/Desktop/2nd/CatDogShelter/uploads
