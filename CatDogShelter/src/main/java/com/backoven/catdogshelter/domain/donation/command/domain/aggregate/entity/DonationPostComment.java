@@ -2,6 +2,7 @@ package com.backoven.catdogshelter.domain.donation.command.domain.aggregate.enti
 
 import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.entity.UserEntity;
+import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -13,7 +14,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Entity
 @Table(name="donationPostComment")
-//@Where(clause = "is_deleted = false")
+@Where(clause = "is_deleted = false")
 public class DonationPostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,12 @@ public class DonationPostComment {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 
+    public void softDelete() {
+        this.deleted = true;
+        this.updatedAt = DateTimeUtil.now();
+    }
+
+
     @Column(name = "is_blinded", nullable = false)
     private boolean blinded = false;
 
@@ -42,8 +49,6 @@ public class DonationPostComment {
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "head_id")
     private ShelterHeadEntity head;
 
-    public void softDelete() {
-        this.deleted = true;
-    }
+
 
 }

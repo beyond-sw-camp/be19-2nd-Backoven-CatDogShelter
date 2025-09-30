@@ -1,6 +1,7 @@
 package com.backoven.catdogshelter.domain.donation.command.application.controller;
 
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.ReportCategory;
 import com.backoven.catdogshelter.domain.donation.command.application.dto.CreateDonationCommentRequest;
@@ -28,7 +29,6 @@ public class DonationExController {
     private final DonationPostLikeCommandService donationLikeService;
     private final DonationPostReportCommentCommandService donationPostCommentReportService;
     private final DonationPostFileService donationPostFileService;
-    private final UserRepository userRepository;
 
       /*===============JPA - READ=============== */
 
@@ -106,7 +106,7 @@ public class DonationExController {
     public ResponseEntity<Void> deleteDonationPost(@PathVariable Integer id,
                                            @RequestParam Integer headId) { // 작성자(보호소장) ID
         donationPostService.deleteDonationPost(id, headId);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -133,7 +133,7 @@ public class DonationExController {
     @DeleteMapping("/{id}/like")
     public ResponseEntity<Void> updateUnLikeDonationPost(@PathVariable Integer id, @RequestParam Integer userId) {
         donationLikeService.updateUnLikeDonationPost(id, userId);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -164,22 +164,33 @@ public class DonationExController {
     public ResponseEntity<Void> deleteDonationPostComment(@PathVariable Integer id,
                                               @RequestParam Integer userId) {
         donationCommentService.deleteDonationPostComment(id, userId);
-        return ResponseEntity.noContent().build(); // 204 반환 권장
+        return ResponseEntity.noContent().build();
     }
 
 
+    // 일반 사용자 댓글 신고
+    @PostMapping("/{commentId}/report/user")
+    public ResponseEntity<Void> createReportDonationPostCommentByUser(@PathVariable Integer commentId,
+                                                    @RequestParam ReportCategory category,
+                                                    @RequestParam(required = false) String detail,
+                                                    @RequestParam Integer userId) {
+        UserEntity user = new UserEntity();
+        user.setUserId(userId);
 
+        donationPostCommentReportService.createReportDonationPostCommentByUser(commentId, category, detail, user);
+        return ResponseEntity.ok().build();
+    }
 
-    // 댓글 신고
-    @PostMapping("/comments/{id}/report")
-    public ResponseEntity<Void> createReportDonationPostComment(@PathVariable Integer id,
-                                              @RequestParam ReportCategory category,
-                                              @RequestParam(required = false) String detail,
-                                              @RequestParam Integer userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+    // 보호소장 댓글 신고
+    @PostMapping("/{commentId}/report/head")
+    public ResponseEntity<Void> createReportDonationPostCommentByHead(@PathVariable Integer commentId,
+                                                    @RequestParam ReportCategory category,
+                                                    @RequestParam(required = false) String detail,
+                                                    @RequestParam Integer headId) {
+        ShelterHeadEntity head = new ShelterHeadEntity();
+        head.setId(headId);
 
-        donationPostCommentReportService.createReportDonationPostComment(id, category, detail, user);
+        donationPostCommentReportService.createReportDonationPostCommentByHead(commentId, category, detail, head);
         return ResponseEntity.ok().build();
     }
 

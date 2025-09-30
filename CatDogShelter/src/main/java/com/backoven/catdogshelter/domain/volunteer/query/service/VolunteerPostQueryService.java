@@ -49,4 +49,6 @@ public class VolunteerPostQueryService {
     public List<VolunteerPostListDTO> selectVolunteerPostsByLiked() {
         return volunteerPostQueryMapper.selectVolunteerPostsByLiked();
     }
+
+
 }

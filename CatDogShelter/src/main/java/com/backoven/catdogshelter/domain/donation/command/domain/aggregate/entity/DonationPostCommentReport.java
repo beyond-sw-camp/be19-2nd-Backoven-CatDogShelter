@@ -12,7 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name ="donationPostCommentReport")
+@Table(name ="donationPostCommentReport",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"comment_id", "user_id"}),
+                @UniqueConstraint(columnNames = {"comment_id", "head_id"})
+        })
 public class DonationPostCommentReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +32,8 @@ public class DonationPostCommentReport {
     @Column(name="created_at")
     private String createdAt;
 
-    private boolean status;
+    @Column(nullable = false)
+    private boolean status = false;
 
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "comment_id")
     private DonationPostComment comment;

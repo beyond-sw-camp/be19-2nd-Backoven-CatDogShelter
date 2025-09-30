@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.post.query.mapper.PostViewDescMapper">
+    <resultMap id="postInventoryMap" type="com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="created_at" column="CREATED_AT"/>
+        <result property="updated_at" column="UPDATED_AT"/>
+        <result property="view" column="VIEW"/>
+        <result property="writeType" column="WRITE_TYPE"/>
+        <result property="writeName" column="WRITE_NAME"/>
+    </resultMap>
+    <select id="selectPostViewDesc" resultMap="postInventoryMap">
+        SELECT
+            p.id
+             , p.title
+             , p.created_at
+             , p.updated_at
+             , p.view
+             , CASE
+                   WHEN p.user_id IS NOT NULL THEN '일반 회원'
+                   WHEN p.head_id IS NOT NULL THEN '보호소장 회원'
+            END AS WRITE_TYPE
+             , CASE
+                   WHEN p.user_id IS NOT NULL THEN u.user_name
+                   WHEN p.head_id IS NOT NULL THEN h.ceo_name
+            END AS WRITE_NAME
+        FROM post p
+                 LEFT JOIN user u ON p.user_id = u.user_id
+                 LEFT JOIN shelter_head h ON p.head_id = h.head_id
+        WHERE p.is_deleted = 0
+     ORDER BY view DESC
+    </select>
+</mapper>

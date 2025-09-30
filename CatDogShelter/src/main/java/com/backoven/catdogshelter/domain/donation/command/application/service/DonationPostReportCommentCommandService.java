@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.donation.command.application.service;
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
 import com.backoven.catdogshelter.common.util.ReportCategory;
@@ -19,16 +20,38 @@ public class DonationPostReportCommentCommandService {
     private final DonationPostCommentRepository donationPostCommentRepository;
     private final DonationPostCommentReportRepository donationPostCommentReportRepository;
 
-    public void createReportDonationPostComment(Integer commentId, ReportCategory category, String detail, UserEntity reporter) {
+    public void createReportDonationPostCommentByUser(Integer commentId, ReportCategory category, String detail, UserEntity user) {
         DonationPostComment comment = donationPostCommentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        if (donationPostCommentReportRepository.existsByCommentAndUser(comment, user)) {
+            throw new IllegalStateException("이미 신고한 댓글입니다.");
+        }
 
         DonationPostCommentReport report = new DonationPostCommentReport();
         report.setComment(comment);
         report.setCategory(category);
         report.setEtcDetail(detail);
         report.setCreatedAt(DateTimeUtil.now());
-        report.setUser(reporter);
+        report.setUser(user);
+
+        donationPostCommentReportRepository.save(report);
+    }
+
+    public void createReportDonationPostCommentByHead(Integer commentId, ReportCategory category, String detail, ShelterHeadEntity head) {
+        DonationPostComment comment = donationPostCommentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        if (donationPostCommentReportRepository.existsByCommentAndHead(comment, head)) {
+            throw new IllegalStateException("이미 신고한 댓글입니다.");
+        }
+
+        DonationPostCommentReport report = new DonationPostCommentReport();
+        report.setComment(comment);
+        report.setCategory(category);
+        report.setEtcDetail(detail);
+        report.setCreatedAt(DateTimeUtil.now());
+        report.setHead(head);
 
         donationPostCommentReportRepository.save(report);
     }

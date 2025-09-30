@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @ToString
 public class MissingPostCommentDTO {
-    private int id;
+    private Integer id;
     private String content;
     private String createdAt;
     private String userRating;//등급
