@@ -60,6 +60,13 @@ public class WebSecurity {
                         .requestMatchers(HttpMethod.PUT, "/catdogshelter/user/**").authenticated() // 수정도 인증 필요
                         .requestMatchers("/catdogshelter/admin/**").permitAll()
                         .requestMatchers("/catdogshelter/**").permitAll()
+                        .requestMatchers("/donation-posts/**").permitAll() // 인증 없이 접근 가능
+                        .requestMatchers("/missing-posts/**").permitAll()// 인증 없이 접근 가능
+                        .requestMatchers(
+                                "/missing-posts/comments/**/report/**",
+                                "/donation-posts/comments/**/report/**",
+                                "/missing-posts/**/report",
+                                "/donation-posts/**/report").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Swagger 허용
                         .anyRequest().authenticated())
                 // 세션을 안쓰겟다
