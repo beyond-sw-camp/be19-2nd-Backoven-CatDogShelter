@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -36,14 +37,6 @@ public class AdoptionPostCommandController {
             AdoptionPostCommandService adoptionPostCommandService) {
         this.adoptionPostCommandService = adoptionPostCommandService;
     }
-    /*
-    // 게시글 조회수 증가 -> GET
-    @PostMapping("/{postId}")
-    public ResponseEntity<?> insertAdoptionPostView(@PathVariable int postId){
-        adoptionPostCommandService.insertAdoptionPostView(postId);
-        return ResponseEntity
-                .ok().build();
-    }*/
 
     // 게시글 좋아요 토글 (회원 or 보호소장)
     @Operation(summary = "게시글 추천",

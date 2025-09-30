@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.sighting.query.mapper.SightingMapper">
+    <!-- 작성자 정보 매핑 -->
+    <resultMap id = "writerResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingUserDTO">
+        <result property = "userId" column = "user_id"/>
+        <result property = "headId" column = "head_id"/>
+        <result property = "name" column = "writer_name"/>
+    </resultMap>
+
+    <!-- 게시글 목록 매핑 -->
+    <resultMap id = "sightingSummaryResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSummaryDTO">
+        <id property = "id" column = "id"/>
+        <result property = "title" column ="title"/>
+        <result property = "createdAt" column ="created_at"/>
+        <result property = "updatedAt" column ="updated_at"/>
+        <result property = "view" column ="view"/>
+        <result property = "likeCount" column ="like_count"/>
+        <association property = "writer" resultMap = "writerResultMap"/>
+    </resultMap>
+    <!-- 게시글 목록 조회 -->
+    <select id = "selectSightingSummary" parameterType = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingSearchDTO" resultMap = "sightingSummaryResultMap">
+        SELECT
+        sp.id
+        , sp.title
+        , sp.created_at
+        , sp.updated_at
+        , sp.view
+        , (SELECT COUNT(*) FROM sightingPostLiked WHERE post_id = sp.id) AS like_count
+        , CASE
+        WHEN sp.user_id IS NOT NULL THEN u.user_name
+        WHEN sp.head_id IS NOT NULL THEN sh.company_name
+        END AS writer_name
+        , sp.user_id
+        , sp.head_id
+        FROM sightingPost AS sp
+        LEFT JOIN sightingPostLiked AS spl ON (sp.id = spl.post_id)
+        LEFT JOIN user AS u ON (sp.user_id = u.user_id)
+        LEFT JOIN shelter_head AS sh ON (sp.head_id = sh.head_id)
+        <where>
+            sp.is_blinded = FALSE
+            AND sp.is_deleted = FALSE
+            <if test = "writer != null and writer != ''">
+                AND (u.user_name LIKE CONCAT('%', #{writer}, '%')
+                OR sh.company_name LIKE CONCAT('%', #{writer}, '%'))
+            </if>
+            <if test = "title != null and title != ''">
+                AND sp.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test = "content != null and content != ''">
+                AND sp.content LIKE CONCAT('%', #{content}, '%')
+            </if>
+            <if test = "animalType != null and animalType != ''">
+                AND sp.animal_type = #{animalType}
+            </if>
+            <if test = "breed != null and breed != ''">
+                AND sp.breed LIKE CONCAT('%', #{breed}, '%')
+            </if>
+            <if test = "color != null and color != ''">
+                AND sp.color LIKE CONCAT('%', #{color}, '%')
+            </if>
+            <if test = "sigunguCode != null">
+                AND sp.sigungu_id = #{sigunguCode}
+            </if>
+        </where>
+        <choose>
+            <when test="order == 0">
+                ORDER BY sp.id DESC
+            </when>
+            <when test="order == 1">
+                ORDER BY sp.id ASC, sp.id DESC
+            </when>
+            <when test="order == 2">
+                ORDER BY sp.view DESC, sp.id DESC
+            </when>
+            <when test="order == 3">
+                ORDER BY sp.view ASC, sp.id DESC
+            </when>
+            <when test="order == 4">
+                ORDER BY like_count DESC, sp.id DESC
+            </when>
+            <when test="order == 5">
+                ORDER BY like_count ASC, sp.id DESC
+            </when>
+            <otherwise>
+                ORDER BY sp.id DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 시도 이름, 시군구 이름 매핑 -->
+    <resultMap id = "addressNameResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingAddressNameDTO">
+        <result property = "sidoName" column = "sido_name"/>
+        <result property = "sigunguName" column = "sigungu_name"/>
+
+    </resultMap>
+
+    <!-- 파일 매핑 -->
+    <resultMap id = "fileResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingFileDTO">
+        <result property = "fileRename" column = "file_rename"/>
+        <result property = "filePath" column = "file_path"/>
+    </resultMap>
+
+    <resultMap id = "writerResultMap2" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingUserDTO" extends = "writerResultMap">
+        <result property = "userId" column = "user_id"/>
+        <result property = "headId" column = "head_id"/>
+        <result property = "name" column = "writer_name"/>
+        <result property = "ratingName" column = "writer_rating"/>
+    </resultMap>
+
+    <!-- 댓글 작성자 매핑 -->
+    <resultMap id = "commentWriterResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingUserDTO">
+        <result property = "userId" column = "comment_user_id"/>
+        <result property = "headId" column = "comment_head_id"/>
+        <result property = "name" column = "comment_writer_name"/>
+        <result property = "ratingName" column = "comment_writer_rating"/>
+    </resultMap>
+
+    <!-- 댓글 매핑 -->
+    <resultMap id = "commentResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingCommentDTO">
+        <id property = "id" column = "comment_id"/>
+        <result property = "content" column = "comment_content"/>
+        <result property = "createdAt" column = "comment_created_at"/>
+        <result property = "updatedAt" column = "comment_updated_at"/>
+        <association property = "writer" resultMap = "commentWriterResultMap"/>
+    </resultMap>
+
+    <!-- 게시글 상세 페이지 매핑 -->
+    <resultMap id = "sightingDetailsResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingDetailDTO">
+        <id property = "id" column = "id"/>
+        <result property = "title" column = "title"/>
+        <result property = "content" column = "content"/>
+        <result property = "sightedAt" column = "sighted_at"/>
+        <result property = "sightedPlace" column = "sighted_place"/>
+        <result property = "animalType" column = "animal_type"/>
+        <result property = "breed" column = "breed"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "updatedAt" column = "updated_at"/>
+        <result property = "view" column = "view"/>
+        <result property = "likeCount" column = "like_count"/>
+        <association property = "addressName" resultMap = "addressNameResultMap"/>
+        <association property = "writer" resultMap = "writerResultMap2"/>
+        <collection property = "files" resultMap = "fileResultMap"/>
+        <collection property = "comments" resultMap = "commentResultMap"/>
+    </resultMap>
+
+    <select id = "selectSightingDetails" parameterType = "_int" resultMap = "sightingDetailsResultMap">
+        SELECT
+            sp.id
+             , sp.title
+             , sp.content
+             , sp.sighted_at
+             , sp.sighted_place
+             , sp.animal_type
+             , sp.breed
+             , sp.created_at
+             , sp.updated_at
+             , sp.view
+             , (SELECT COUNT(*) FROM sightingPostLiked WHERE post_id = sp.id) AS like_count
+             , sido.sido_name
+             , sigungu.sigungu_name
+             , CASE
+                   WHEN sp.user_id IS NOT NULL THEN u.user_name
+                   WHEN sp.head_id IS NOT NULL THEN sh.company_name
+            END AS writer_name
+             , CASE
+                   WHEN sp.user_id IS NOT NULL THEN spr.name
+                   WHEN sp.head_id IS NOT NULL THEN NULL
+            END AS writer_rating
+             , sp.user_id
+             , sp.head_id
+             , spf.file_rename
+             , spf.file_path
+             , spc.id AS comment_id
+             , spc.content AS comment_content
+             , spc.created_at as comment_created_at
+             , spc.updated_at as comment_updated_at
+             , CASE
+                   WHEN spc.user_id IS NOT NULL THEN cu.user_name
+                   WHEN spc.head_id IS NOT NULL THEN csh.company_name
+            END AS comment_writer_name
+             , CASE
+                   WHEN spc.user_id IS NOT NULL THEN spcr.name
+                   WHEN spc.head_id IS NOT NULL THEN NULL
+            END AS comment_writer_rating
+             , spc.user_id AS comment_user_id
+             , spc.head_id AS comment_head_id
+        FROM sightingPost AS sp
+                 LEFT JOIN user AS u ON (sp.user_id = u.user_id)
+                 LEFT JOIN shelter_head AS sh ON (sp.head_id = sh.head_id)
+                 LEFT JOIN sigungu ON (sp.sigungu_id = sigungu.sigungu_id)
+                 LEFT JOIN sido ON (sigungu.sido_id = sido.sido_id)
+                 LEFT JOIN sightingPostFiles AS spf ON (sp.id = spf.post_id)
+                 LEFT JOIN sightingPostComment AS spc ON (sp.id = spc.post_id AND spc.is_blinded = FALSE AND spc.is_deleted = FALSE)
+                 LEFT JOIN user AS cu ON (spc.user_id = cu.user_id)
+                 LEFT JOIN shelter_head AS csh ON (spc.head_id = csh.head_id)
+                 LEFT JOIN rating AS spr ON (u.rating_id = spr.id)
+                 LEFT JOIN rating AS spcr ON (cu.rating_id = spcr.id)
+        WHERE sp.is_blinded = FALSE
+          AND sp.is_deleted = FALSE
+          AND sp.id = #{postId}
+    </select>
+
+    <update id = "incrementSightingView" parameterType = "_int">
+        UPDATE sightingPost
+        SET view = view + 1
+        WHERE id = #{postId}
+    </update>
+
+    <resultMap id = "postReportResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingPostReportDTO">
+        <id property = "id" column="id"/>
+        <result property = "reportCategory" column = "category"/>
+        <result property = "etcDetail" column = "etc_detail"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <result property = "postId" column = "post_id"/>
+        <association property="writer" resultMap = "writerResultMap"/>
+    </resultMap>
+
+    <select id = "selectSightingPostReport" parameterType = "_int" resultMap = "postReportResultMap">
+        SELECT
+            spr.id
+             , spr.category
+             , spr.etc_detail
+             , spr.created_at
+             , spr.status
+             , spr.post_id
+             , spr.user_id
+             , spr.head_id
+             , CASE
+                   WHEN spr.user_id IS NOT NULL THEN u.user_name
+                   WHEN spr.head_id IS NOT NULL THEN sh.company_name
+            END AS writer_name
+        FROM sightingPostReport AS spr
+                 LEFT JOIN user AS u ON (spr.user_id = u.user_id)
+                 LEFT JOIN shelter_head AS sh ON (spr.head_id = sh.head_id)
+        WHERE spr.post_id = #{postId}
+    </select>
+
+    <resultMap id = "postCommentReportResultMap" type = "com.backoven.catdogshelter.domain.sighting.query.dto.SightingPostCommentReportDTO">
+        <id property = "id" column="id"/>
+        <result property = "reportCategory" column = "category"/>
+        <result property = "etcDetail" column = "etc_detail"/>
+        <result property = "createdAt" column = "created_at"/>
+        <result property = "status" column = "status"/>
+        <result property = "commentId" column = "comment_id"/>
+        <association property="writer" resultMap = "writerResultMap"/>
+    </resultMap>
+
+    <select id = "selectSightingPostCommentReport" parameterType = "_int" resultMap = "postCommentReportResultMap">
+        SELECT
+            sprc.id
+             , sprc.category
+             , sprc.etc_detail
+             , sprc.created_at
+             , sprc.status
+             , sprc.comment_id
+             , sprc.user_id
+             , sprc.head_id
+             , CASE
+                   WHEN sprc.user_id IS NOT NULL THEN u.user_name
+                   WHEN sprc.head_id IS NOT NULL THEN sh.company_name
+            END AS writer_name
+        FROM sightingPostCommentReport AS sprc
+                 LEFT JOIN user AS u ON (sprc.user_id = u.user_id)
+                 LEFT JOIN shelter_head AS sh ON (sprc.head_id = sh.head_id)
+        WHERE sprc.comment_id = #{commentId}
+    </select>
+</mapper>

@@ -29,7 +29,8 @@ public class DonationPostCommandService {
 
     private final DonationPostRepository donationPostRepository;
     private final DonationPostFilesRepository donationPostFilesRepository;
-    private final String uploadDir = "/Users/dong/uploads/";
+    private final String uploadDir = "/Users/haeone/Desktop/be19-2nd-backoven-petShelter/uploads/";
+//    private final String uploadDir = "/Users/dong/uploads/";
 
     // 게시글 단건 조회
     @Transactional(readOnly = true)
