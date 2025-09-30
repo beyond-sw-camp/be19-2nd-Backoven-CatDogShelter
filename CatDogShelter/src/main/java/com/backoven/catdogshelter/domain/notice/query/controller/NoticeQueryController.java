@@ -1,71 +1,49 @@
+// src/main/java/com/backoven/catdogshelter/domain/notice/query/controller/NoticeQueryController.java
 package com.backoven.catdogshelter.domain.notice.query.controller;
 
-import com.backoven.catdogshelter.domain.notice.query.dto.NoticePostQueryDTO;
-import com.backoven.catdogshelter.domain.notice.query.dto.NoticeQueryDTO;
+import com.backoven.catdogshelter.domain.notice.query.dto.NoticeDetailDTO;
 import com.backoven.catdogshelter.domain.notice.query.service.NoticeQueryService;
-import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerPostQueryService;
+import com.backoven.catdogshelter.domain.volunteer.query.service.VolunteerAssociationQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/notice-posts")
 public class NoticeQueryController {
 
-    private final VolunteerPostQueryService volunteerPostQueryService;
-    private NoticeQueryService noticeQueryService;
+    private final NoticeQueryService noticeQueryService;
+    private final VolunteerAssociationQueryService volunteerAssociationQueryService;
 
     @Autowired
-    public NoticeQueryController(NoticeQueryService noticeQueryService, VolunteerPostQueryService volunteerPostQueryService) {
+    public NoticeQueryController(NoticeQueryService noticeQueryService, VolunteerAssociationQueryService volunteerAssociationQueryService) {
         this.noticeQueryService = noticeQueryService;
-        this.volunteerPostQueryService = volunteerPostQueryService;
+        this.volunteerAssociationQueryService = volunteerAssociationQueryService;
     }
 
-    // 공지사항 전체 목록 조회
-    @GetMapping("/notices")
-    public ResponseEntity<List<NoticeQueryDTO>> selectNotices() {
-
-        List<NoticeQueryDTO> notices = noticeQueryService.selectNotices();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json", Charset.forName("UTF-8"))
-        );
-
-        return ResponseEntity.ok().headers(headers).body(notices);
-    }
-
-    // 공지사항 검색 목록 조회
-    @GetMapping("/search")
-    public ResponseEntity<List<NoticeQueryDTO>> selectNoticesByKeyword(
-            @RequestParam(required = false) String keyword) {
-
-        List<NoticeQueryDTO> notices = noticeQueryService.selectNoticesByKeyword(keyword);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json", Charset.forName("UTF-8"))
-        );
-        return ResponseEntity.ok().headers(headers).body(notices);
-    }
-
-    // 공지사항 상세 조회
+    // 공지 상세 + 파일 목록 GET /notice-posts/1
     @GetMapping("/{id}")
-    public ResponseEntity<NoticePostQueryDTO> selectNotice(@PathVariable int id) {
+    public ResponseEntity<?> getDetail(@PathVariable Integer id) {
+        NoticeDetailDTO dto = noticeQueryService.getNoticeDetail(id);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
+    }
 
-        NoticePostQueryDTO notice = noticeQueryService.selectNotice(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                new MediaType("application", "json",
-                        Charset.forName("UTF-8")));
-        return ResponseEntity.ok().headers(headers).body(notice);
+    // 공지 목록 (검색/페이징) 예: GET /api/notices?keyword=공지&createdFrom=2025-09-01&createdTo=2025-09-30&page=1&size=10&orderBy=likeCount&orderDir=DESC
+    @GetMapping(value = {"/", "/search"})
+    public Map<String, Object> list(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "createdFrom", required = false) String createdFrom,
+            @RequestParam(value = "createdTo", required = false) String createdTo,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "size", required = false) Integer size,
+            @RequestParam(value = "orderBy", required = false) String orderBy,
+            @RequestParam(value = "orderDir", required = false) String orderDir
+    ) {
+        return noticeQueryService.search(keyword, createdFrom, createdTo, page, size, orderBy, orderDir);
     }
 }

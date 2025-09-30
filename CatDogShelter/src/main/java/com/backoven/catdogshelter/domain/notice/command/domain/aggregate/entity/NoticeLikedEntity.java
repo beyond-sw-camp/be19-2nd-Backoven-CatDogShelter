@@ -1,36 +1,34 @@
 package com.backoven.catdogshelter.domain.notice.command.domain.aggregate.entity;
 
+import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
+import com.backoven.catdogshelter.common.entity.UserEntity;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter @Setter
 @Entity
-@Table(name = "noticeliked",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"notice_id", "user_id"}),
-                @UniqueConstraint(columnNames = {"notice_id", "user_id"})
-        })
+@Table(name = "noticeLiked")
 public class NoticeLikedEntity {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "notice_id", nullable = false)
-    private Long noticeId;
+    // 좋아요 대상 공지
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id", nullable = false, foreignKey = @ForeignKey(name = "fk_nl_notice"))
+    private NoticeEntity notice;
 
-    @Column(name = "user_id")
-    private Long userId;
+    // 일반 유저 (nullable)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_nl_user"))
+    private UserEntity user;
 
-    @Column(name = "head_id")
-    private Long headId;
+    // 보호소장 (nullable)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "head_id", foreignKey = @ForeignKey(name = "fk_nl_head"))
+    private ShelterHeadEntity head;
 
-    @PrePersist @PreUpdate
-    private void ensureExclusiveActor() {
-        boolean u = userId != null;
-        boolean h = headId != null;
-        if (u == h) throw new IllegalStateException("Exactly one of userId or headId must be set.");
-    }
+    // user XOR head (둘 중 하나만 설정) 은 서비스에서 보장
 }
