@@ -1,9 +1,12 @@
+// src/main/java/com/backoven/catdogshelter/domain/volunteer/query/dto/VolunteerPostFileDTO.java
 package com.backoven.catdogshelter.domain.volunteer.query.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class VolunteerPostFileDTO {
-    private String rename;
-    private String path;
+    private Integer id;
+    private String fileRename;
+    private String filePath;
+    private String uploadedAt;
 }
