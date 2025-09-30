@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,6 +30,7 @@ import com.backoven.catdogshelter.domain.adoption.query.dto.AdoptionPostAllQuery
 
 @RestController
 @RequestMapping("catdogshelter/adoption-post")
+@Tag(name="입양 게시글 조회 API")
 public class AdoptionPostQueryController {
     private final AdoptionPostQueryServiceImpl adoptionService;
 

@@ -6,19 +6,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/volunteer-posts")
 public class VolunteerPostQueryController {
 
     private final VolunteerPostQueryService volunteerPostQueryService;
 
-    @Autowired
-    public VolunteerPostQueryController(VolunteerPostQueryService volunteerPostQueryService) {
-        this.volunteerPostQueryService = volunteerPostQueryService;
+    // 전체 목록 (order: created | views | likes)  — 내림차순
+    // 예: GET /api/volunteer-posts/list/views?page=1&size=10
+    @GetMapping(value = {"/list/{order}"})
+    public Map<String, Object> list(@PathVariable String order,
+                                    @RequestParam(required = false) Integer page,
+                                    @RequestParam(required = false) Integer size) {
+        return volunteerPostQueryService.list(order, page, size);
     }
 
     @Operation(summary = "게시글 목록 조회",

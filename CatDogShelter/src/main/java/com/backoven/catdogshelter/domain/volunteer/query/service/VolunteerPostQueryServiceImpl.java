@@ -1,14 +1,18 @@
 // VolunteerPost 서비스 구현
 package com.backoven.catdogshelter.domain.volunteer.query.service;
 
+
 import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListItemDTO;
+
 import com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostSearchCond;
 import com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerPostQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+
 import java.util.List;
+
 import java.util.Map;
 
 import static com.backoven.catdogshelter.common.util.pagination.PagingUtil.*;
@@ -26,7 +30,9 @@ public class VolunteerPostQueryServiceImpl implements VolunteerPostQueryService 
     private String sanitizeOrder(String order) {
         if ("views".equalsIgnoreCase(order)) return "views";
         if ("likes".equalsIgnoreCase(order)) return "likes";
+
         if ("".equalsIgnoreCase(order)) return "created";
+
         return "created";
     }
 
@@ -35,6 +41,7 @@ public class VolunteerPostQueryServiceImpl implements VolunteerPostQueryService 
         int p = safePage(page);
         int s = safeSize(size);
         int offset = (p - 1) * s;
+
 
         VolunteerPostSearchCond cond = VolunteerPostSearchCond.builder()
                                                               .order(sanitizeOrder(order))

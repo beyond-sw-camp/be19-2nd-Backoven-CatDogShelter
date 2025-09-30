@@ -4,7 +4,9 @@ package com.backoven.catdogshelter.domain.volunteer.command.application.controll
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.*;
 import com.backoven.catdogshelter.domain.volunteer.command.application.service.VolunteerPostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class VolunteerPostCommandController {
 
     // 생성: multipart (dto + files[])
     @Operation(summary = "게시글 등록", description = "봉사후기 게시글을 사진파일과 함께 작성할 수 있다.")
+
     @PostMapping(value = "/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> writeVolunteerPost(
             @RequestPart("dto") String dtoJson,
@@ -40,6 +43,7 @@ public class VolunteerPostCommandController {
     }
 
     // 수정: multipart (dto + newFiles[])
+
     @Operation(summary = "게시글 수정",
             description = "봉사후기 게시글을 사진파일과 함꼐 수정할 수 있다." +
                     "\n사진파일은 삭제 후 다시 업로드하는 방식이다.")
@@ -55,6 +59,7 @@ public class VolunteerPostCommandController {
     }
 
     // 소프트 삭제
+
     @Operation(summary = "게시글 삭제", description = "봉사후기 게시글을 삭제할 수 있다." +
             "\n대신 봉사후기를 완전히 삭제하지 않고 soft delete 방식으로 진행한다.")
     @DeleteMapping("/{id}/delete")
