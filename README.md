@@ -164,7 +164,18 @@
 
 <details>
   <summary>회원 API</summary>
-  여기서부터 작성
+  <summary>회원 등록</summary>
+    </details>
+    <details>
+      <summary>회원 정보 수정</summary>
+    </details>
+    <details>
+      <summary>회원 탈퇴</summary>
+    </details>
+    <details>
+      <summary>회원 조회</summary>
+    </details>
+  </details>
 </details>
 
 <details>
