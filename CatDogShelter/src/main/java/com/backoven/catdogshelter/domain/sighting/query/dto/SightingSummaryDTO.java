@@ -24,6 +24,6 @@ public class SightingSummaryDTO {
     private int view;
     @Schema(description = "추천수", example = "5")
     private int likeCount;
-    @Schema(description = "작성자", example = "5")
+    @Schema(description = "작성자")
     private SightingUserDTO writer;
 }
