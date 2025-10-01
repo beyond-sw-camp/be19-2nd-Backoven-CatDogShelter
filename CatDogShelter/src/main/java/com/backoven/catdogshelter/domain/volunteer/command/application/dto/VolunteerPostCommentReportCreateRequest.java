@@ -7,7 +7,7 @@ import lombok.ToString;
 // 댓글 신고 요청 DTO
 @Getter @Setter
 @ToString
-public class VolunteerCommentReportCreateRequest {
+public class VolunteerPostCommentReportCreateRequest {
     private String category;
     private String etcDetail;
     private Integer commentId;

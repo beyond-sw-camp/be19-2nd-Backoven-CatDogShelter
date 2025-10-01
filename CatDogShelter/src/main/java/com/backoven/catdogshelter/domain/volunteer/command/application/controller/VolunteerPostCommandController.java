@@ -76,7 +76,7 @@ public class VolunteerPostCommandController {
     @PostMapping("/{id}/like")
     public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Integer id,
-            @RequestBody LikeToggleRequest req
+            @RequestBody VolunteerPostLikeToggleRequest req
     ) {
         boolean liked = volunteerPostService.toggleLike(id, req);
         return ResponseEntity.ok(Map.of("liked", liked));
@@ -86,7 +86,7 @@ public class VolunteerPostCommandController {
 //    @PostMapping("/{id}/report")
 //    public ResponseEntity<Void> reportPost(
 //            @PathVariable Integer id,
-//            @RequestBody PostReportRequest req
+//            @RequestBody VolunteerPostReportRequest req
 //    ) {
 //        req.setPostId(id);
 //        volunteerPostService.reportPost(req);
@@ -118,7 +118,7 @@ public class VolunteerPostCommandController {
     @PostMapping("/{id}/comment")
     public ResponseEntity<Map<String, Object>> addVolunteerPostComment(
             @PathVariable Integer id,
-            @RequestBody CommentCreateDTO dto
+            @RequestBody VolunteerPostCommentCreateDTO dto
     ) {
         dto.setPostId(id);
         Integer cmtId = volunteerPostService.addVolunteerPostComment(dto);
@@ -131,7 +131,7 @@ public class VolunteerPostCommandController {
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<Void> modifyVolunteerPostComment(
             @PathVariable Integer commentId,
-            @RequestBody CommentUpdateDTO dto
+            @RequestBody VolunteerPostCommentUpdateDTO dto
     ) {
         volunteerPostService.modifyVolunteerPostComment(commentId, dto);
         return ResponseEntity.noContent().build();
@@ -150,7 +150,7 @@ public class VolunteerPostCommandController {
 //    @PostMapping("/comments/{commentId}/report")
 //    public ResponseEntity<Void> reportComment(
 //            @PathVariable Integer commentId,
-//            @RequestBody CommentReportRequest req
+//            @RequestBody VolunteerPostCommentReportRequest req
 //    ) {
 //        req.setCommentId(commentId);
 //        volunteerPostService.reportComment(req);
@@ -165,7 +165,7 @@ public class VolunteerPostCommandController {
     @PostMapping("/comments/{commentId}/report")
     public ResponseEntity<?> reportVolunteerPostComment(
             @PathVariable Integer commentId,
-            @RequestBody VolunteerCommentReportCreateRequest req
+            @RequestBody VolunteerPostCommentReportCreateRequest req
     ) {
         try {
             req.setCommentId(commentId);

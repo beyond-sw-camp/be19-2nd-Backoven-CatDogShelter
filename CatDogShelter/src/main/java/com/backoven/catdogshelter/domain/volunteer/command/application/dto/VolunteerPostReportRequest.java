@@ -1,5 +1,6 @@
 package com.backoven.catdogshelter.domain.volunteer.command.application.dto;
 
+import com.backoven.catdogshelter.common.util.ReportCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,10 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentCreateDTO {
+public class VolunteerPostReportRequest {
     private Integer postId;
-    private String content;
-    private LikeToggleRequest.ActorType actorType;
+    private ReportCategory category;
+    private String etcDetail;
+    private VolunteerPostLikeToggleRequest.ActorType actorType;
     private Integer userId;
     private Integer headId;
 }

@@ -1,8 +1,8 @@
 // VolunteerAssociationCommandController.java
 package com.backoven.catdogshelter.domain.volunteer.command.application.controller;
 
-import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerApplyRequest;
-import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerApproveRequest;
+import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationApplyRequest;
+import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationApproveRequest;
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationUpdateDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.application.service.VolunteerAssociationService;
@@ -58,7 +58,7 @@ public class VolunteerAssociationCommandController {
     @Operation(summary = "신청",
             description = "일반회원은 봉사모임 게시글을 보고 신청할 수 있다.")
     @PostMapping("/apply")
-    public ResponseEntity<Integer> apply(@RequestBody VolunteerApplyRequest req) {
+    public ResponseEntity<Integer> apply(@RequestBody VolunteerAssociationApplyRequest req) {
         Integer id = volunteerAssociationService.apply(req);
         return ResponseEntity.ok(id);
     }
@@ -67,7 +67,7 @@ public class VolunteerAssociationCommandController {
     @Operation(summary = "신청 취소",
             description = "일반회원은 신청을 취소할 수 있다.")
     @DeleteMapping("/apply")
-    public ResponseEntity<Void> cancel(@RequestBody VolunteerApplyRequest req) {
+    public ResponseEntity<Void> cancel(@RequestBody VolunteerAssociationApplyRequest req) {
         volunteerAssociationService.cancel(req);
         return ResponseEntity.ok().build();
     }
@@ -76,7 +76,7 @@ public class VolunteerAssociationCommandController {
     @Operation(summary = "신청 승인",
             description = "일반회원의 신청을 승인할 수 있다.")
     @PostMapping("/apply/approve")
-    public ResponseEntity<Void> approve(@RequestBody VolunteerApproveRequest req) {
+    public ResponseEntity<Void> approve(@RequestBody VolunteerAssociationApproveRequest req) {
         volunteerAssociationService.approve(req);
         return ResponseEntity.ok().build();
     }

@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentReportRequest {
+public class VolunteerPostCommentReportRequest {
     private Integer commentId;
     private ReportCategory category;
     private String etcDetail;
-    private LikeToggleRequest.ActorType actorType;
+    private VolunteerPostLikeToggleRequest.ActorType actorType;
     private Integer userId;
     private Integer headId;
 }
