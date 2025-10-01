@@ -201,7 +201,7 @@
     <summary>📝 게시글</summary>
     <details>
        <summary>게시글 작성</summary>
-       ![Image](https://github.com/user-attachments/assets/cf16c32a-bd15-4964-9d70-ffba60c215cb)
+       <img src="https://github.com/user-attachments/assets/cf16c32a-bd15-4964-9d70-ffba60c215cb" width="100"/>
     </details>
     <details>
       <summary>게시글 수정</summary>
