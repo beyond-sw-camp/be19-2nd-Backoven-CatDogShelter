@@ -193,64 +193,64 @@
   여기서부터 작성
 </details>
 
+
 <details>
   <summary>🤝 봉사모임 API</summary>
 
+  <details>
+    <summary>📝 게시글</summary>
     <details>
-      <summary>📝 게시글</summary>
-        <details>
-          <summary>게시글 작성</summary>
-          ![Image](https://github.com/user-attachments/assets/cf16c32a-bd15-4964-9d70-ffba60c215cb)
-        </details>
-        <details>
-          <summary>게시글 수정</summary>
-          ![Image](https://github.com/user-attachments/assets/3a8d5e22-b4c1-4873-81e9-23c94cfa1bc7)
-        </details>
-        <details>
-          <summary>게시글 목록 조회</summary>
-          ![Image](https://github.com/user-attachments/assets/8e7e2ae5-b0ef-4430-b7d5-70cf8b3c88e0)
-          ![Image](https://github.com/user-attachments/assets/9053d68c-4b27-47f3-929f-2d93aef5844a)
-        </details>
-        <details>
-          <summary>게시글 상세 조회</summary>
-          ![Image](https://github.com/user-attachments/assets/f7078236-b7cc-4425-ac84-200289ab872b)
-        </details>
-        <details>
-          <summary>봉사모임 신청/승인/취소</summary>
-          ![Image](https://github.com/user-attachments/assets/5857802c-f4ec-4e0c-990b-911ad4fa7bb4)
-          ![Image](https://github.com/user-attachments/assets/cc9d49b3-9f69-4077-be87-5242685f9649)
-          ![Image](https://github.com/user-attachments/assets/3aa3ab62-4284-46cc-b649-7634296bb96f)
-        </details>
+       <summary>게시글 작성</summary>
+       ![Image](https://github.com/user-attachments/assets/cf16c32a-bd15-4964-9d70-ffba60c215cb)
     </details>
+    <details>
+      <summary>게시글 수정</summary>
+      ![Image](https://github.com/user-attachments/assets/3a8d5e22-b4c1-4873-81e9-23c94cfa1bc7)
+    </details>
+    <details>
+      <summary>게시글 목록 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/8e7e2ae5-b0ef-4430-b7d5-70cf8b3c88e0)
+      ![Image](https://github.com/user-attachments/assets/9053d68c-4b27-47f3-929f-2d93aef5844a)
+    </details>
+    <details>
+      <summary>게시글 상세 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/f7078236-b7cc-4425-ac84-200289ab872b)
+    </details>
+    <details>
+      <summary>봉사모임 신청/승인/취소</summary>
+      ![Image](https://github.com/user-attachments/assets/5857802c-f4ec-4e0c-990b-911ad4fa7bb4)
+      ![Image](https://github.com/user-attachments/assets/cc9d49b3-9f69-4077-be87-5242685f9649)
+      ![Image](https://github.com/user-attachments/assets/3aa3ab62-4284-46cc-b649-7634296bb96f)
+    </details>
+  </details>
 
+  <details>
+    <summary>💬 댓글</summary>
     <details>
-      <summary>💬 댓글</summary>
-        <details>
-          <summary>댓글 작성</summary>
-        </details>
-        <details>
-          <summary>댓글 수정</summary>
-        </details>
-        <details>
-          <summary>댓글 삭제</summary>
-        </details>
+      <summary>댓글 작성</summary>
     </details>
+    <details>
+      <summary>댓글 수정</summary>
+    </details>
+    <details>
+      <summary>댓글 삭제</summary>
+    </details>
+  </details>
 
+  <details>
+    <summary>🚨 신고</summary>
     <details>
-      <summary>🚨 신고</summary>
-        <details>
-          <summary>게시글 신고하기</summary>
-        </details>
-        <details>
-          <summary>신고 내역 조회</summary>
-        </details>
-        <details>
-          <summary>신고 처리</summary>
-        </details>
+      <summary>게시글 신고하기</summary>
     </details>
+    <details>
+      <summary>신고 내역 조회</summary>
+    </details>
+    <details>
+      <summary>신고 처리</summary>
+    </details>
+  </details>
 
 </details>
-
 
 
 <details>
