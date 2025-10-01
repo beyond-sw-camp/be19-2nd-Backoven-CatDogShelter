@@ -255,10 +255,9 @@
 
 <details>
   <summary>🤝 봉사후기 API</summary>
-
+  
   <details>
     <summary>📝 게시글</summary>
-
     <details>
       <summary>게시글 작성</summary>
       ![Image](https://github.com/user-attachments/assets/a7e17403-00f1-4fb3-81cc-b227b5c0b40d)
