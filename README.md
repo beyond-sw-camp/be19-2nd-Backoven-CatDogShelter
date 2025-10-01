@@ -523,10 +523,12 @@
       <summary>댓글 신고하기</summary>
     </details>
     <details>
-      <summary>신고 내역 조회</summary>
-    </details>
+  </details>
+
+  <details>
+    <summary>좋아요 수</summary>
     <details>
-      <summary>신고 처리</summary>
+      <summary>게시글 좋아요 수 증가</summary>
     </details>
   </details>
 
