@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @ToString
 public class SightingFileDTO {
-    @Schema(description = "fileName", example = "ecdfe3810d534d8fb40578fa1bf32c59.png")
+    @Schema(description = "fileReName", example = "ecdfe3810d534d8fb40578fa1bf32c59.png")
     private String fileRename;
     @Schema(description = "filePath", example = "sighting")
     private String filePath;

@@ -122,10 +122,10 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
     }
 
     @Override
-    public boolean toggleLike(Integer postId, LikeToggleRequest req) {
+    public boolean toggleLike(Integer postId, VolunteerPostLikeToggleRequest req) {
         var post = volunteerPostRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음: " + postId));
-        if (req.getActorType() == LikeToggleRequest.ActorType.USER) {
+        if (req.getActorType() == VolunteerPostLikeToggleRequest.ActorType.USER) {
             var user = volNoUserRepository.findById(req.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("회원 없음: " + req.getUserId()));
             if (volunteerPostLikedRepository.existsByPost_IdAndUser_UserId(postId, user.getUserId())) {
@@ -156,11 +156,11 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
 
     // 봉사후기 게시글 신고
 //    @Override
-//    public void reportPost(PostReportRequest req) {
+//    public void reportPost(VolunteerPostReportRequest req) {
 //        var post = volunteerPostRepository.findById(req.getPostId())
 //                .orElseThrow(() -> new IllegalArgumentException("게시글 없음: " + req.getPostId()));
 //
-//        if (req.getActorType() == LikeToggleRequest.ActorType.USER) {
+//        if (req.getActorType() == VolunteerPostLikeToggleRequest.ActorType.USER) {
 //            var user = VolNoUserRepository.findById(req.getUserId())
 //                    .orElseThrow(() -> new IllegalArgumentException("회원 없음: " + req.getUserId()));
 //            if (volunteerPostReportRepository.existsByPost_IdAndUser_UserId(post.getId(), user.getUserId()))
@@ -238,12 +238,12 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
 
     // 댓글 추가
     @Override
-    public Integer addVolunteerPostComment(CommentCreateDTO dto) {
+    public Integer addVolunteerPostComment(VolunteerPostCommentCreateDTO dto) {
         var post = volunteerPostRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글 없음: " + dto.getPostId()));
 
         UserEntity user = null; ShelterHeadEntity head = null;
-        if (dto.getActorType() == LikeToggleRequest.ActorType.USER) {
+        if (dto.getActorType() == VolunteerPostLikeToggleRequest.ActorType.USER) {
             user = volNoUserRepository.findById(dto.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("회원 없음: " + dto.getUserId()));
         } else {
@@ -258,7 +258,7 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
 
     // 댓글 수정
     @Override
-    public void modifyVolunteerPostComment(Integer commentId, CommentUpdateDTO dto) {
+    public void modifyVolunteerPostComment(Integer commentId, VolunteerPostCommentUpdateDTO dto) {
         var c = volunteerPostCommentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글 없음: " + commentId));
         if (c.getDeleted()) throw new IllegalStateException("삭제된 댓글입니다.");
@@ -274,11 +274,11 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
 
     // 댓글 신고
 //    @Override
-//    public void reportComment(CommentReportRequest req) {
+//    public void reportComment(VolunteerPostCommentReportRequest req) {
 //        var c = volunteerPostCommentRepository.findById(req.getCommentId())
 //                .orElseThrow(() -> new IllegalArgumentException("댓글 없음: " + req.getCommentId()));
 //
-//        if (req.getActorType() == LikeToggleRequest.ActorType.USER) {
+//        if (req.getActorType() == VolunteerPostLikeToggleRequest.ActorType.USER) {
 //            var user = VolNoUserRepository.findById(req.getUserId())
 //                    .orElseThrow(() -> new IllegalArgumentException("회원 없음: " + req.getUserId()));
 //            if (volunteerPostCommentReportRepository.existsByComment_IdAndUser_UserId(c.getId(), user.getUserId()))
@@ -297,7 +297,7 @@ public class VolunteerPostServiceImpl implements VolunteerPostService {
 
     // 댓글도 etc만 입력 가능,
     @Override
-    public Integer reportVolunteerPostComment(VolunteerCommentReportCreateRequest req) {
+    public Integer reportVolunteerPostComment(VolunteerPostCommentReportCreateRequest req) {
         if (req.getCommentId() == null) throw new IllegalArgumentException("commentId는 필수입니다.");
         if ((req.getUserId() == null) == (req.getHeadId() == null)) {
             throw new IllegalArgumentException("신고 주체는 userId 또는 headId 중 정확히 하나만 보내세요.");

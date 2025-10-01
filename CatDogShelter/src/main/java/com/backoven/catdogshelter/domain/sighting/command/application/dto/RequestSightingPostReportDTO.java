@@ -16,9 +16,9 @@ public class RequestSightingPostReportDTO {
     private String etcDetail;
     @Schema(description = "신고한 게시글의 댓글 번호", example = "2")
     private int postId;
-    @Schema(description = "신고한 유저의 유저 번호", example = "2")
+    @Schema(description = "신고한 유저의 유저 번호(null 허용, headId와 배타적 관계)")
     private Integer headId;
-    @Schema(description = "산고한 보호소의 보호소 번호", example = "2")
+    @Schema(description = "산고한 보호소의 보호소 번호(null 허용, userId와 배타적 관계)")
     private Integer userId;
 
 }

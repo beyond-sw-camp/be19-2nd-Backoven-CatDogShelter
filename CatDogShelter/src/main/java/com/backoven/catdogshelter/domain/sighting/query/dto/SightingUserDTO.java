@@ -9,9 +9,9 @@ import lombok.*;
 @Setter
 @ToString
 public class SightingUserDTO {
-    @Schema(description = "작성자 번호(유저 번호)", example = "5")
+    @Schema(description = "작성자 번호(유저 번호)(null 허용, headId와 배타적)")
     private Integer userId;
-    @Schema(description = "작성자 번호(보호소 번호)", example = "5")
+    @Schema(description = "작성자 번호(보호소 번호)(null 허용, userId와 배타적)")
     private Integer headId;
     @Schema(description = "작성자 이름", example = "홍길동")
     private String name;
