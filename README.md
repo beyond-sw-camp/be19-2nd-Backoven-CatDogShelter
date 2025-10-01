@@ -200,18 +200,26 @@
     <summary>📝 게시글</summary>
     <details>
       <summary>게시글 작성</summary>
+      ![Image](https://github.com/user-attachments/assets/cf16c32a-bd15-4964-9d70-ffba60c215cb)
     </details>
     <details>
       <summary>게시글 수정</summary>
+      ![Image](https://github.com/user-attachments/assets/3a8d5e22-b4c1-4873-81e9-23c94cfa1bc7)
     </details>
     <details>
-      <summary>게시글 삭제</summary>
+      <summary>게시글 목록 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/8e7e2ae5-b0ef-4430-b7d5-70cf8b3c88e0)
+      ![Image](https://github.com/user-attachments/assets/9053d68c-4b27-47f3-929f-2d93aef5844a)
     </details>
     <details>
-      <summary>게시글 조회</summary>
+      <summary>게시글 상세 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/f7078236-b7cc-4425-ac84-200289ab872b)
     </details>
     <details>
-      <summary>게시글 추천</summary>
+      <summary>봉사모임 신청/승인/취소</summary>
+      ![Image](https://github.com/user-attachments/assets/5857802c-f4ec-4e0c-990b-911ad4fa7bb4)
+      ![Image](https://github.com/user-attachments/assets/cc9d49b3-9f69-4077-be87-5242685f9649)
+      ![Image](https://github.com/user-attachments/assets/3aa3ab62-4284-46cc-b649-7634296bb96f)
     </details>
   </details>
 
@@ -243,6 +251,68 @@
 
 </details>
 
+<details>
+  <summary>🤝 봉사후기 API</summary>
+
+  <details>
+    <summary>📝 게시글</summary>
+    <details>
+      <summary>게시글 작성</summary>
+      ![Image](https://github.com/user-attachments/assets/a7e17403-00f1-4fb3-81cc-b227b5c0b40d)
+    </details>
+    <details>
+      <summary>게시글 수정</summary>
+      ![Image](https://github.com/user-attachments/assets/58b763bf-92b8-4031-83cc-dd6dce5c5d3e)
+    </details>
+    <details>
+      <summary>게시글 삭제</summary>
+      ![Image](https://github.com/user-attachments/assets/f6368030-193e-4b7a-86b2-24f37396a610)
+    </details>
+    <details>
+      <summary>게시글 목록 검색 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/d89b5c93-15bb-4adb-8447-bf3993f5d0f7)
+    </details>
+    <details>
+      <summary>게시글 목록 페이지 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/c50e4be5-69f4-495c-9d7e-15123aeee805)
+    </details>
+    <details>
+      <summary>게시글 상세 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/af39fe89-ca5b-4bd2-ba50-a53dac99fbed)
+    </details>
+    <details>
+      <summary>게시글 좋아요</summary>
+      ![Image](https://github.com/user-attachments/assets/6c9289b2-3701-4919-9fd0-3f51e32e936c)
+    </details>
+
+  <details>
+    <summary>💬 댓글</summary>
+    <details>
+      <summary>댓글 작성</summary>
+      ![Image](https://github.com/user-attachments/assets/e8b9c62e-fbaf-498d-9a8d-46bd80fc7c63)
+    </details>
+    <details>
+      <summary>댓글 수정</summary>
+      ![Image](https://github.com/user-attachments/assets/44064ef1-5cc5-427d-bf2f-1460f84ee459)
+    </details>
+    <details>
+      <summary>댓글 삭제</summary>
+      ![Image](https://github.com/user-attachments/assets/eab86258-0d54-4689-a132-6fc512bb5050)
+    </details>
+  </details>
+
+  <details>
+    <summary>🚨 신고</summary>
+    <details>
+      <summary>게시글 신고하기</summary>
+      ![Image](https://github.com/user-attachments/assets/90460ed2-1caa-4c4b-9ac3-6cf7f9afbe9d)
+    </details>
+    <details>
+      <summary>댓글 신고하기</summary>
+      ![Image](https://github.com/user-attachments/assets/eb2c18d5-7843-4097-bea8-1a374c22f894)
+    </details>
+  </details>
+</details>
 
 <details>
   <summary>📦 물품후기 게시판 API</summary>
@@ -461,18 +531,24 @@
     <summary>📝 게시글</summary>
     <details>
       <summary>게시글 작성</summary>
+      ![Image](https://github.com/user-attachments/assets/667dcba1-9cd0-46a6-ac55-cdd1dad9f888)
     </details>
     <details>
       <summary>게시글 수정</summary>
+      ![Image](https://github.com/user-attachments/assets/d8a96cae-cc03-4cd5-9299-d9b536a3c65b)
     </details>
     <details>
-      <summary>게시글 삭제</summary>
+      <summary>게시글 목록 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/db407882-ac34-481a-89bf-0262d2f4a0e8)
     </details>
     <details>
-      <summary>게시글 조회</summary>
+      <summary>게시글 상세 조회</summary>
+      ![Image](https://github.com/user-attachments/assets/d8f65d7e-fb22-44f0-bb0d-4a170f4ee740)
     </details>
     <details>
       <summary>게시글 추천</summary>
+      ![Image](https://github.com/user-attachments/assets/a203ab75-e982-4f06-8057-e81f0a043b2d)
+      ![Image](https://github.com/user-attachments/assets/1b4b4375-42b6-4aa6-b572-f8a925c41b70)
     </details>
   </details>
 
