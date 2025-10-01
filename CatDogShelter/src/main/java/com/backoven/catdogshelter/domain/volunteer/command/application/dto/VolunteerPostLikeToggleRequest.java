@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @NoArgsConstructor
-public class LikeToggleRequest {
+public class VolunteerPostLikeToggleRequest {
     public enum ActorType { USER, HEAD }
     private ActorType actorType;
     private Integer userId; // USER면 필수
