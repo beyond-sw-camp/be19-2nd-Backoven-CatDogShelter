@@ -16,7 +16,7 @@ public interface VolunteerAssociationService {
     void deleteAssociation(Integer id);
 
 //    /** 일반회원 신청 */
-    void apply(VolunteerApplyRequest req);
+    Integer apply(VolunteerApplyRequest req);
 
 //    /** 일반회원 신청 취소 */
     void cancel(VolunteerApplyRequest req);

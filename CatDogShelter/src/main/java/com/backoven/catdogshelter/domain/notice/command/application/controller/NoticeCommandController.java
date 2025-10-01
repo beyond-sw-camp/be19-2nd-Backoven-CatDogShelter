@@ -5,6 +5,11 @@ import com.backoven.catdogshelter.domain.notice.command.application.dto.NoticeDT
 import com.backoven.catdogshelter.domain.notice.command.application.dto.NoticeUpdateDTO;
 import com.backoven.catdogshelter.domain.notice.command.application.service.NoticeLikeService;
 import com.backoven.catdogshelter.domain.notice.command.application.service.NoticeService;
+
+import io.swagger.v3.oas.annotations.Operation;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Tag(name = "공지사항 API")
 @RestController
 @RequestMapping("/notice-posts")
 public class NoticeCommandController {
@@ -27,7 +33,7 @@ public class NoticeCommandController {
     }
 
     // JSON(dto) + 파일(files[])
-
+    @Operation(summary = "게시글 등록", description = "관리자는 파일과 함께 게시글을 등록할 수 있다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = {"/write"})
     public ResponseEntity<Long> create(
             @RequestPart("dto") NoticeDTO dto,
@@ -38,6 +44,7 @@ public class NoticeCommandController {
     }
 
     // 수정: JSON(dto) + 새파일(newFiles[]) + 삭제할 파일 ID목록(deleteFileIds)
+    @Operation(summary = "게시글 수정", description = "관리자는 파일과 함께 게시글을 수정할 수 있다.")
     @PutMapping(value = "/{id}/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> update(
             @PathVariable Long id,
@@ -56,6 +63,7 @@ public class NoticeCommandController {
      * 예) /api/notices/10/likes/toggle?userId=3
      *    /api/notices/10/likes/toggle?headId=5
      */
+    @Operation(summary = "게시글 추천", description = "일반회원과 보호소장은 게시물에 토글로 추천과 취소를 할 수 있다.")
     @PostMapping("/{noticeId}/likes/toggle")
     public ResponseEntity<Void> toggleLike(
             @PathVariable Integer noticeId,
