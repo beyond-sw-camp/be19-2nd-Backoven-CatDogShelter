@@ -180,7 +180,7 @@
 
 <details>
   <summary>회원등급 API</summary>
-  <img src="github.com/user-attachments/assets/1c161ac8-bf41-4914-a976-9933f9e3dd9d" width="500"/>
+  <img src="https://github.com/user-attachments/assets/1c161ac8-bf41-4914-a976-9933f9e3dd9d" width="500"/>
   <br>받을 수 있는 등급 -> 회원의 등급 조회회
   여기서부터 작성
 </details>
