@@ -432,18 +432,42 @@
     <summary>📝 게시글</summary>
     <details>
       <summary>게시글 작성</summary>
+      <img src="https://github.com/user-attachments/assets/bcd2a4aa-4417-4512-93ef-4f0fefa18919" width="500"/>
     </details>
     <details>
       <summary>게시글 수정</summary>
+      <img src="https://github.com/user-attachments/assets/ae9e0cde-dfad-4b89-a71e-292683fd2297" width="500"/>
     </details>
     <details>
-      <summary>게시글 삭제</summary>
+      <summary>게시글 삭제 & 복원</summary>
+      <img src="https://github.com/user-attachments/assets/b415adf5-a124-46e9-a080-c1ae72d39399" width="500"/>
+      게시글의 이미지 삭제
+      <img src="https://github.com/user-attachments/assets/e7df0dda-4c6c-4ee5-bd68-951c95088af1" width="500"/>
+      게시글 삭제
+      <img src="https://github.com/user-attachments/assets/b4458aa9-df9c-437e-b2e8-5f9b16cafc53" width="500"/>
+      게시글 복원
     </details>
     <details>
-      <summary>게시글 조회</summary>
+      <summary>게시글 목록 조회</summary>
+      <img src="https://github.com/user-attachments/assets/4bd65d4b-8325-4e97-b3d1-3d5add698c81" width="500"/>
+      최신순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/9780ca20-45db-4d2a-b258-7e81708d52ff" width="500"/>
+      최신역순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/1a0d8d38-eed2-43df-a19b-eaa2802cbc74" width="500"/>
+      조회순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/3158fc2f-e711-472a-a05f-fbea060daa57" width="500"/>
+      조회역순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/8b40d8f8-e547-4fa3-a025-51297abc1b4f" width="500"/>
+      추천순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/33dee158-ded1-4118-aaf9-485deac8e007" width="500"/>
+      추천역순 정렬 조회
+      <img src="https://github.com/user-attachments/assets/7eee870b-79d9-409a-9af3-72a13f01d1d1" width="500"/>
+      조건 검색 조회
     </details>
     <details>
       <summary>게시글 추천</summary>
+      <img src="https://github.com/user-attachments/assets/c67b766e-1b8d-43ae-8341-bcd41ddb446a" width="500"/>
+      게시글 추천과 상세 조회시 조회수 증가
     </details>
   </details>
 
@@ -451,12 +475,18 @@
     <summary>💬 게시글 댓글</summary>
     <details>
       <summary>댓글 작성</summary>
+      <img src="https://github.com/user-attachments/assets/4d732157-191b-4cc3-b36a-308c9fe22cce" width="500"/>
     </details>
     <details>
       <summary>댓글 수정</summary>
+      <img src="https://github.com/user-attachments/assets/0aef2a69-fc50-454e-82b8-707b34d2a8be" width="500"/>
     </details>
     <details>
-      <summary>댓글 삭제</summary>
+      <summary>댓글 삭제 & 복원</summary>
+      <img src="https://github.com/user-attachments/assets/80967f48-b86f-4ac7-a017-3753cde61fb2" width="500"/>
+      댓글 삭제
+      <img src="https://github.com/user-attachments/assets/46d27a0e-750f-4915-a654-614adcde5bed" width="500"/>
+      댓글 복원
     </details>
   </details>
 
@@ -464,12 +494,18 @@
     <summary>🚨 게시글 신고</summary>
     <details>
       <summary>게시글 신고하기</summary>
+      <img src="https://github.com/user-attachments/assets/006b802a-7d7a-44e4-a205-9870f1130eb6" width="500"/>
     </details>
     <details>
       <summary>댓글 신고하기</summary>
+      <img src="https://github.com/user-attachments/assets/e25795b2-2be0-43f5-be49-f8bafd182ec7" width="500"/>
     </details>
     <details>
-      <summary>신고 내역 조회</summary>
+      <summary>신고 처리</summary>
+      <img src="https://github.com/user-attachments/assets/d3354500-b059-4efa-88cc-5aa11a48bb27" width="500"/>
+      게시글 신고 처리
+      <img src="https://github.com/user-attachments/assets/161dd32d-ac98-462b-96da-50df90b79843" width="500"/>
+      댓글 신고 처리
     </details>
   </details>
 
