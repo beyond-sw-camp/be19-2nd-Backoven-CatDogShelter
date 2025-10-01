@@ -469,24 +469,24 @@
     <summary>📝 게시글</summary>
     <details>
       <summary>게시글 작성</summary>
-      ![Image](https://github.com/user-attachments/assets/667dcba1-9cd0-46a6-ac55-cdd1dad9f888)
+       ![Image](https://github.com/user-attachments/assets/667dcba1-9cd0-46a6-ac55-cdd1dad9f888)
     </details>
     <details>
       <summary>게시글 수정</summary>
-      ![Image](https://github.com/user-attachments/assets/d8a96cae-cc03-4cd5-9299-d9b536a3c65b)
+       ![Image](https://github.com/user-attachments/assets/d8a96cae-cc03-4cd5-9299-d9b536a3c65b)
     </details>
     <details>
       <summary>게시글 목록 조회</summary>
-      ![Image](https://github.com/user-attachments/assets/db407882-ac34-481a-89bf-0262d2f4a0e8)
+       ![Image](https://github.com/user-attachments/assets/db407882-ac34-481a-89bf-0262d2f4a0e8)
     </details>
     <details>
       <summary>게시글 상세 조회</summary>
-      ![Image](https://github.com/user-attachments/assets/d8f65d7e-fb22-44f0-bb0d-4a170f4ee740)
+       ![Image](https://github.com/user-attachments/assets/d8f65d7e-fb22-44f0-bb0d-4a170f4ee740)
     </details>
     <details>
       <summary>게시글 추천</summary>
-      ![Image](https://github.com/user-attachments/assets/a203ab75-e982-4f06-8057-e81f0a043b2d)
-      ![Image](https://github.com/user-attachments/assets/1b4b4375-42b6-4aa6-b572-f8a925c41b70)
+       ![Image](https://github.com/user-attachments/assets/a203ab75-e982-4f06-8057-e81f0a043b2d)
+       ![Image](https://github.com/user-attachments/assets/1b4b4375-42b6-4aa6-b572-f8a925c41b70)
     </details>
   </details>
 
