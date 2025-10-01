@@ -25,9 +25,9 @@ public class RequestSightingPostDTO {
     private AnimalType animalType;  // CAT, DOG
     @Schema(description = "동물의 품종", example = "말티즈")
     private String breed;           // 품종
-    @Schema(description = "작성자 번호", example = "2")
+    @Schema(description = "작성자 번호(null 허용, headId와 배타적 관계)")
     private Integer userId;         // 회원 작성자 번호    - headId와 배타적 관계
-    @Schema(description = "작성자 번호", example = "3")
+    @Schema(description = "작성자 번호(null 허용, userId와 배타적 관계)")
     private Integer headId;         // 보호소 작성자 번호  - userId와 배타적 관계
     @Schema(description = "목격한 장소의 시군구 코드", example = "7")
     private Integer sigunguId;      // 시군구 코드

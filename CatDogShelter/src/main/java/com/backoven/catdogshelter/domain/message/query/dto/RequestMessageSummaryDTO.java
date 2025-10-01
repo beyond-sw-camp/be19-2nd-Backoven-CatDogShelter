@@ -9,8 +9,8 @@ import lombok.*;
 @Setter
 @ToString
 public class RequestMessageSummaryDTO {
-    @Schema(description = "유저 번호", example = "2")
+    @Schema(description = "유저 번호(null 허용, headId와 배타적 관계)")
     private Integer userId = null;
-    @Schema(description = "보호소 번호", example = "5")
+    @Schema(description = "보호소 번호(null 허용, userId와 배타적 관계)")
     private Integer headId = null;
 }
