@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerAssociationQueryMapper">
+
+    <sql id="BASE_COLUMNS">
+        va.id,
+    va.title,
+    va.content,
+    va.created_at AS createdAt,
+    va.start_date AS startDate,
+    va.time,
+    va.detail_address AS detailAddress,
+    va.number_of_people AS numberOfPeople,
+    va.deadline,
+    va.is_end AS isEnd,
+    sh.head_id AS headId,
+    sh.ceo_name AS ceoName,
+    sh.company_name AS companyName,
+    /* ✅ 시군구 컬럼 추가 */
+    s.sigungu_id AS sigunguId,
+    s.sigungu_name AS sigunguName
+    </sql>
+
+    <!-- 목록 검색 -->
+    <select id="searchAssociations"
+            parameterType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationSearchCond"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationQueryDTO">
+        SELECT
+        <include refid="BASE_COLUMNS"/>
+        FROM volunteerAssociation va
+        JOIN shelter_head sh ON sh.head_id = va.head_id
+        /* ✅ 시군구 조인 추가 */
+        JOIN sigungu s ON s.sigungu_id = va.sigungu_id
+        <where>
+            <if test="cond.sigunguId != null">
+                AND va.sigungu_id = #{cond.sigunguId}
+            </if>
+            <if test="cond.headId != null">
+                AND va.head_id = #{cond.headId}
+            </if>
+            <if test="cond.deadline != null">
+                AND va.deadline = #{cond.deadline}
+            </if>
+            <if test="cond.isEnd != null">
+                AND va.is_end = #{cond.isEnd}
+            </if>
+            <if test="cond.keyword != null and cond.keyword != ''">
+                AND (
+                va.title LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR va.content LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR va.detail_address LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR sh.ceo_name LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR sh.company_name LIKE CONCAT('%', #{cond.keyword}, '%')
+                )
+            </if>
+            <if test="cond.startDateFrom != null and cond.startDateFrom != ''">
+                AND va.start_date &gt;= #{cond.startDateFrom}
+            </if>
+            <if test="cond.startDateTo != null and cond.startDateTo != ''">
+                AND va.start_date &lt;= #{cond.startDateTo}
+            </if>
+        </where>
+
+        <choose>
+            <when test="cond.orderBy == 'createdAt'">ORDER BY va.created_at</when>
+            <when test="cond.orderBy == 'startDate'">ORDER BY va.start_date</when>
+            <when test="cond.orderBy == 'time'">ORDER BY va.time</when>
+            <otherwise>ORDER BY va.created_at</otherwise>
+        </choose>
+        <choose>
+            <when test="cond.orderDir != null and (cond.orderDir == 'ASC' or cond.orderDir == 'asc')">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+
+        <if test="cond.limit != null and cond.offset != null">
+            LIMIT #{cond.limit} OFFSET #{cond.offset}
+        </if>
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="findAssociationById"
+            parameterType="int"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerAssociationQueryDTO">
+        SELECT
+        <include refid="BASE_COLUMNS"/>
+        FROM volunteerAssociation va
+        JOIN shelter_head sh ON sh.head_id = va.head_id
+        /* ✅ 시군구 조인 추가 */
+        JOIN sigungu s ON s.sigungu_id = va.sigungu_id
+        WHERE va.id = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.domain.post.query.mapper.PostDetailMapper">
+    <resultMap id="postInventoryMap" type="com.backoven.catdogshelter.domain.post.query.dto.PostInventoryDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="created_at" column="CREATED_AT"/>
+        <result property="updated_at" column="UPDATED_AT"/>
+        <result property="view" column="VIEW"/>
+        <result property="ratingName" column="RATING_NAME"/>
+        <result property="writeType" column="WRITE_TYPE"/>
+        <result property="writeName" column="WRITE_NAME"/>
+    </resultMap>
+
+    <!-- extends를 사용하여 상속 관계로 나타냄. -->
+    <resultMap id="postDetailMap" type="com.backoven.catdogshelter.domain.post.query.dto.PostDetailDTO"
+               extends="postInventoryMap">
+
+        <!-- 자유게시글 첨부파일 매핑 -->
+        <collection property="files" ofType="com.backoven.catdogshelter.domain.post.query.dto.PostFilesDTO">
+            <id property="id" column="FILE_ID"/>
+            <result property="file_rename" column="FILE_RENAME"/>
+            <result property="uploaded_at" column="UPLOADED_AT"/>
+        </collection>
+
+        <!-- 자유게시글 댓글 매핑 -->
+        <collection property="comments" ofType="com.backoven.catdogshelter.domain.post.query.dto.PostCommentDTO">
+            <id property="id" column="COMMENT_ID"/>
+            <result property="content" column="COMMENT_CONTENT"/>
+            <!-- postInventoryMap에 있는 created_at, updated_at 컬럼명이 겹쳐 상세하게 표현 -->
+            <result property="created_at" column="COMMENT_CREATED_AT"/>
+            <result property="updated_at" column="COMMENT_UPDATED_AT"/>
+            <result property="writeType" column="COMMENT_WRITE_TYPE"/>
+            <result property="writeName" column="COMMENT_WRITE_NAME"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectPostDetail" resultMap="postDetailMap">
+            SELECT
+                       p.id AS ID
+                     , p.title
+                     , p.content
+                     , p.created_at
+                     , p.updated_at
+                     , p.view
+                     , CASE
+                           WHEN p.user_id IS NOT NULL THEN '일반 회원'
+                           WHEN p.head_id IS NOT NULL THEN '보호소장 회원'
+                       END AS WRITE_TYPE
+                     , CASE
+                           WHEN p.user_id IS NOT NULL THEN u.user_name
+                           WHEN p.head_id IS NOT NULL THEN h.ceo_name
+                       END AS WRITE_NAME
+                     , CASE
+                           WHEN p.user_id IS NOT NULL THEN r.name
+                           ELSE NULL
+                        END AS RATING_NAME
+                     , f.id AS FILE_ID
+                     , f.file_rename
+                     , f.uploaded_at
+                     , c.id AS COMMENT_ID
+                     , c.content AS COMMENT_CONTENT
+                     , c.created_at AS comment_created_at
+                     , c.updated_at AS comment_update_at
+                     , CASE
+                           WHEN c.user_id IS NOT NULL THEN '일반 회원'
+                           WHEN c.head_id IS NOT NULL THEN '보호소장 회원'
+                        END AS COMMENT_WRITE_TYPE
+                     , CASE
+                           WHEN c.user_id IS NOT NULL THEN cu.user_name
+                           WHEN c.head_id IS NOT NULL THEN ch.ceo_name
+                        END AS COMMENT_WRITE_NAME
+             FROM post p
+                     LEFT JOIN user u ON p.user_id = u.user_id
+                     LEFT JOIN shelter_head h ON p.head_id = h.head_id
+                     LEFT JOIN postfiles f ON p.id = f.post_id
+                     LEFT JOIN postcomment c ON p.id = c.post_id
+                     LEFT JOIN rating r ON u.rating_id = r.id
+                     LEFT JOIN user cu ON c.user_id = cu.user_id
+                     LEFT JOIN shelter_head ch ON c.head_id = ch.head_id
+            WHERE p.id = #{id}
+              AND p.is_deleted = 0
+    </select>
+</mapper>
