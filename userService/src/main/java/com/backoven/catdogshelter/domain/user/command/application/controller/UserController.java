@@ -3,6 +3,7 @@ package com.backoven.catdogshelter.domain.user.command.application.controller;
 import com.backoven.catdogshelter.domain.user.UserDtoToDtoMapper;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyPasswordUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyUserDTO;
+import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestPasswordDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestRegistUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.responselogin.ResponseFindLoginUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.responselogin.ResponseModifyUserDTO;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController()
-@RequestMapping("/catdogshelter")
+@RequestMapping("/user")
 public class UserController {
     private final ModelMapper modelMapper;
     private final UserService userService;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     // 일반회원 회원가입
-    @PostMapping("/users")
+    @PostMapping("/regist")
     public ResponseEntity<ResponseRegistUserDTO> registUser(
             @RequestBody RequestRegistUserDTO newUser){
         UserDTO userDTO = UserDtoToDtoMapper.toUserDTO(newUser);
@@ -86,7 +87,7 @@ public class UserController {
     }
 
     // 마이페이지에서 비밀번호 수정
-    @PutMapping("/user/{userId}/pwd")
+    @PutMapping("/mypage/{userId}/pwd")
     public ResponseEntity<?> modifyUserPassword(
             @PathVariable int userId,
             @RequestBody RequestModifyPasswordUserDTO updatedUser,
@@ -103,10 +104,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
     // 마이페이지 탈퇴
-    @GetMapping("/mypage/{userId}/withdraw")
+    @PutMapping("/mypage/{userId}/withdraw")
     public ResponseEntity<?> deleterUserByPassword(
             @PathVariable int userId,
-            @RequestBody RequestModifyPasswordUserDTO updatedUser,
+            @RequestBody RequestPasswordDTO passwordDTO,
             @RequestHeader("Authorization") String bearerToken) {
         // 토큰에서 userId 추출
         String token = bearerToken.replace("Bearer ", "");
@@ -116,7 +117,7 @@ public class UserController {
             throw new AccessDeniedException("본인의 마이페이지에만 접근 가능합니다.");
         }
         // 본인일 경우에만 수정 진행
-        userService.deleterUserByPassword(userId, updatedUser);
+        userService.deleterUserByPassword(userId, passwordDTO.getCurrentPwd());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

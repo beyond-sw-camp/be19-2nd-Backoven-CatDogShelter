@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController()
-@RequestMapping("/catdogshelter/admin")
+@RequestMapping("/user/admin")
 public class UserQueryController {
 
     private UserQueryService userQueryService;
@@ -24,27 +24,27 @@ public class UserQueryController {
         this.userQueryService = userQueryService;
     }
 
-    @GetMapping("/user/all")
+    @GetMapping("/all")
     public ResponseEntity<?> selectAllUsers(){
         List<UserQueryDTO> users = userQueryService.selectAllUsers();
         return ResponseEntity.ok().body(users);
     }
-    @GetMapping("/user/general")
+    @GetMapping("/general")
     public ResponseEntity<?> selectAllUsersByGeneral(){
         List<UserQueryDTO> usersByGeneral = userQueryService.selectAllUsersByGeneral();
         return ResponseEntity.ok().body(usersByGeneral);
     }
-    @GetMapping("/user/black")
+    @GetMapping("/black")
     public ResponseEntity<?> selectAllUsersByBlack(){
         List<UserQueryDTO> usersByBlack = userQueryService.selectAllUsersByBlack();
         return ResponseEntity.ok().body(usersByBlack);
     }
-    @GetMapping("/user/canceled")
+    @GetMapping("/canceled")
     public ResponseEntity<?> selectAllUsersByCanceled(){
         List<UserQueryDTO> usersByCanceled = userQueryService.selectAllUsersByCanceled();
         return ResponseEntity.ok().body(usersByCanceled);
     }
-    @GetMapping("/user/login-history")
+    @GetMapping("/login-history")
     public ResponseEntity<?> selectAllLoginHistory(){
         List<LoginHistoryDTO> usersLoginHistory = userQueryService.selectAllLoginHistory();
         return ResponseEntity.ok().body(usersLoginHistory);

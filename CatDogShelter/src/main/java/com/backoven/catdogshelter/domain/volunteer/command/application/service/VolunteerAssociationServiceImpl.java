@@ -5,8 +5,8 @@ import com.backoven.catdogshelter.common.entity.ShelterHeadEntity;
 import com.backoven.catdogshelter.common.entity.SigunguEntity;
 import com.backoven.catdogshelter.common.entity.UserEntity;
 import com.backoven.catdogshelter.common.util.DateTimeUtil;
-import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerApplyRequest;
-import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerApproveRequest;
+import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationApplyRequest;
+import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationApproveRequest;
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.application.dto.VolunteerAssociationUpdateDTO;
 import com.backoven.catdogshelter.domain.volunteer.command.domain.aggregate.entity.VolunteerAssociationApplicationDetailsEntity;
@@ -15,6 +15,9 @@ import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.Vol
 import com.backoven.catdogshelter.domain.volunteer.command.domain.repository.VolunteerAssociationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@Slf4j
 @Service
 @Transactional
 public class VolunteerAssociationServiceImpl implements VolunteerAssociationService {
@@ -115,7 +119,7 @@ public class VolunteerAssociationServiceImpl implements VolunteerAssociationServ
     }
 
     @Override
-    public void apply(VolunteerApplyRequest req) {
+    public Integer apply(VolunteerAssociationApplyRequest req) {
         var assoc = associationRepository.findById(req.getVolunteerId())
                 .orElseThrow(() -> new IllegalArgumentException("봉사모임 없음: " + req.getVolunteerId()));
 
@@ -145,10 +149,13 @@ public class VolunteerAssociationServiceImpl implements VolunteerAssociationServ
         app.setTime(0);
 
         assoc.getApplications().add(app);
+
+        applicationRepository.save(app);
+        return app.getId();
     }
 
     @Override
-    public void cancel(VolunteerApplyRequest req) {
+    public void cancel(VolunteerAssociationApplyRequest req) {
         int deleted = applicationRepository.deleteByVolunteerAndUser(req.getVolunteerId(), req.getUserId());
         if (deleted == 0) {
             throw new IllegalArgumentException("신청내역이 없습니다.");
@@ -157,7 +164,7 @@ public class VolunteerAssociationServiceImpl implements VolunteerAssociationServ
 
 //    /* 승인 */
     @Override
-    public void approve(VolunteerApproveRequest req) {
+    public void approve(VolunteerAssociationApproveRequest req) {
         var app = applicationRepository.findById(req.getApplicationId())
                 .orElseThrow(() -> new IllegalArgumentException("신청내역 없음: " + req.getApplicationId()));
         app.setStatus(true);

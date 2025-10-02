@@ -3,6 +3,7 @@ package com.backoven.catdogshelter.domain.user.command.application.service;
 
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyPasswordUserDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestModifyUserDTO;
+import com.backoven.catdogshelter.domain.user.command.application.dto.requestlogin.RequestPasswordDTO;
 import com.backoven.catdogshelter.domain.user.command.application.dto.user.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -17,5 +18,5 @@ public interface UserService extends UserDetailsService {
 
     void modifyUserPassword(int userId, RequestModifyPasswordUserDTO updatedUser);
 
-    void deleterUserByPassword(int userId, RequestModifyPasswordUserDTO updatedUser);
+    void deleterUserByPassword(int userId, String currentPwd);
 }

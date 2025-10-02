@@ -173,7 +173,7 @@ CREATE TABLE shelter_head (
 CREATE TABLE loginHistory (
     id INT NOT NULL AUTO_INCREMENT,
     ip_address VARCHAR(39) NOT NULL,
-    logged_at VARCHAR(20) NOT NULL,
+    logged_at VARCHAR(30) NOT NULL,
     user_id INT,
     head_id INT,
     PRIMARY KEY (id),

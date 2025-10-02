@@ -35,13 +35,13 @@ public class SightingDetailDTO {
     @Schema(description = "추천수", example = "5")
     private int likeCount;                      // 추천 수
 
-    @Schema(description = "시도 이름과 시군구 이름")
+    @Schema(description = "지역 이름")
     private SightingAddressNameDTO addressName; // 시군구 이름
     @Schema(description = "작성자")
     private SightingUserDTO writer;             // 작성자
-    @Schema(description = "filePath와 fileName")
+    @Schema(description = "파일 리스트")
     private List<SightingFileDTO> files;        // 파일
-    @Schema(description = "댓글")
+    @Schema(description = "댓글 리스트")
     private List<SightingCommentDTO> comments;  // 댓글
 
 }

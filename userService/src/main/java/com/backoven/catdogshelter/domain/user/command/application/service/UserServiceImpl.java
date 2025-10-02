@@ -172,12 +172,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleterUserByPassword(int userId, RequestModifyPasswordUserDTO updatedUser) {
-        UserEntity foundUser = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+    @Transactional
+    public void deleterUserByPassword(int userId, String currentPwd) {
+        UserEntity foundUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
 
         // 기존 비밀번호와 일치하지 않다면 예외처리
-        if(!bCryptPasswordEncoder.matches(updatedUser.getCurrentPwd(), foundUser.getEncryptPwd())){
-            throw new IllegalArgumentException();
+        if (!bCryptPasswordEncoder.matches(currentPwd, foundUser.getEncryptPwd())) {
+            throw new IllegalArgumentException("비밀번호 불일치");
         }
 
         // 탈퇴 -> soft delete (상태 변경)
