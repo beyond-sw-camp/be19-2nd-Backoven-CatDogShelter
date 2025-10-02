@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.notice.query.mapper.NoticeQueryMapper">
+
+    <!-- 공지 단건: 좋아요 수 포함 (LEFT JOIN + GROUP BY) -->
+    <select id="findNoticeById" resultType="com.backoven.catdogshelter.domain.notice.query.dto.NoticeDetailDTO">
+        SELECT
+        n.id,
+        n.title,
+        n.content,
+        n.created_at AS createdAt,
+        n.updated_at AS updatedAt,
+        n.rating_id  AS ratingId,
+        COALESCE(COUNT(nl.id), 0) AS likeCount
+        FROM notice n
+        LEFT JOIN noticeLiked nl ON nl.notice_id = n.id
+        WHERE n.id = #{id}
+        GROUP BY n.id, n.title, n.content, n.created_at, n.updated_at, n.rating_id
+    </select>
+
+    <!-- 파일 목록 -->
+    <select id="findFilesByNoticeId" resultType="com.backoven.catdogshelter.domain.notice.query.dto.NoticeFileDTO">
+        SELECT
+        nf.id,
+        nf.file_rename AS fileRename,
+        nf.file_path   AS filePath,
+        nf.uploaded_at AS uploadedAt
+        FROM noticeFiles nf
+        WHERE nf.notice_id = #{noticeId}
+        ORDER BY nf.id ASC
+    </select>
+
+
+    <!-- 공통 SELECT 절 -->
+    <sql id="notice_list_select">
+        SELECT
+        n.id,
+        n.title,
+        -- 목록에서는 내용 앞부분만 미리보기(원하면 LENGTH 조절)
+        CASE
+        WHEN LENGTH(n.content) > 200 THEN CONCAT(SUBSTRING(n.content,1,200),'...')
+        ELSE n.content
+        END AS content,
+        n.created_at AS createdAt,
+        n.updated_at AS updatedAt,
+        COALESCE(COUNT(nl.id), 0) AS likeCount
+        FROM notice n
+        LEFT JOIN noticeLiked nl ON nl.notice_id = n.id
+    </sql>
+
+    <!-- 공통 WHERE -->
+    <sql id="notice_list_where">
+        <where>
+            <!-- keyword: 제목/내용 -->
+            <if test="cond.keyword != null and cond.keyword != ''">
+                (n.title LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR n.content LIKE CONCAT('%', #{cond.keyword}, '%'))
+            </if>
+
+            <!-- created_at 범위: VARCHAR 이므로 날짜 형식일 경우만 STR_TO_DATE 사용 -->
+            <if test="cond.createdFrom != null and cond.createdFrom != ''">
+                AND STR_TO_DATE(n.created_at, '%Y-%m-%d') &gt;= STR_TO_DATE(#{cond.createdFrom}, '%Y-%m-%d')
+            </if>
+            <if test="cond.createdTo != null and cond.createdTo != ''">
+                AND STR_TO_DATE(n.created_at, '%Y-%m-%d') &lt;= STR_TO_DATE(#{cond.createdTo}, '%Y-%m-%d')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 목록 조회 -->
+    <select id="searchNotices" parameterType="map"
+            resultType="com.backoven.catdogshelter.domain.notice.query.dto.NoticeListItemDTO">
+        <include refid="notice_list_select"/>
+        <include refid="notice_list_where"/>
+        GROUP BY n.id, n.title, content, n.created_at, n.updated_at
+
+        <!-- 정렬 화이트리스트 -->
+        <choose>
+            <when test="cond.orderBy == 'likeCount'">
+                ORDER BY likeCount
+            </when>
+            <otherwise>
+                ORDER BY n.created_at
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="cond.orderDir == 'ASC'">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+
+        <!-- 페이징 -->
+        <if test="cond.limit != null and cond.offset != null">
+            LIMIT #{cond.offset}, #{cond.limit}
+        </if>
+    </select>
+
+    <!-- 총 건수 -->
+    <select id="countNotices" parameterType="map" resultType="long">
+        SELECT COUNT(1) FROM (
+        <include refid="notice_list_select"/>
+        <include refid="notice_list_where"/>
+        GROUP BY n.id, n.title, content, n.created_at, n.updated_at
+        ) X
+    </select>
+
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.post.query.mapper.PostCommentReportDetailMapper">
+    <resultMap id="postCommentReportDetailMap"
+               type="com.backoven.catdogshelter.domain.post.query.dto.PostCommentReportDetailDTO">
+        <id property="id" column="ID"/>
+        <result property="category" column="CATEGORY"/>
+        <result property="etc_detail" column="ETC_DETAIL"/>
+        <result property="created_at" column="CREATED_AT"/>
+        <result property="comment_id" column="COMMENT_ID"/>
+        <result property="writeType" column="WRITE_TYPE"/>
+        <result property="writeName" column="WRITE_NAME"/>
+        <result property="reportCount" column="REPORT_COUNT"/>
+    </resultMap>
+    <select id="selectPostCommentReportDetail" resultMap="postCommentReportDetailMap">
+        SELECT
+            pcr.id,
+            pcr.comment_id,
+            pcr.category,
+            pcr.etc_detail,
+            pcr.created_at,
+            CASE
+                WHEN pcr.user_id IS NOT NULL THEN '일반 회원'
+                WHEN pcr.head_id IS NOT NULL THEN '보호소장 회원'
+                END AS WRITE_TYPE,
+            CASE
+                WHEN pcr.user_id IS NOT NULL THEN u.user_name
+                WHEN pcr.head_id IS NOT NULL THEN h.ceo_name
+                END AS WRITE_NAME,
+            cnt.report_count
+        FROM postcommentreport pcr
+                 LEFT JOIN user u ON pcr.user_id = u.user_id
+                 LEFT JOIN shelter_head h ON pcr.head_id = h.head_id
+                 INNER JOIN (
+            SELECT comment_id, COUNT(*) AS report_count
+            FROM postcommentreport
+            GROUP BY comment_id
+        ) cnt ON pcr.comment_id = cnt.comment_id
+        WHERE pcr.comment_id = #{postCommentId}
+        ORDER BY pcr.created_at DESC
+    </select>
+
+</mapper>

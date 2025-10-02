@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.volunteer.query.mapper.VolunteerPostQueryMapper">
+
+    <sql id="post_from_join">
+        FROM volunteerPost p
+    LEFT JOIN volunteerPostLiked pl ON pl.post_id = p.id
+    LEFT JOIN volunteerAssociationApplicationDetails vaad ON vaad.id = p.volappdetail_id
+    LEFT JOIN user u ON u.user_id = vaad.user_id
+    LEFT JOIN volunteerAssociation va ON va.id = vaad.volunteer_id
+    LEFT JOIN shelter_head h ON h.head_id = va.head_id
+    WHERE p.is_deleted = FALSE
+    </sql>
+
+    <sql id="post_select">
+        SELECT
+        p.id,
+        p.title,
+        CASE
+        WHEN LENGTH(p.content) > 200 THEN CONCAT(SUBSTRING(p.content,1,200), '...')
+        ELSE p.content
+        END AS contentPreview,
+        p.created_at AS createdAt,
+        p.view AS views,
+        COALESCE(COUNT(pl.id), 0) AS likeCount,
+        /* 작성자 표기는 유저명 우선, 없으면 보호소명/대표명 */
+        COALESCE(u.user_name, h.company_name, h.ceo_name) AS author
+        <include refid="post_from_join"/>
+    </sql>
+
+    <sql id="order_clause">
+        <choose>
+            <when test="cond.order == 'views'">
+                ORDER BY p.view DESC, p.id DESC
+            </when>
+            <when test="cond.order == 'likes'">
+                ORDER BY likeCount DESC, p.id DESC
+            </when>
+            <otherwise>
+                ORDER BY STR_TO_DATE(p.created_at, '%Y-%m-%d') DESC, p.id DESC
+            </otherwise>
+        </choose>
+    </sql>
+
+    <!-- 전체 목록 -->
+    <select id="listByOrder" parameterType="map"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListItemDTO">
+        <include refid="post_select"/>
+        GROUP BY p.id, p.title, contentPreview, p.created_at, p.view, author
+        <include refid="order_clause"/>
+        <if test="cond.limit != null and cond.offset != null">
+            LIMIT #{cond.offset}, #{cond.limit}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(1) FROM volunteerPost p WHERE p.is_deleted = FALSE
+    </select>
+
+    <!-- 검색 -->
+    <select id="searchByOrder" parameterType="map"
+            resultType="com.backoven.catdogshelter.domain.volunteer.query.dto.VolunteerPostListItemDTO">
+        <include refid="post_select"/>
+        <if test="cond.keyword != null and cond.keyword != ''">
+            AND (
+            p.title   LIKE CONCAT('%', #{cond.keyword}, '%')
+            OR p.content LIKE CONCAT('%', #{cond.keyword}, '%')
+            OR u.user_name LIKE CONCAT('%', #{cond.keyword}, '%')
+            OR h.company_name LIKE CONCAT('%', #{cond.keyword}, '%')
+            OR h.ceo_name LIKE CONCAT('%', #{cond.keyword}, '%')
+            )
+        </if>
+        <if test="cond.title != null and cond.title != ''">
+            AND p.title LIKE CONCAT('%', #{cond.title}, '%')
+        </if>
+        <if test="cond.content != null and cond.content != ''">
+            AND p.content LIKE CONCAT('%', #{cond.content}, '%')
+        </if>
+        <if test="cond.author != null and cond.author != ''">
+            AND (
+            u.user_name LIKE CONCAT('%', #{cond.author}, '%')
+            OR h.company_name LIKE CONCAT('%', #{cond.author}, '%')
+            OR h.ceo_name LIKE CONCAT('%', #{cond.author}, '%')
+            )
+        </if>
+        GROUP BY p.id, p.title, contentPreview, p.created_at, p.view, author
+        <include refid="order_clause"/>
+        <if test="cond.limit != null and cond.offset != null">
+            LIMIT #{cond.offset}, #{cond.limit}
+        </if>
+    </select>
+
+    <select id="countSearch" parameterType="map" resultType="long">
+        SELECT COUNT(1)
+        <include refid="post_from_join"/>
+        <trim prefix="AND" prefixOverrides="AND |OR ">
+            <if test="cond.keyword != null and cond.keyword != ''">
+                AND (
+                p.title   LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR p.content LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR u.user_name LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR h.company_name LIKE CONCAT('%', #{cond.keyword}, '%')
+                OR h.ceo_name LIKE CONCAT('%', #{cond.keyword}, '%')
+                )
+            </if>
+            <if test="cond.title != null and cond.title != ''">
+                AND p.title LIKE CONCAT('%', #{cond.title}, '%')
+            </if>
+            <if test="cond.content != null and cond.content != ''">
+                AND p.content LIKE CONCAT('%', #{cond.content}, '%')
+            </if>
+            <if test="cond.author != null and cond.author != ''">
+                AND (
+                u.user_name LIKE CONCAT('%', #{cond.author}, '%')
+                OR h.company_name LIKE CONCAT('%', #{cond.author}, '%')
+                OR h.ceo_name LIKE CONCAT('%', #{cond.author}, '%')
+                )
+            </if>
+        </trim>
+    </select>
+
+</mapper>

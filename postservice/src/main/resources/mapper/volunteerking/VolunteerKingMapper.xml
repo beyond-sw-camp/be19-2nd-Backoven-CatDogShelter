@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backoven.catdogshelter.domain.volunteerking.query.mapper.VolunteerKingMapper">
+    <resultMap id = "monthResultMap" type = "com.backoven.catdogshelter.domain.volunteerking.query.dto.VolunteerKingMonthDTO">
+        <result property = "year" column = "year"/>
+        <result property = "month" column = "month"/>
+        <result property = "volunteerTime" column = "volunteer_time"/>
+        <result property = "userName" column = "user_name"/>
+        <result property = "ratingName" column = "rating_name"/>
+
+    </resultMap>
+
+    <resultMap id = "totalResultMap" type = "com.backoven.catdogshelter.domain.volunteerking.query.dto.VolunteerKingTotalDTO">
+        <result property = "volunteerTime" column = "volunteer_time"/>
+        <result property = "userName" column = "user_name"/>
+        <result property = "ratingName" column = "rating_name"/>
+    </resultMap>
+
+    <select id = "selectVolunteerKingMonth" resultMap = "monthResultMap">
+        SELECT
+               vk.year
+             , vk.month
+             , vk.volunteer_time
+             , u.user_name
+             , rating.name AS rating_name
+          FROM volunteerKing AS vk
+          LEFT JOIN user AS u ON (vk.user_id = u.user_id)
+          LEFT JOIN rating ON (u.rating_id = rating.id)
+         WHERE vk.category = true
+         ORDER BY vk.id DESC
+    </select>
+
+    <select id = "selectVolunteerKingTotal" resultMap = "totalResultMap">
+        SELECT
+               vk.volunteer_time
+             , u.user_name
+             , rating.name AS rating_name
+          FROM volunteerKing AS vk
+          LEFT JOIN user AS u ON (vk.user_id = u.user_id)
+          LEFT JOIN rating ON (u.rating_id = rating.id)
+         WHERE vk.category = false
+    </select>
+
+    <select id = "selectVolunteerKingByUserId" parameterType="_int" resultMap = "monthResultMap">
+        SELECT
+               vk.year
+             , vk.month
+             , vk.volunteer_time
+             , u.user_name
+             , rating.name AS rating_name
+          FROM volunteerKing AS vk
+                 LEFT JOIN user AS u ON (vk.user_id = u.user_id)
+                 LEFT JOIN rating ON (u.rating_id = rating.id)
+         WHERE vk.category = true
+           AND vk.user_id = #{userId}
+         ORDER BY vk.id DESC
+    </select>
+</mapper>
