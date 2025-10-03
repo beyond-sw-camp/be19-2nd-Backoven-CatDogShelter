@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.backoven.catdogshelter.common.user.query.mapper.UserMapper">
+
+    <!-- 일반회원 조회를 위한 매핑 -->
+    <resultMap id="UserResultMap"
+               type="com.backoven.catdogshelter.common.user.query.dto.UserQueryDTO">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userAccount" column="user_account"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="email" column="e_mail"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="answer" column="answer"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="cumulativeVolunteerTime" column="cumulative_volunteer_time"/>
+        <result property="monthVolunteerTime" column="month_volunteer_time"/>
+        <result property="volunteerCount" column="volunteer_count"/>
+        <result property="deactivationTimes" column="deactivation_times"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="activationDate" column="activation_date"/>
+        <result property="ratingId" column="rating_id"/>
+        <result property="sigunguId" column="sigungu_id"/>
+        <result property="questionCategoryId" column="questionCategory_id"/>
+    </resultMap>
+
+    <!-- 전체 회원 조회 -->
+    <select id="selectAllUsers" resultMap="UserResultMap">
+        SELECT *
+        FROM user
+    </select>
+
+    <!-- 일반 회원 조회 (user_status = 'GENERAL') -->
+    <select id="selectAllUsersByGeneral" resultMap="UserResultMap">
+        SELECT *
+        FROM user
+        WHERE user_status = 'GENERAL'
+    </select>
+
+    <!-- 블랙 회원 조회 (user_status = 'BLACK') -->
+    <select id="selectAllUsersByBlack" resultMap="UserResultMap">
+        SELECT *
+        FROM user
+        WHERE user_status = 'BLACK'
+    </select>
+
+    <!-- 탈퇴한 회원 조회 (user_status = 'CANCEL') -->
+    <select id="selectAllUsersByCanceled" resultMap="UserResultMap">
+        SELECT *
+        FROM user
+        WHERE user_status = 'CANCEL'
+    </select>
+
+    <!-- 로그인 이력 매핑 -->
+    <resultMap id="LoginHistoryResultMap"
+               type="com.backoven.catdogshelter.common.user.query.dto.LoginHistoryDTO">
+        <id property="id" column="id"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="loggedAt" column="logged_at" jdbcType="TIMESTAMP"/>
+        <result property="userId" column="user_id"/>
+        <result property="headId" column="head_id"/>
+    </resultMap>
+
+    <!-- 전체 로그인 이력 조회 -->
+    <select id="selectAllLoginHistory" resultMap="LoginHistoryResultMap">
+        SELECT id,
+        ip_address,
+        logged_at,
+        user_id,
+        head_id
+        FROM loginHistory
+        ORDER BY logged_at DESC
+    </select>
+</mapper>
