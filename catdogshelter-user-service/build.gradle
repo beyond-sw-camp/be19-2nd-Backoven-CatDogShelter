@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.6'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.backoven'
+version = '0.0.1-SNAPSHOT'
+description = 'catdogshelter-user-service'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "2025.0.0")
+}
+
+dependencies {
+    // Spring Boot 기본 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'     // JPA (Hibernate) 기반 ORM
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'        // JDBC (기본 DB 연결)
+    implementation 'org.springframework.boot:spring-boot-starter-security'    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'   // Thymeleaf 템플릿 엔진
+    implementation 'org.springframework.boot:spring-boot-starter-web'         // Spring MVC + REST API
+    // MyBatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5' // MyBatis 연동
+
+    // Spring Cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // Eureka Client (서비스 등록/발견)
+
+    // Thymeleaf + Security 확장
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'    // Thymeleaf에서 Spring Security 지원
+
+    // 개발 편의성 및 런타임
+    compileOnly 'org.projectlombok:lombok'               // Lombok (Getter/Setter/Builder 등)
+    annotationProcessor 'org.projectlombok:lombok'       // Lombok 어노테이션 처리기
+    developmentOnly 'org.springframework.boot:spring-boot-devtools' // 개발용 자동 리로드
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'   // MariaDB 드라이버
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'    // 기본 테스트 라이브러리
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5' // MyBatis 테스트
+    testImplementation 'org.springframework.security:spring-security-test'    // Security 테스트
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'              // JUnit 플랫폼 런처
+
+    // 로깅 & 매핑 유틸
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16' // SQL 로그 출력용
+    implementation 'org.modelmapper:modelmapper:3.1.1'                     // DTO ↔ Entity 매핑
+
+    // JWT (인증/인가)
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Jackson 기반 JJWT 파서
+
+    // Swagger / OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0' // Swagger UI 제공
+
+    // Spring Cloud BOM (버전 관리)
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+        }
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
