@@ -50,6 +50,7 @@
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-black?logo=intellij-idea&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)
 
 ### 📚 library
 ![log4jdbc](https://img.shields.io/badge/log4jdbc-1.16-FF6F00?style=flat&logo=apache&logoColor=white)
