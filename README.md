@@ -70,15 +70,15 @@
 #### [✨ 차별성](#차별성)
 #### [📝 주요 기능](#주요-기능)
 #### [🏁 서비스 목표](#서비스-목표)
-#### [📊 wbs](#wbs)
+#### [📊 WBS](#WBS)
 #### [🗒️ 요구사항 명세서](#요구사항-명세서)
-#### [📐 ddd](#ddd)
+#### [📐 DDD](#DDD)
 #### [📂 논리 모델링](#논리-모델링)
 #### [🗺️ 물리 모델링](#물리-모델링)
-#### [🏗️ msa 아키텍처](#msa-아키텍처)
-#### [🧪 테스트 프레임워크 (junit)](#테스트-프레임워크-junit)
-#### [📜 api 명세서 (swagger)](#api-명세서-swagger)
-#### [🔗 api 테스트 (postman)](#api-테스트-postman)
+#### [🏗️ MSA 아키텍처](#MSA-아키텍처)
+#### [🧪 테스트 프레임워크 (Junit)](#테스트-프레임워크-Junit)
+#### [📜 API 명세서 (swagger)](#API-명세서-swagger)
+#### [🔗 API 테스트 (postman)](#API-테스트-postman)
 #### [📃 프로젝트 회고록](#프로젝트-회고록)
 #### [📝 동료평가](#동료평가)
 
@@ -268,7 +268,7 @@
 
 ---
 
-## 📜 API 명세서 (Swagger)
+## 📜 API 명세서 (swagger)
 <details>
   <img width="3378" height="1544" alt="Image" src="https://github.com/user-attachments/assets/303ebfef-8551-468b-83f1-d3e6b76d3655" /><br>
   <img width="1792" height="638" alt="Image" src="https://github.com/user-attachments/assets/96f99539-58e9-4b3f-8f11-07883d685f27" /><br>
@@ -294,7 +294,7 @@
 
 ---
 
-## 🔗 API 테스트 (Postman)
+## 🔗 API 테스트 (postman)
 <details>
   <summary>🙍🏻‍♀️ 회원 API</summary>
 
